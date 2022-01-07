@@ -4,10 +4,10 @@ var mongoose = require("mongoose");
 const Trip = require("../models/tripModel");
 
 // retrieve list of trips for user
-exports.list_all_trips = function (req, res) {
+exports.get_trip = function (req, res) {
   Trip.find(
     {
-      username: req.params.userId,
+      _id: req.params.tripId,
     },
     function (err, spot) {
       if (err) res.send(err);

@@ -3,21 +3,29 @@ import "bootstrap/dist/css/bootstrap.css";
 import Modal from "react-modal";
 import { FormControl, Form, Button, Col, Row } from "react-bootstrap";
 import axios from "axios";
-import sha256 from "crypto-js/sha256";
+var bcrypt = require("bcryptjs");
+const saltRounds = 10;
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
     this.onChangeUsername = this.onChangeUsername.bind(this);
+    this.onChangeName = this.onChangeName.bind(this);
+    this.onChangeEmail = this.onChangeEmail.bind(this);
+    this.onChangePassword = this.onChangePassword.bind(this);
+    this.onChangePasswordHash = this.onChangePasswordHash.bind(this);
+    this.onChangeFollowing = this.onChangeFollowing.bind(this);
+    this.onChangeSavedTripIDs = this.onChangeSavedTripIDs.bind(this);
     this.onSubmitLogIn = this.onSubmitLogIn.bind(this);
     this.onSubmitCreateProfile = this.onSubmitCreateProfile.bind(this);
 
     this.state = {
       loggedIn: false,
       username: "",
-      name: false,
-      passHash: "",
+      name: "",
+      password: "",
+      passwordHash: "",
       email: "",
       savedTripIDs: [],
       following: [],
@@ -26,15 +34,18 @@ export default class Home extends Component {
 
   // upon starting, should maintain logged-in view if logged in; else, present sign-in view
   componentDidMount() {
-    if (this.props.loggedIn) {
+    const loggedInUser = localStorage.getItem("userInfo");
+    if (loggedInUser) {
+      const userInfo = JSON.parse(loggedInUser);
+
       this.setState({
-        loggedIn: this.props.loggedIn,
-        username: this.props.username,
-        name: this.props.name,
-        passHash: this.props.passHash,
-        email: this.props.email,
-        savedTripIDs: this.props.savedTripIDs,
-        following: this.props.following,
+        loggedIn: userInfo.loggedIn,
+        username: userInfo.username,
+        name: userInfo.name,
+        passwordHash: userInfo.passwordHash,
+        email: userInfo.email,
+        savedTripIDs: userInfo.savedTripIDs,
+        following: userInfo.following,
       });
     }
   }
@@ -78,25 +89,35 @@ export default class Home extends Component {
   // logging in
   onSubmitLogIn(e) {
     e.preventDefault();
-    const user = {
+    let user = {
       username: this.state.username,
       password: this.state.password,
     };
-    console.log(user);
-    console.log(sha256(user.password));
-    user.passHash = sha256(user.password);
-    console.log(user.passHash);
 
     axios
-      .get("http://localhost:3001/users", {
-        params: {
-          username: user.username,
-        },
-      })
+      .get(`http://localhost:3001/users/${user.username}`)
       .then((response) => {
-        console.log(response);
-        // if response was received (i.e. got a user entry) & passHash matches with generated passHash, then go to logged-in view
+        // if response was received (i.e. got a user entry) & passwordHash matches with generated passwordHash, then go to logged-in view
         // else, wipe password & re-prompt for password
+        if (
+          bcrypt.compareSync(this.state.password, response.data.passwordHash)
+        ) {
+          console.log("correct password");
+          this.setState({
+            loggedIn: true,
+          });
+          localStorage.setItem("userInfo", {
+            username: response.data.username,
+            passwordHash: response.data.passwordHash,
+            email: response.data.email,
+            name: response.data.name,
+            following: response.data.following,
+            savedTripIDs: response.data.savedTripIDs,
+            loggedIn: true,
+          });
+        } else {
+          console.log("incorrect password");
+        }
       })
       .catch((err) => {
         console.log("error - grabbing profile", err);
@@ -108,37 +129,47 @@ export default class Home extends Component {
     e.preventDefault();
     const user = {
       username: this.state.username,
-      passHash: sha256(this.state.password),
+      passwordHash: bcrypt.hashSync(this.state.password, saltRounds),
       email: this.state.email,
       name: this.state.name,
     };
     console.log(user);
     axios
-      .get("http://localhost:3001/users", {
-        params: {
-          username: user.username,
-        },
-      })
+      .get(`http://localhost:3001/users/${user.username}`)
       .then((response) => {
         console.log(response);
-        // // if already exists, wipe entries and re-prompt for username
-        // // else, perform add to database
-        // axios
-        //   .post("http://localhost:3001/users", {
-        //     body: {
-        //       username: user.username,
-        //       passHash: user.passHash,
-        //       email: user.email,
-        //       name: user.name,
-        //     },
-        //   })
-        //   .then((response) => {
-        //     console.log(response);
-        //     // automatically go to logged in view (set loggedIn to true)
-        //   })
-        //   .catch((err) => {
-        //     console.log("error - posting profile", err);
-        //   });
+        if (response.data != null) {
+          // if already exists, wipe entries and re-prompt for username
+          console.log("sorry");
+        } else if (response.data == null) {
+          // else, perform add to database
+          axios
+            .post("http://localhost:3001/users", {
+              username: user.username,
+              passwordHash: user.passwordHash,
+              email: user.email,
+              name: user.name,
+            })
+            .then((response) => {
+              console.log(response);
+              localStorage.setItem("userInfo", {
+                username: user.username,
+                passwordHash: user.passwordHash,
+                email: user.email,
+                name: user.name,
+                following: [],
+                savedTripIDs: [],
+                loggedIn: true,
+              });
+              this.setState({
+                loggedIn: true,
+              });
+              // automatically go to logged in view (set loggedIn to true)
+            })
+            .catch((err) => {
+              console.log("error - posting profile", err);
+            });
+        }
       })
       .catch((err) => {
         console.log("error - grabbing profile", err);

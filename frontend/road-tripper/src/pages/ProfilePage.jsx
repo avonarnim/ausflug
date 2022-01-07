@@ -20,24 +20,68 @@ export default class Home extends Component {
 
   // upon starting, should maintain logged-in view if logged in; else, present sign-in view
   componentDidMount() {
-    if (this.props.loggedIn) {
+    const loggedInUser = localStorage.getItem("userInfo");
+    if (loggedInUser) {
+      const userInfo = JSON.parse(loggedInUser);
+
       this.setState({
-        loggedIn: this.props.loggedIn,
-        username: this.props.username,
-        name: this.props.name,
-        passHash: this.props.passHash,
-        email: this.props.email,
-        savedTripIDs: this.props.savedTripIDs,
-        following: this.props.following,
+        loggedIn: userInfo.loggedIn,
+        username: userInfo.username,
+        name: userInfo.name,
+        passwordHash: userInfo.passwordHash,
+        email: userInfo.email,
+        savedTripIDs: userInfo.savedTripIDs,
+        following: userInfo.following,
       });
     }
+  }
+
+  savedTrips() {
+    let savedTrips = [];
+    for (id in user.savedTripIDs) {
+      axios
+        .get(`http://localhost:3001/trips/${id}`)
+        .then((resp) => {
+          savedTrips.push(resp.data);
+        })
+        .catch((err) => {
+          console.log("error attaining following profile", err);
+        });
+    }
+
+    return savedTrips.slice(0, 5).map((trip) => (
+      <li>
+        <a href={"/trips/" + trip._id}>
+          Trip from {trip.startingLocation} to {trip.finalLocation}
+        </a>
+      </li>
+    ));
+  }
+
+  following() {
+    let followingInfos = [];
+    for (username in this.state.following) {
+      axios
+        .get(`http://localhost:3001/users/${user.username}`)
+        .then((resp) => {
+          followingInfos.push(resp.data);
+        })
+        .catch((err) => {
+          console.log("error attaining following profile", err);
+        });
+    }
+    return followingInfos.slice(0, 5).map((user) => <li>{user.username}</li>);
   }
 
   loggedInProfile() {
     return (
       <div className="profile-info">
         <h2>Hello, {this.state.name}</h2>
-        <p>I will place personal profile info here</p>
+        <p>Email: {this.state.email}</p>
+        <h4>Saved Trips:</h4>
+        {this.savedTrips()}
+        <h4>Following:</h4>
+        {this.following()}
       </div>
     );
   }
@@ -45,7 +89,7 @@ export default class Home extends Component {
   loggedOutProfile() {
     return (
       <div className="profile-info">
-        <h2>Maybe redirect to home?</h2>
+        <h2>Please navigate to home to sign in</h2>
       </div>
     );
   }

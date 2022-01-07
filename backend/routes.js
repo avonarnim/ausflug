@@ -1,23 +1,23 @@
 "use strict";
 const router = require("express").Router();
-const spot = require("../controllers/spotController");
-const trip = require("../controllers/tripController");
-const user = require("../controllers/userController");
+const spot = require("./controllers/spotController");
+const trip = require("./controllers/tripController");
+const user = require("./controllers/userController");
 
 // trip-user Routes
-router.route("/trips/:userId").get((req, res) => {
-  trip.list_all_trips(req, res);
+router.route("/trips/:tripId").get((req, res) => {
+  trip.get_trip(req, res);
 });
-router.route("/trips/:userId").post((req, res) => {
+router.route("/trips").post((req, res) => {
   trip.create_trip(req, res);
 });
-router.route("/trips/:userId/:tripId").post((req, res) => {
+router.route("/trips/:username/:tripId").post((req, res) => {
   trip.update_trip(req, res);
 });
-router.route("/trips/:userId/:tripId").delete((req, res) => {
+router.route("/trips/:username/:tripId").delete((req, res) => {
   trip.delete_trip(req, res);
 });
-router.route("/trips/:userId/:tripId").put((req, res) => {
+router.route("/trips/:username/:tripId").put((req, res) => {
   user.save_trip_to_user(req, res);
 });
 
@@ -36,7 +36,7 @@ router.route("/spots").post((req, res) => {
 router.route("/spots").delete((req, res) => {
   spot.delete_spot(req, res);
 });
-router.route("/spots").get((req, res) => {
+router.route("/spots/:spotId").get((req, res) => {
   spot.view_spot(req, res);
 });
 router.route("/spots").put((req, res) => {

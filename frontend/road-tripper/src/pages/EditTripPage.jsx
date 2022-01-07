@@ -8,6 +8,26 @@ export default class EditTripPage extends Component {
   constructor(props) {
     super(props);
 
+    this.onChangeStartingLat = onChangeStartingLat.bind(this);
+    this.onChangeStartingLong = onChangeStartingLong.bind(this);
+    this.onChangeFinalLat = onChangeFinalLat.bind(this);
+    this.onChangeFinalLong = onChangeFinalLong.bind(this);
+    this.onChangeDesiredTotalDriveTime =
+      onChangeDesiredTotalDriveTime.bind(this);
+    this.onChangeDesiredTotalTravelTime =
+      onChangeDesiredTotalTravelTime.bind(this);
+    this.onChangeDesiredMaxCost = onChangeDesiredMaxCost.bind(this);
+    this.onChangeDesiredMinSpecialty = onChangeDesiredMinSpecialty.bind(this);
+    this.onChangeDesiredMinQuality = onChangeDesiredMinQuality.bind(this);
+    this.onChangeDesiredNights = onChangeDesiredNights.bind(this);
+    this.onChangeDesiredFoodCategories =
+      onChangeDesiredFoodCategories.bind(this);
+    this.onChangeDesiredDetourCategories =
+      onChangeDesiredDetourCategories.bind(this);
+
+    this.onSubmitPreferences = this.onSubmitPreferences.bind(this);
+    this.onSaveTrip = this.onSaveTrip.bind(this);
+
     this.state = {
       loggedIn: false,
       username: "",
@@ -16,177 +36,445 @@ export default class EditTripPage extends Component {
       email: "",
       savedTripIDs: [],
       following: [],
+
+      startingLat: 0,
+      startingLong: 0,
+      finalLat: 0,
+      finalLong: 0,
+      desiredTotalDriveTime: 0,
+      desiredTotalTravelTime: 0,
+      desiredMaxCost: 0,
+      desiredMinSpecialty: 0,
+      desiredMinQuality: 0,
+      desiredNights: 0,
+      desiredFoodCategories: [],
+      desiredDetourCategories: [],
+      possibleStops: [],
+      confirmedStops: [],
+      actualDriveTime: 0,
+      actualTravelTime: 0,
+      completed: false,
+
+      update: false,
     };
   }
 
   // upon starting, should maintain logged-in view if logged in; else, present sign-in view
   componentDidMount() {
-    if (this.props.loggedIn) {
+    const loggedInUser = localStorage.getItem("userInfo");
+    if (loggedInUser) {
+      const userInfo = JSON.parse(loggedInUser);
+
       this.setState({
-        loggedIn: this.props.loggedIn,
-        username: this.props.username,
-        name: this.props.name,
-        passHash: this.props.passHash,
-        email: this.props.email,
-        savedTripIDs: this.props.savedTripIDs,
-        following: this.props.following,
+        loggedIn: userInfo.loggedIn,
+        username: userInfo.username,
+        name: userInfo.name,
+        passwordHash: userInfo.passwordHash,
+        email: userInfo.email,
+        savedTripIDs: userInfo.savedTripIDs,
+        following: userInfo.following,
+      });
+    }
+    const editingNotCreating = localStorage.getItem("tripID");
+    if (editingNotCreating) {
+      const tripInfo = JSON.parse(tripInfo);
+      this.setState({
+        startingLat: tripInfo.startingLocation.latitude,
+        startingLong: tripInfo.startingLocation.longitude,
+        finalLat: tripInfo.finalLocation.latitude,
+        finalLong: tripInfo.finalLocation.longitude,
+        username: tripInfo.username,
+        desiredTotalDriveTime: tripInfo.desiredTotalDriveTime,
+        desiredTotalTravelTime: tripInfo.desiredTotalTravelTime,
+        desiredMaxCost: tripInfo.desiredMaxCost,
+        desiredMinSpecialty: tripInfo.desiredMinSpecialty,
+        desiredMinQuality: tripInfo.desiredMinQuality,
+        desiredNights: tripInfo.desiredNights,
+        desiredFoodCategories: tripInfo.desiredFoodCategories,
+        desiredDetourCategories: tripInfo.desiredDetourCategories,
+        confirmedStops: tripInfo.confirmedStops,
+        actualDriveTime: tripInfo.actualDriveTime,
+        actualTravelTime: tripInfo.actualTravelTime,
+        completed: tripInfo.completed,
       });
     }
   }
-
-  onChangeUsername(e) {
+  onChangeStartingLat(e) {
+    this.setState({
+      startingLat: e.target.value,
+    });
+  }
+  onChangeStartingLong(e) {
+    this.setState({
+      startingLong: e.target.value,
+    });
+  }
+  onChangeFinalLat(e) {
+    this.setState({
+      finalLat: e.target.value,
+    });
+  }
+  onChangeFinalLong(e) {
+    this.setState({
+      finalLong: e.target.value,
+    });
+  }
+  onChangeDesiredTotalDriveTime(e) {
+    this.setState({
+      desiredTotalDriveTime: e.target.value,
+    });
+  }
+  onChangeDesiredTotalTravelTime(e) {
+    this.setState({
+      desiredTotalTravelTime: e.target.value,
+    });
+  }
+  onChangeDesiredMaxCost(e) {
+    this.setState({
+      desiredMaxCost: e.target.value,
+    });
+  }
+  onChangeDesiredMinSpecialty(e) {
+    this.setState({
+      desiredMinSpecialty: e.target.value,
+    });
+  }
+  onChangeDesiredMinQuality(e) {
+    this.setState({
+      desiredMinQuality: e.target.value,
+    });
+  }
+  onChangeDesiredNights(e) {
+    this.setState({
+      desiredNights: e.target.value,
+    });
+  }
+  onChangeDesiredFoodCategories(e) {
+    this.setState({
+      desiredFoodCategories: e.target.value,
+    });
+  }
+  onChangeDesiredDetourCategories(e) {
     this.setState({
       username: e.target.value,
     });
   }
-  onChangeName(e) {
-    this.setState({
-      name: e.target.value,
-    });
-  }
-  onChangeEmail(e) {
-    this.setState({
-      email: e.target.value,
-    });
-  }
-  onChangePassword(e) {
-    this.setState({
-      password: e.target.value,
-    });
-  }
-  onChangePasswordHash(e) {
-    this.setState({
-      passwordHash: e.target.value,
-    });
-  }
-  onChangeSavedTripIDs(e) {
-    this.setState({
-      savedTripIDs: e.target.value,
-    });
-  }
-  onChangeFollowing(e) {
-    this.setState({
-      following: e.target.value,
-    });
-  }
 
-  // logging in
-  onSubmitLogIn(e) {
-    e.preventDefault();
-    const user = {
-      username: this.state.username,
+  // Go through confirmed stops and find the total travel/drive times
+  getTime() {
+    let spotA;
+    let spotB = {
+      latitude: this.state.startingLat,
+      longitude: this.state.startingLong,
+      averageTimeSpent: 0,
     };
-    console.log(user);
-    // perform get --> compare for equality
-    // go to logged in view if equal, else re-prompt
-  }
-
-  // creating new account
-  onSubmitCreateProfile(e) {
-    e.preventDefault();
-    const user = {
-      username: this.state.username,
+    let driveTime = 0;
+    let stayTime = 0;
+    while (this.state.confirmedStops.length > 0) {
+      spotA = spotB;
+      spotB = this.state.confirmedStops.pop();
+      driveTime +=
+        Math.abs(spotA.latitude - spotB.latitude) +
+        Math.abs(spotA.longitude - spotB.longitude);
+      stayTime += spotB.averageTimeSpent;
+    }
+    spotA = spotB;
+    spotB = {
+      latitude: this.state.finalLat,
+      longitude: this.state.finalLong,
+      averageTimeSpent: 0,
     };
-    console.log(user);
-    // perform add to database
-    // automatically go to logged in view (set loggedIn to true)
+    driveTime +=
+      Math.abs(spotA.latitude - spotB.latitude) +
+      Math.abs(spotA.longitude - spotB.longitude);
+    this.state.actualDriveTime = driveTime;
+    this.state.actualTravelTime = driveTime + stayTime;
   }
 
-  loggedInProfile() {
+  // query database for nearby stops that fit criteria
+  onSubmitPreferences(e) {
+    e.preventDefault();
+
+    let timeToTraverse = getTime();
+    let timeAvailable = this.state.desiredDriveTime - timeToTraverse;
+
+    const leftOrRight = this.state.startingLat - this.state.finalLat; // pos --> going west
+    const upOrDown = this.state.startingLong - this.state.finalLong; // pos --> going south
+    const travelingHoriz = leftOrRight > upOrDown;
+    axios
+      .get(`http://localhost:3001/spots`, {
+        location: {
+          longitude: {
+            $gte:
+              Math.min(this.state.startingLong, this.state.startingLong) -
+              timeAvailable / 2,
+            $lte:
+              Math.max(this.state.startingLong, this.state.finalLong) +
+              timeAvailable / 2,
+          },
+          latitude: {
+            $gte:
+              Math.min(this.state.startingLat, this.state.startingLat) -
+              timeAvailable / 2,
+            $lte:
+              Math.max(this.state.startingLat, this.state.finalLat) +
+              timeAvailable / 2,
+          },
+        },
+        desiredMaxCost: { $lte: this.state.desiredMaxCost },
+        desiredMinSpecialty: { $gte: this.state.desiredMinSpecialty },
+        desiredMinQuality: { $gte: this.state.desiredMinQuality },
+      })
+      .then((response) => {
+        this.setState({
+          update: true,
+          possibleStops: response.data,
+        });
+      })
+      .catch((err) => {
+        console.log("error - grabbing profile", err);
+      });
+  }
+
+  // save trip in database & place generated id into user list
+  onSaveTrip(e) {
+    e.preventDefault();
+    axios
+      .post(`http://localhost:3001/trips`, {
+        startingLat: this.state.startingLat,
+        startingLong: this.state.startingLong,
+        finalLat: this.state.finalLat,
+        finalLong: this.state.finalLong,
+        username: this.state.username,
+        desiredTotalDriveTime: this.state.desiredTotalDriveTime,
+        desiredTotalTravelTime: this.state.desiredTotalTravelTime,
+        desiredMaxCost: this.state.desiredMaxCost,
+        desiredMinSpecialty: this.state.desiredMinSpecialty,
+        desiredMinQuality: this.state.desiredMinQuality,
+        desiredNights: this.state.desiredNights,
+        desiredFoodCategories: this.state.desiredFoodCategories,
+        desiredDetourCategories: this.state.desiredDetourCategories,
+        confirmedStops: this.state.confirmedStops,
+        actualDriveTime: this.state.actualDriveTime,
+        actualTravelTime: this.state.actualTravelTime,
+        completed: this.state.completed,
+      })
+      .then((response) => {
+        axios
+          .put(
+            `http://localhost:3001/trips/` +
+              this.state.username +
+              `/` +
+              response.id
+          )
+          .then((response) => {
+            console.log("saved trip to user profile");
+          })
+          .catch((err) => {
+            console.log("error - saving trip to user profile");
+          });
+      })
+      .catch((err) => {
+        console.log("error - saving trip", err);
+      });
+  }
+
+  preferencesForm() {
     return (
-      <div className="profile-info">
-        <h2>Hello, {this.state.name}</h2>
-        <p>I will place personal trip info here</p>
+      <form onSubmit={this.onSubmitPreferences}>
+        <div className="form-group">
+          <label>Starting Latitude: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={this.state.startingLat}
+            onChange={this.onChangeStartingLat}
+          />
+        </div>
+        <div className="form-group">
+          <label>Starting Longitude: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={this.state.startingLong}
+            onChange={this.onChangeStartingLong}
+          />
+        </div>
+        <div className="form-group">
+          <label>Final Latitude: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={this.state.finalLat}
+            onChange={this.onChangeFinalLat}
+          />
+        </div>
+        <div className="form-group">
+          <label>Final Longitude: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={this.state.finalLong}
+            onChange={this.onChangeFinalLong}
+          />
+        </div>
+        <div className="form-group">
+          <label>Drive Time: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={this.state.desiredTotalDriveTime}
+            onChange={this.onChangeDesiredTotalDriveTime}
+          />
+        </div>
+        <div className="form-group">
+          <label>Travel Time: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={this.state.desiredTotalTravelTime}
+            onChange={this.onChangeDesiredTotalTravelTime}
+          />
+        </div>
+        <div className="form-group">
+          <label>Cost: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={this.state.desiredMaxCost}
+            onChange={this.onChangeDesiredMaxCost}
+          />
+        </div>
+        <div className="form-group">
+          <label>Specialty: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={this.state.desiredMinSpecialty}
+            onChange={this.onChangeDesiredMinSpecialty}
+          />
+        </div>
+        <div className="form-group">
+          <label>Quality: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={this.state.desiredMinQuality}
+            onChange={this.onChangeDesiredMinQuality}
+          />
+        </div>
+        <div className="form-group">
+          <label>Food: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={this.state.desiredFoodCategories}
+            onChange={this.onChangeDesiredFoodCategories}
+          />
+        </div>
+        <div className="form-group">
+          <label>Detours: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={this.state.desiredDetourCategories}
+            onChange={this.onChangeDesiredDetourCategories}
+          />
+        </div>
+        <div className="form-group">
+          <label>Travel Time: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={this.state.desiredTotalTravelTime}
+            onChange={this.onChangeDesiredTotalTravelTime}
+          />
+        </div>
+        <div className="form-group">
+          <input type="submit" value="Get Trip" className="btn btn-primary" />
+        </div>
+      </form>
+    );
+  }
+
+  saveTrip() {
+    return (
+      <a href="/home" onClick={onSaveTrip} className="nav-item">
+        Save Trip
+      </a>
+    );
+  }
+
+  selectSpot(stop) {
+    confirmedStops.push(stop);
+  }
+
+  tripDetails() {
+    return (
+      <div>
+        Drive time: {this.state.actualDriveTime}
+        Travel time: {this.state.actualTravelTime}
       </div>
     );
   }
 
-  logIn() {
-    return (
-      <form onSubmit={this.onSubmitLogIn}>
-        <div className="form-group">
-          <label>Username: </label>
-          <input
-            type="text"
-            required
-            className="form-control"
-            value={this.state.username}
-            onChange={this.onChangeUsername}
-          />
+  chooseSpots() {
+    let stopButtons = [];
+    for (stop in this.state.possibleStops) {
+      buffer.push(
+        <div>
+          <a onClick={() => selectSpot(stop)}>{stop.name}</a>
+          <p>
+            Quality Rating: {stop.quality} ({stop.numberOfRatings})
+          </p>
+          <p>
+            Specialty Rating: {stop.specialty} ({stop.numberOfRatings})
+          </p>
         </div>
-        <div className="form-group">
-          <label>Password: </label>
-          <input
-            type="text"
-            required
-            className="form-control"
-            value={this.state.username}
-            onChange={this.onChangePassword}
-          />
-        </div>
-        <div className="form-group">
-          <input type="submit" value="Sign In" className="btn btn-primary" />
-        </div>
-      </form>
-    );
+      );
+    }
+    getTime();
+    return <div>{stopButtons}</div>;
   }
 
-  signUp() {
+  blank() {
+    return <br></br>;
+  }
+
+  loggedInProfile() {
+    const displaySpots = this.state.update ? this.blank() : this.chooseSpots();
+
     return (
-      <form onSubmit={this.onSubmitCreateProfile}>
-        <div className="form-group">
-          <label>Username: </label>
-          <input
-            type="text"
-            required
-            className="form-control"
-            value={this.state.username}
-            onChange={this.onChangeUsername}
-          />
-        </div>
-        <div className="form-group">
-          <label>Name: </label>
-          <input
-            type="text"
-            required
-            className="form-control"
-            value={this.state.name}
-            onChange={this.onChangePassword}
-          />
-        </div>
-        <div className="form-group">
-          <label>Email: </label>
-          <input
-            type="text"
-            required
-            className="form-control"
-            value={this.state.email}
-            onChange={this.onChangeEmail}
-          />
-        </div>
-        <div className="form-group">
-          <label>Password: </label>
-          <input
-            type="text"
-            required
-            className="form-control"
-            value={this.state.password}
-            onChange={this.onChangePassword}
-          />
-        </div>
-        <div className="form-group">
-          <input type="submit" value="Sign In" className="btn btn-primary" />
-        </div>
-      </form>
+      <div className="profile-info">
+        <p>
+          Please input information for a potential trip, then select all spots
+          you'd like to include in the trip
+        </p>
+        {this.preferencesForm()}
+        {this.tripDetails()}
+        {displaySpots}
+        {this.selectSpots()}
+        {this.saveTrip()}
+      </div>
     );
   }
 
   loggedOutProfile() {
     return (
       <div className="profile-info">
-        <h2>Please sign up for an account or log in</h2>
-        {this.logIn()}
-        {this.signUp()}
+        <h2>Please navigate to home to sign in</h2>
       </div>
     );
   }
@@ -197,7 +485,9 @@ export default class EditTripPage extends Component {
       : this.loggedOutProfile();
     return (
       <div className="home">
-        <div className="home-welcome">Hi! Welcome to Road Tripper!</div>
+        <div className="home-welcome">
+          Hi! Welcome to Road Tripper! Please request a trip
+        </div>
         {loggedIn}
       </div>
     );

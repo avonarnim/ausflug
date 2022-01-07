@@ -16,7 +16,7 @@ connection.once("open", () => {
   console.log("Connection established w MongoDB");
 });
 
-const routes = require("./routes/routes");
+const routes = require("./routes");
 app.use("", routes);
 
 app.listen(port, () => {

@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the frontend project directory, you can run:
 
 ### `npm start`
 
@@ -13,6 +13,13 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+
+In the backend project directory, you can run:
+
+### `nodemon server`
+
+which runs the backend in development mode at http://localhost:3001 and
+reloads with edits.
 
 ### `npm test`
 

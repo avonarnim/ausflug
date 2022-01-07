@@ -25,7 +25,7 @@ exports.insert_spot = function (req, res) {
 
 // retrieve single spot with matching id
 exports.view_spot = function (req, res) {
-  Spot.findById(req.body.spotId, function (err, spot) {
+  Spot.findById(req.params.spotId, function (err, spot) {
     if (err) res.send(err);
     res.json(spot);
   });

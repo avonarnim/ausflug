@@ -5,7 +5,7 @@ const User = require("../models/userModel");
 
 // retrieve single user's profile with matching id
 exports.get_profile = function (req, res) {
-  User.find({ username: req.params.username }, function (err, user) {
+  User.findOne({ username: req.params.username }, function (err, user) {
     if (err) res.send(err);
     res.json(user);
   });
@@ -13,12 +13,8 @@ exports.get_profile = function (req, res) {
 
 exports.create_profile = function (req, res) {
   var new_user = new User(req.body);
-  // const { createHash } = await import("crypto");
-  // const hash = createHash("sha256");
-  // new_user.passwordHash = hash.update(req.body.password);
-
-  // check for username match
-  // if no match, perform save; else, send 'incomplete' message
+  console.log("A", req.body);
+  console.log("B", new_user);
 
   new_user.save(function (err, user) {
     if (err) {
