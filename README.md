@@ -1,77 +1,58 @@
-# Getting Started with Create React App
+# Road Tripper
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#### Overview
 
-## Available Scripts
+Road-Tripper is a full-stack app designed to help users plan a route through
+multiple intermediary stops. Users can:
 
-In the frontend project directory, you can run:
+1. Create an account, log-in to the account, and log-out of the account
+2. Add spots to the spot database
+3. Create, edit, and save a trip that goes between start and end destinations.
+4. View their profile, containing links to their saved trips and other users they
+   follow
 
-### `npm start`
+When creating a trip, potential stops are suggested if they are within a certain
+bounding box of the start and end points. The bounding box is calculated with the
+expectation that Manhattan travel distances correlate exactly with drive times. A
+travel time variable is also calculated based on the average time spent at each
+given stop. Users can also specify max costs and minimum ratings when requesting
+potential stops.
+
+It was built using the MERN stack: MongoDB, Express, React, and Node JS.
+
+# Backend
+
+The backend was built using MongoDB, Express, and Node JS. Start by looking at
+the `server.js` file, which instantiates a connection to the MongoDB database and
+creates an Express-backed API which relies on the `routes.js` file to route
+requests to their controllers. The controllers rely on the models to answer post/
+put/get/update/delete requests.
+
+## Scripts:
+
+`nodemon server`
+
+which runs the backend in development mode at http://localhost:3001 and
+reloads upon edit.
+
+# Frontend
+
+The frontend was built using React, which starts in the `public/index.html` file.
+The `root` div is grabbed in `src/index.js` and replaced by App in `App.js`.
+There, Main and NavBar components are rendered. Main routes users to the home
+page, profile page, spot creation page, and trip creation page.
+
+There are forms in the home, spot, and trip pages.
+The home page lets users sign up for a new account. Password authentication is
+done using bcrypt, which has a compareSync method. Password hashing is done by
+bcrypt's hashSync method, which automatically generates a salt before hashing.
+
+## Scripts:
+
+`npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
-
-In the backend project directory, you can run:
-
-### `nodemon server`
-
-which runs the backend in development mode at http://localhost:3001 and
-reloads with edits.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
