@@ -38,7 +38,7 @@ export default class Home extends Component {
 
   savedTrips() {
     let savedTrips = [];
-    for (id in user.savedTripIDs) {
+    for (const id of this.state.savedTripIDs) {
       axios
         .get(`http://localhost:3001/trips/${id}`)
         .then((resp) => {
@@ -60,9 +60,9 @@ export default class Home extends Component {
 
   following() {
     let followingInfos = [];
-    for (username in this.state.following) {
+    for (const username of this.state.following) {
       axios
-        .get(`http://localhost:3001/users/${user.username}`)
+        .get(`http://localhost:3001/users/${this.state.username}`)
         .then((resp) => {
           followingInfos.push(resp.data);
         })

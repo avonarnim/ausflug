@@ -1,6 +1,5 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import Modal from "react-modal";
 import { FormControl, Form, Button, Col, Row } from "react-bootstrap";
 import axios from "axios";
 var bcrypt = require("bcryptjs");

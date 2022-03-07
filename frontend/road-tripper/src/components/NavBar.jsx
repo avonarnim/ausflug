@@ -16,7 +16,7 @@ class NavBar extends Component {
   }
   loggedInProfile() {
     return (
-      <a href="/home" onClick={logOut} className="nav-item">
+      <a href="/home" onClick={this.logOut} className="nav-item">
         Log Out
       </a>
     );

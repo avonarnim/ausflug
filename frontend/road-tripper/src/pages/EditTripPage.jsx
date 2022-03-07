@@ -8,22 +8,23 @@ export default class EditTripPage extends Component {
   constructor(props) {
     super(props);
 
-    this.onChangeStartingLat = onChangeStartingLat.bind(this);
-    this.onChangeStartingLong = onChangeStartingLong.bind(this);
-    this.onChangeFinalLat = onChangeFinalLat.bind(this);
-    this.onChangeFinalLong = onChangeFinalLong.bind(this);
+    this.onChangeStartingLat = this.onChangeStartingLat.bind(this);
+    this.onChangeStartingLong = this.onChangeStartingLong.bind(this);
+    this.onChangeFinalLat = this.onChangeFinalLat.bind(this);
+    this.onChangeFinalLong = this.onChangeFinalLong.bind(this);
     this.onChangeDesiredTotalDriveTime =
-      onChangeDesiredTotalDriveTime.bind(this);
+      this.onChangeDesiredTotalDriveTime.bind(this);
     this.onChangeDesiredTotalTravelTime =
-      onChangeDesiredTotalTravelTime.bind(this);
-    this.onChangeDesiredMaxCost = onChangeDesiredMaxCost.bind(this);
-    this.onChangeDesiredMinSpecialty = onChangeDesiredMinSpecialty.bind(this);
-    this.onChangeDesiredMinQuality = onChangeDesiredMinQuality.bind(this);
-    this.onChangeDesiredNights = onChangeDesiredNights.bind(this);
+      this.onChangeDesiredTotalTravelTime.bind(this);
+    this.onChangeDesiredMaxCost = this.onChangeDesiredMaxCost.bind(this);
+    this.onChangeDesiredMinSpecialty =
+      this.onChangeDesiredMinSpecialty.bind(this);
+    this.onChangeDesiredMinQuality = this.onChangeDesiredMinQuality.bind(this);
+    this.onChangeDesiredNights = this.onChangeDesiredNights.bind(this);
     this.onChangeDesiredFoodCategories =
-      onChangeDesiredFoodCategories.bind(this);
+      this.onChangeDesiredFoodCategories.bind(this);
     this.onChangeDesiredDetourCategories =
-      onChangeDesiredDetourCategories.bind(this);
+      this.onChangeDesiredDetourCategories.bind(this);
 
     this.onSubmitPreferences = this.onSubmitPreferences.bind(this);
     this.onSaveTrip = this.onSaveTrip.bind(this);
@@ -195,7 +196,7 @@ export default class EditTripPage extends Component {
   onSubmitPreferences(e) {
     e.preventDefault();
 
-    let timeToTraverse = getTime();
+    let timeToTraverse = this.getTime();
     let timeAvailable = this.state.desiredDriveTime - timeToTraverse;
 
     const leftOrRight = this.state.startingLat - this.state.finalLat; // pos --> going west
@@ -411,14 +412,14 @@ export default class EditTripPage extends Component {
 
   saveTrip() {
     return (
-      <a href="/home" onClick={onSaveTrip} className="nav-item">
+      <a href="/home" onClick={this.onSaveTrip} className="nav-item">
         Save Trip
       </a>
     );
   }
 
   selectSpot(stop) {
-    confirmedStops.push(stop);
+    this.state.confirmedStops.push(stop);
   }
 
   tripDetails() {
@@ -432,10 +433,10 @@ export default class EditTripPage extends Component {
 
   chooseSpots() {
     let stopButtons = [];
-    for (stop in this.state.possibleStops) {
-      buffer.push(
+    for (const stop of this.state.possibleStops) {
+      stopButtons.push(
         <div>
-          <a onClick={() => selectSpot(stop)}>{stop.name}</a>
+          <a onClick={() => this.selectSpot(stop)}>{stop.name}</a>
           <p>
             Quality Rating: {stop.quality} ({stop.numberOfRatings})
           </p>
@@ -445,7 +446,7 @@ export default class EditTripPage extends Component {
         </div>
       );
     }
-    getTime();
+    this.getTime();
     return <div>{stopButtons}</div>;
   }
 

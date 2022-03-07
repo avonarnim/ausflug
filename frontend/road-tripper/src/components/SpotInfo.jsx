@@ -37,15 +37,15 @@ export default class SpotInfo extends Component {
   }
 
   static propTypes = {
-    name: PropTypes.string.name,
-    description: PropTypes.string.description,
-    category: PropTypes.string.category,
-    cost: PropTypes.number.cost,
-    specialty: PropTypes.number.specialty,
-    quality: PropTypes.number.quality,
-    time: PropTypes.number.time,
-    longitude: PropTypes.number.longitude,
-    latitude: PropTypes.number.latitude,
+    name: PropTypes.string,
+    description: PropTypes.string,
+    category: PropTypes.string,
+    cost: PropTypes.number,
+    specialty: PropTypes.number,
+    quality: PropTypes.number,
+    time: PropTypes.number,
+    longitude: PropTypes.number,
+    latitude: PropTypes.number,
   };
 
   render() {
