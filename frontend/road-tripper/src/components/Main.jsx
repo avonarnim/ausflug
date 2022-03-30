@@ -10,9 +10,11 @@ const Main = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />}></Route>
+        <Route exact path="/" element={<Home />}></Route>
         <Route path="/home" element={<Home />}></Route>
-        <Route path="/trips/:tripId?" element={<EditTripPage />}></Route>
+        <Route path="/trips" element={<EditTripPage />}>
+          <Route path=":tripId" element={<EditTripPage />} />
+        </Route>
         <Route path="/spots" element={<SpotsPage />}></Route>
         <Route path="/profile" element={<ProfilePage />}></Route>
       </Routes>

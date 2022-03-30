@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import { FormControl, Form, Button, Col, Row } from "react-bootstrap";
 import axios from "axios";
+import logo from "../res/logo.png";
 var bcrypt = require("bcryptjs");
 const saltRounds = 10;
 
@@ -267,6 +268,7 @@ export default class Home extends Component {
   loggedOutProfile() {
     return (
       <div className="profile-info">
+        <img src={logo} alt="Logo" />
         <h2>Please sign up for an account or log in</h2>
         {this.logIn()}
         {this.signUp()}

@@ -481,6 +481,7 @@ export default class EditTripPage extends Component {
   }
 
   render() {
+    console.log("in edit trip page");
     const loggedIn = this.state.loggedIn
       ? this.loggedInProfile()
       : this.loggedOutProfile();
