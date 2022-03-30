@@ -2,7 +2,38 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-class NavBar extends Component {
+export default class NavBar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loggedIn: false,
+      username: "",
+      name: "",
+      password: "",
+      passwordHash: "",
+      email: "",
+      savedTripIDs: [],
+      following: [],
+    };
+  }
+
+  componentDidMount() {
+    const loggedInUser = localStorage.getItem("userInfo");
+    if (loggedInUser) {
+      const userInfo = JSON.parse(loggedInUser);
+
+      this.setState({
+        loggedIn: userInfo.loggedIn,
+        username: userInfo.username,
+        name: userInfo.name,
+        passwordHash: userInfo.passwordHash,
+        email: userInfo.email,
+        savedTripIDs: userInfo.savedTripIDs,
+        following: userInfo.following,
+      });
+    }
+  }
+
   logOut() {
     localStorage.clear();
   }
@@ -47,5 +78,3 @@ class NavBar extends Component {
     );
   }
 }
-
-export default NavBar;
