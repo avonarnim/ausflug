@@ -10,10 +10,14 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.onChangeUsername = this.onChangeUsername.bind(this);
+    this.onChangeUsernameLogIn = this.onChangeUsernameLogIn.bind(this);
+    this.onChangePasswordLogIn = this.onChangePasswordLogIn.bind(this);
+
+    this.onChangeUsernameSignUp = this.onChangeUsernameSignUp.bind(this);
+    this.onChangeName = this.onChangeName.bind(this);
     this.onChangeName = this.onChangeName.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
+    this.onChangePasswordSignUp = this.onChangePasswordSignUp.bind(this);
     this.onChangePasswordHash = this.onChangePasswordHash.bind(this);
     this.onChangeFollowing = this.onChangeFollowing.bind(this);
     this.onChangeSavedTripIDs = this.onChangeSavedTripIDs.bind(this);
@@ -50,7 +54,12 @@ export default class Home extends Component {
     }
   }
 
-  onChangeUsername(e) {
+  onChangeUsernameLogIn(e) {
+    this.setState({
+      username: e.target.value,
+    });
+  }
+  onChangeUsernameSignUp(e) {
     this.setState({
       username: e.target.value,
     });
@@ -65,7 +74,12 @@ export default class Home extends Component {
       email: e.target.value,
     });
   }
-  onChangePassword(e) {
+  onChangePasswordLogIn(e) {
+    this.setState({
+      password: e.target.value,
+    });
+  }
+  onChangePasswordSignUp(e) {
     this.setState({
       password: e.target.value,
     });
@@ -90,8 +104,8 @@ export default class Home extends Component {
   onSubmitLogIn(e) {
     e.preventDefault();
     let user = {
-      username: this.state.username,
-      password: this.state.password,
+      username: this.state.usernameLogIn,
+      password: this.state.passwordLogIn,
     };
 
     axios
@@ -100,7 +114,10 @@ export default class Home extends Component {
         // if response was received (i.e. got a user entry) & passwordHash matches with generated passwordHash, then go to logged-in view
         // else, wipe password & re-prompt for password
         if (
-          bcrypt.compareSync(this.state.password, response.data.passwordHash)
+          bcrypt.compareSync(
+            this.state.passwordLogIn,
+            response.data.passwordHash
+          )
         ) {
           console.log("correct password");
           this.setState({
@@ -128,8 +145,8 @@ export default class Home extends Component {
   onSubmitCreateProfile(e) {
     e.preventDefault();
     const user = {
-      username: this.state.username,
-      passwordHash: bcrypt.hashSync(this.state.password, saltRounds),
+      username: this.state.usernameSignUp,
+      passwordHash: bcrypt.hashSync(this.state.passwordSignUp, saltRounds),
       email: this.state.email,
       name: this.state.name,
     };
@@ -194,8 +211,8 @@ export default class Home extends Component {
             type="text"
             required
             className="form-control"
-            value={this.state.username}
-            onChange={this.onChangeUsername}
+            value={this.state.usernameLogIn}
+            onChange={this.onChangeUsernameLogIn}
           />
         </div>
         <div className="form-group">
@@ -204,8 +221,8 @@ export default class Home extends Component {
             type="text"
             required
             className="form-control"
-            value={this.state.password}
-            onChange={this.onChangePassword}
+            value={this.state.passwordLogIn}
+            onChange={this.onChangePasswordLogIn}
           />
         </div>
         <div className="form-group">
@@ -224,8 +241,8 @@ export default class Home extends Component {
             type="text"
             required
             className="form-control"
-            value={this.state.username}
-            onChange={this.onChangeUsername}
+            value={this.state.usernameSignUp}
+            onChange={this.onChangeUsernameSignUp}
           />
         </div>
         <div className="form-group">
@@ -254,8 +271,8 @@ export default class Home extends Component {
             type="text"
             required
             className="form-control"
-            value={this.state.password}
-            onChange={this.onChangePassword}
+            value={this.state.passwordSignUp}
+            onChange={this.onChangePasswordSignUp}
           />
         </div>
         <div className="form-group">

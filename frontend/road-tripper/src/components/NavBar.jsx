@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import "./styles/Home.css";
+import "../../node_modules/bootstrap/dist/css/bootstrap.css";
 
 export default class NavBar extends Component {
   constructor(props) {

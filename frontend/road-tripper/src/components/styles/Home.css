@@ -1,0 +1,30 @@
+.navbar-dark {
+  background-color: darkgoldenrod;
+}
+
+.navbar-brand {
+  color: white;
+}
+
+.navbar-nav {
+  position: relative;
+  float: left;
+  text-align: center;
+}
+
+.nav-item {
+  position: relative;
+  display: inline-block;
+  padding: 4px;
+  margin: 10px;
+  background-color: rgb(184, 134, 11);
+  color: white;
+}
+
+.nav-item:hover {
+  background-color: rgb(189, 162, 94);
+}
+
+.nav-item:active {
+  color: rgb(255, 246, 222);
+}
