@@ -34,6 +34,8 @@ put/get/update/delete requests.
 
 which runs the backend in development mode at http://localhost:3001 and
 reloads upon edit.
+To ensure successful runs, make sure a MongoDB cluster is connected, and a
+current IP address is whitelisted.
 
 # Frontend
 

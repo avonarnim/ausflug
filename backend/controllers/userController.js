@@ -6,15 +6,16 @@ const User = require("../models/userModel");
 // retrieve single user's profile with matching id
 exports.get_profile = function (req, res) {
   User.findOne({ username: req.params.username }, function (err, user) {
-    if (err) res.send(err);
-    res.json(user);
+    if (err) {
+      res.send(err);
+    } else {
+      res.json(user);
+    }
   });
 };
 
 exports.create_profile = function (req, res) {
   var new_user = new User(req.body);
-  console.log("A", req.body);
-  console.log("B", new_user);
 
   new_user.save(function (err, user) {
     if (err) {
@@ -31,16 +32,22 @@ exports.delete_profile = function (req, res) {
       username: req.params.username,
     },
     function (err, user) {
-      if (err) res.send(err);
-      res.json({ message: "User successfully deleted" });
+      if (err) {
+        res.send(err);
+      } else {
+        res.json({ message: "User successfully deleted" });
+      }
     }
   );
 };
 
 exports.list_users = function (req, res) {
   User.find({}, function (err, user) {
-    if (err) res.send(err);
-    res.json(user);
+    if (err) {
+      res.send(err);
+    } else {
+      res.json(user);
+    }
   });
 };
 
@@ -56,8 +63,11 @@ exports.save_trip_to_user = async function (req, res) {
       { username: req.params.username },
       update,
       function (err, resp) {
-        if (err) res.send(err);
-        res.send("Successfully added trip");
+        if (err) {
+          res.send(err);
+        } else {
+          res.send("Successfully added trip");
+        }
       }
     );
   } catch (err) {
@@ -77,8 +87,11 @@ exports.add_user_to_following = async function (req, res) {
       { username: req.params.username },
       update,
       function (err, resp) {
-        if (err) res.send(err);
-        res.send("Successfully added following");
+        if (err) {
+          res.send(err);
+        } else {
+          res.send("Successfully added following");
+        }
       }
     );
   } catch (err) {

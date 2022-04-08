@@ -28,3 +28,32 @@
 .nav-item:active {
   color: rgb(255, 246, 222);
 }
+
+.dark-brown {
+  background-color: #43352b;
+}
+
+.silver {
+  background-color: #e1e1e1;
+}
+
+.gold {
+  background-color: #fbcb55;
+}
+
+.beige {
+  background-color: #bba38c;
+}
+
+.gray {
+  background-color: #8e8e8e;
+}
+
+.warm-brown {
+  color: #e1e1e1;
+  background-color: #805651;
+}
+
+.green {
+  background-color: #466959;
+}

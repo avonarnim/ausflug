@@ -38,7 +38,7 @@ export default class Home extends Component {
 
   // upon starting, should maintain logged-in view if logged in; else, present sign-in view
   componentDidMount() {
-    const loggedInUser = localStorage.getItem("userInfo");
+    const loggedInUser = sessionStorage.getItem("userInfo");
     if (loggedInUser) {
       const userInfo = JSON.parse(loggedInUser);
 
@@ -104,8 +104,8 @@ export default class Home extends Component {
   onSubmitLogIn(e) {
     e.preventDefault();
     let user = {
-      username: this.state.usernameLogIn,
-      password: this.state.passwordLogIn,
+      username: this.state.username,
+      password: this.state.password,
     };
 
     axios
@@ -114,16 +114,13 @@ export default class Home extends Component {
         // if response was received (i.e. got a user entry) & passwordHash matches with generated passwordHash, then go to logged-in view
         // else, wipe password & re-prompt for password
         if (
-          bcrypt.compareSync(
-            this.state.passwordLogIn,
-            response.data.passwordHash
-          )
+          bcrypt.compareSync(this.state.password, response.data.passwordHash)
         ) {
           console.log("correct password");
           this.setState({
             loggedIn: true,
           });
-          localStorage.setItem("userInfo", {
+          sessionStorage.setItem("userInfo", {
             username: response.data.username,
             passwordHash: response.data.passwordHash,
             email: response.data.email,
@@ -145,8 +142,8 @@ export default class Home extends Component {
   onSubmitCreateProfile(e) {
     e.preventDefault();
     const user = {
-      username: this.state.usernameSignUp,
-      passwordHash: bcrypt.hashSync(this.state.passwordSignUp, saltRounds),
+      username: this.state.username,
+      passwordHash: bcrypt.hashSync(this.state.password, saltRounds),
       email: this.state.email,
       name: this.state.name,
     };
@@ -157,7 +154,7 @@ export default class Home extends Component {
         console.log(response);
         if (response.data != null) {
           // if already exists, wipe entries and re-prompt for username
-          console.log("sorry");
+          console.log("sorry, username already taken");
         } else if (response.data == null) {
           // else, perform add to database
           axios
@@ -169,7 +166,7 @@ export default class Home extends Component {
             })
             .then((response) => {
               console.log(response);
-              localStorage.setItem("userInfo", {
+              sessionStorage.setItem("userInfo", {
                 username: user.username,
                 passwordHash: user.passwordHash,
                 email: user.email,
@@ -226,7 +223,7 @@ export default class Home extends Component {
           />
         </div>
         <div className="form-group">
-          <input type="submit" value="Log In" className="btn btn-primary" />
+          <input type="submit" value="Log In" className="btn warm-brown" />
         </div>
       </form>
     );
@@ -276,7 +273,7 @@ export default class Home extends Component {
           />
         </div>
         <div className="form-group">
-          <input type="submit" value="Sign Up" className="btn btn-primary" />
+          <input type="submit" value="Sign Up" className="btn warm-brown" />
         </div>
       </form>
     );

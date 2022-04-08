@@ -7,8 +7,13 @@ import "../../node_modules/bootstrap/dist/css/bootstrap.css";
 export default class NavBar extends Component {
   constructor(props) {
     super(props);
+
+    const loggedInUser = sessionStorage.getItem("userInfo");
+    console.log("mounting");
+    console.log(loggedInUser);
+
     this.state = {
-      loggedIn: false,
+      loggedIn: loggedInUser ? true : false,
       username: "",
       name: "",
       password: "",
@@ -20,7 +25,9 @@ export default class NavBar extends Component {
   }
 
   componentDidMount() {
-    const loggedInUser = localStorage.getItem("userInfo");
+    const loggedInUser = sessionStorage.getItem("userInfo");
+    console.log("mounting");
+    console.log(loggedInUser);
     if (loggedInUser) {
       const userInfo = JSON.parse(loggedInUser);
 
@@ -37,7 +44,7 @@ export default class NavBar extends Component {
   }
 
   logOut() {
-    localStorage.clear();
+    sessionStorage.clear();
   }
 
   loggedOutProfile() {
@@ -59,6 +66,8 @@ export default class NavBar extends Component {
     const loggedIn = this.state.loggedIn
       ? this.loggedInProfile()
       : this.loggedOutProfile();
+    console.log("rendering");
+    console.log(this.state.loggedIn);
     return (
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <a href="/home" className="navbar-brand">
