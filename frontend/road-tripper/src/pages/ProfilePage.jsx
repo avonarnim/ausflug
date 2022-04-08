@@ -20,7 +20,7 @@ export default class Home extends Component {
 
   // upon starting, should maintain logged-in view if logged in; else, present sign-in view
   componentDidMount() {
-    const loggedInUser = localStorage.getItem("userInfo");
+    const loggedInUser = sessionStorage.getItem("userInfo");
     if (loggedInUser) {
       const userInfo = JSON.parse(loggedInUser);
 
