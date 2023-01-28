@@ -1,5 +1,4 @@
 import React, { Component, useState } from "react";
-import "bootstrap/dist/css/bootstrap.css";
 import Modal from "react-modal";
 import axios from "axios";
 
