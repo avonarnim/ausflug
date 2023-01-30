@@ -1,17 +1,25 @@
 "use strict";
 
+const { auth } = require("../config/firebase");
 var mongoose = require("mongoose");
 const User = require("../models/userModel");
 
 // retrieve single user's profile with matching id
-exports.get_profile = function (req, res) {
-  User.findOne({ username: req.params.username }, function (err, user) {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(user);
-    }
-  });
+exports.get_profile = async function (req, res) {
+  // User.findOne({ username: req.params.username }, function (err, user) {
+  //   if (err) {
+  //     res.send(err);
+  //   } else {
+  //     res.json(user);
+  //   }
+  // });
+
+  try {
+    const userRecord = await auth.getUser(req.params.userId);
+    res.status(200).json(userRecord.toJSON());
+  } catch (error) {
+    console.log("Error fetching user data:", error);
+  }
 };
 
 exports.create_profile = function (req, res) {
@@ -29,7 +37,7 @@ exports.create_profile = function (req, res) {
 exports.delete_profile = function (req, res) {
   User.deleteOne(
     {
-      username: req.params.username,
+      username: req.params.userId,
     },
     function (err, user) {
       if (err) {
@@ -41,14 +49,27 @@ exports.delete_profile = function (req, res) {
   );
 };
 
-exports.list_users = function (req, res) {
-  User.find({}, function (err, user) {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(user);
-    }
-  });
+exports.list_users = async function (req, res) {
+  // User.find({}, function (err, user) {
+  //   if (err) {
+  //     res.send(err);
+  //   } else {
+  //     res.json(user);
+  //   }
+  // });
+
+  const maxResults = 10;
+  let users = [];
+
+  try {
+    const userRecords = await auth.listUsers(maxResults);
+    userRecords.users.forEach((userRecord) => {
+      users.push(userRecord.toJSON());
+    });
+    res.json(users);
+  } catch (err) {
+    console.log("Error listing users:", err);
+  }
 };
 
 // add tripId to user list of trips

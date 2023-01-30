@@ -15,6 +15,10 @@ const SpotSchema = new Schema({
     longitude: Number,
     latitude: Number,
   },
+  sponsored: Boolean,
+  duration: Number,
+  status: String,
+  openTimes: [Date],
 });
 
 module.exports = mongoose.model("Spot", SpotSchema);

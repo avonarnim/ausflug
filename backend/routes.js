@@ -33,6 +33,9 @@ router.route("/spots").get((req, res) => {
 router.route("/spots").post((req, res) => {
   spot.insert_spot(req, res);
 });
+router.route("/spots/:spotId").post((req, res) => {
+  spot.update_spot(req, res);
+});
 router.route("/spots").delete((req, res) => {
   spot.delete_spot(req, res);
 });
@@ -50,13 +53,13 @@ router.route("/users").post((req, res) => {
 router.route("/users").get((req, res) => {
   user.list_users(req, res);
 });
-router.route("/users/:username").get((req, res) => {
+router.route("/users/:userId").get((req, res) => {
   user.get_profile(req, res);
 });
-router.route("/users/:username").delete((req, res) => {
+router.route("/users/:userId").delete((req, res) => {
   user.delete_profile(req, res);
 });
-router.route("/users/:username/:followingId").put((req, res) => {
+router.route("/users/:userId/:followingId").put((req, res) => {
   user.add_user_to_following(req, res);
 });
 

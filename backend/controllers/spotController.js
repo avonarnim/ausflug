@@ -23,6 +23,22 @@ exports.insert_spot = function (req, res) {
   });
 };
 
+// either hide or approve spot
+exports.update_spot = async function (req, res) {
+  try {
+    const update = {
+      status: req.body.status,
+    };
+
+    Spot.findOneAndUpdate(req.params.spotId, update, function (err, resp) {
+      if (err) res.send(err);
+      res.send("Successfully updated status to " + req.body.status);
+    });
+  } catch (err) {
+    res.send(err);
+  }
+};
+
 // retrieve single spot with matching id
 exports.view_spot = function (req, res) {
   Spot.findById(req.params.spotId, function (err, spot) {

@@ -1,0 +1,40 @@
+# GitHub Actions workflow for Pull Requests
+# https://help.github.com/actions
+
+name: PR
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "yarn"
+
+      # Install dependencies
+      - run: yarn install
+
+      # Analyze code for potential problems
+      - run: yarn prettier --check .
+      - run: yarn lint
+      - run: yarn tsc --build
+
+      # Compile
+      - run: yarn build
+
+      # Run unit & integration tests
+      - run: yarn test
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          PINATA_SECRET_KEY: ${{ secrets.PINATA_SECRET_KEY }}
+
+      # Deploy to https://<PR>-test.chainfuse.com
+      # - name: yarn deploy
+      #   env:
+      #     VERSION: ${{ github.event.pull_request.number }}
+      #     CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      #   run: yarn deploy --env=test --version=$VERSION

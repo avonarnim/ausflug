@@ -1,26 +1,117 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import "./styles/Home.css";
+import { Link as NavLink } from "react-router-dom";
+import { ThemeButton } from "./ThemeButton";
+import { useMediaQuery } from "react-responsive";
+import {
+  AppBar,
+  AppBarProps,
+  Toolbar,
+  Typography,
+  Box,
+  Link,
+} from "@mui/material";
+import { useAuth } from "../core/AuthContext";
+import { Logout as LogoutIcon } from "../icons/Logout";
+import { Logout } from "./Logout";
+import { useState } from "react";
+import logo from "../assets/logo.png";
+import logo250 from "../assets/logo250.png";
 
-export function NavBar(): JSX.Element {
+export function NavBar(props: AppBarProps): JSX.Element {
+  const { sx, ...other } = props;
+
+  // base on if user is logged in or not, display different things
+  const { currentUser } = useAuth();
+  const [modal, setModal] = useState(false);
+
+  const isTabletOrMobile = useMediaQuery({
+    query: "(max-width: 599px)",
+  });
+
   return (
-    <nav className="navbar navbar-expand navbar-dark bg-dark">
-      <a href="/home" className="navbar-brand">
-        Road Tripper
-      </a>
-      <div className="navbar-nav mr-auto">
-        <a href="/trips" className="nav-item">
-          Trips
-        </a>
-        <a href="/spots" className="nav-item">
-          Spots
-        </a>
-        <a href="/profile" className="nav-item">
-          Profile
-        </a>
-        {<p>Login stuff</p>}
-      </div>
-    </nav>
+    <>
+      <AppBar
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, ...sx }}
+        color="default"
+        variant="outlined"
+        {...other}
+      >
+        <Toolbar>
+          <Typography variant="h1">
+            <Link color="inherit" underline="none" to="/" component={NavLink}>
+              <Box
+                display={"flex"}
+                alignContent="center"
+                justifyContent={"center"}
+              >
+                {isTabletOrMobile ? (
+                  <img src={logo250} height={50} />
+                ) : (
+                  <img src={logo} height={50} />
+                )}
+              </Box>
+            </Link>
+          </Typography>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            <Link
+              color="inherit"
+              underline="none"
+              to="/trips"
+              component={NavLink}
+            >
+              Trips
+            </Link>
+            <Link
+              color="inherit"
+              underline="none"
+              to="/spots"
+              component={NavLink}
+            >
+              Spots
+            </Link>
+            <Link
+              color="inherit"
+              underline="none"
+              to="/profile"
+              component={NavLink}
+            >
+              Profile
+            </Link>
+            <Link
+              color="inherit"
+              underline="none"
+              to="/login"
+              component={NavLink}
+            >
+              Login Stuff
+            </Link>
+            {currentUser && (
+              <>
+                <button
+                  className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5"
+                  onClick={() => setModal(true)}
+                >
+                  <LogoutIcon className="h-8 w-8" aria-hidden="true" />
+                </button>
+
+                <NavLink
+                  to="/profile"
+                  className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-full text-sm p-2.5"
+                >
+                  <img
+                    className="h-8 w-8 rounded-full"
+                    src={currentUser.photoURL}
+                    alt=""
+                  />
+                </NavLink>
+              </>
+            )}
+          </Box>
+          <ThemeButton />
+        </Toolbar>
+      </AppBar>
+      {modal && <Logout modal={modal} setModal={setModal} />}
+    </>
   );
 }
