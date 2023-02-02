@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useMutation } from "../core/api";
 
 export function QueueSpotFormDetailsSection(props: {
   values: QueueSpotFormState;
@@ -75,9 +76,36 @@ export function QueueSpotFormConfirm(props: {
   handleBack: () => void;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }): JSX.Element {
-  const attemptContinue = () => {
-    // TODO: perform api call to db --> if successful, advance to next step
-    props.handleNext();
+  const createSpot = useMutation("CreateSpot");
+
+  const attemptContinue = async () => {
+    try {
+      const spotInfo = {
+        id: "",
+        name: props.values.title,
+        description: props.values.description,
+        location: {
+          latitude: props.values.latitude,
+          longitude: props.values.longitude,
+        },
+        category: "",
+        cost: 0,
+        specialty: 0,
+        quality: 0,
+        numberOfRatings: 0,
+        avgTimeSpent: 0,
+        sponsored: false,
+        duration: 0,
+        status: "pending",
+        openTimes: [new Date().getTime()],
+      };
+      const createSpotResponse = await createSpot.commit(spotInfo);
+      console.log(createSpotResponse);
+      props.handleNext();
+    } catch (err) {
+      console.log("Sorry, but we were not able to submit this spot.");
+      console.log(err);
+    }
   };
 
   return (

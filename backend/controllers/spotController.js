@@ -12,6 +12,22 @@ exports.search_spots = function (req, res) {
   });
 };
 
+exports.search_spots_in_area = function (req, res) {
+  Spot.find(
+    {
+      location: {
+        $geoWithin: {
+          $centerSphere: [[req.body.longitude, req.body.latitude], 0.1],
+        },
+      },
+    },
+    function (err, spot) {
+      if (err) res.send(err);
+      res.json(spot);
+    }
+  );
+};
+
 // add spot
 exports.insert_spot = function (req, res) {
   console.log(req.body);

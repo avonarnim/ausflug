@@ -11,21 +11,29 @@ export function SpotInfo(props: SpotInfoProps): JSX.Element {
       <Typography>Cost: {props.cost}</Typography>
       <Typography>Specialty: {props.specialty}</Typography>
       <Typography> Quality: {props.quality}</Typography>
-      <Typography>Time: {props.time}</Typography>
-      <Typography>Longitude: {props.longitude}</Typography>
-      <Typography>Latitude: {props.latitude}</Typography>
+      <Typography>Time: {props.avgTimeSpent}</Typography>
+      <Typography>Longitude: {props.location.longitude}</Typography>
+      <Typography>Latitude: {props.location.latitude}</Typography>
     </Box>
   );
 }
 
 export type SpotInfoProps = {
+  id: string;
   name: string;
   description: string;
   category: string;
-  cost: string;
-  specialty: string;
-  quality: string;
-  time: string;
-  longitude: string;
-  latitude: string;
+  cost: number;
+  specialty: number;
+  quality: number;
+  numberOfRatings: number;
+  avgTimeSpent: number;
+  location: {
+    longitude: number;
+    latitude: number;
+  };
+  sponsored: boolean;
+  duration: number;
+  status: string;
+  openTimes: number[];
 };

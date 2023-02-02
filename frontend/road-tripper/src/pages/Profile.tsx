@@ -120,3 +120,15 @@ export default function Profile(): JSX.Element {
     </Grid>
   );
 }
+
+export type ProfileProps = {
+  id: string;
+  name: string;
+  bio: string;
+  following: string[];
+  followers: string[];
+  savedTrips: string[];
+  upcomingTrips: string[];
+  homeLongitude: string;
+  homeLatitude: string;
+};

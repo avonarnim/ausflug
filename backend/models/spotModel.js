@@ -18,7 +18,7 @@ const SpotSchema = new Schema({
   sponsored: Boolean,
   duration: Number,
   status: String,
-  openTimes: [Date],
+  openTimes: [Number],
 });
 
 module.exports = mongoose.model("Spot", SpotSchema);

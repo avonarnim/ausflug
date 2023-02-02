@@ -99,13 +99,35 @@ exports.save_trip_to_user = async function (req, res) {
 // add tripId to user list of trips
 exports.add_user_to_following = async function (req, res) {
   try {
-    const user = await User.findById({ username: req.params.username });
+    const user = await User.findById({ username: req.params.userId });
 
-    user.following.push(req.params.username);
+    user.following.push(req.params.followingId);
     const update = { following: user.following };
 
     User.findOneAndUpdate(
-      { username: req.params.username },
+      { username: req.params.userId },
+      update,
+      function (err, resp) {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send("Successfully added following");
+        }
+      }
+    );
+  } catch (err) {
+    res.send(err);
+  }
+};
+
+exports.remove_user_from_following = async function (req, res) {
+  try {
+    const user = await User.findById({ username: req.params.userId });
+
+    user.following.remove(req.params.followingId);
+
+    User.findOneAndUpdate(
+      { username: req.params.userId },
       update,
       function (err, resp) {
         if (err) {

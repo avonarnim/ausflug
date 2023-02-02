@@ -1,15 +1,28 @@
 import * as React from "react";
 import { auth } from "./firebase";
+import { SpotInfoProps } from "../components/SpotInfo";
+import { ProfileProps } from "../pages/Profile";
+import { TripProps } from "../pages/EditTrip";
 
 // #region TypeScript Definitions
 
 type Type =
-  | "CreateProject"
-  | "GetWalletNFTs"
-  | "GetHighlightedCollections"
-  | "GetHighlightedNfts"
-  | "GetHighlightedProfiles"
-  | "GetProfile";
+  | "CreateSpot"
+  | "UpdateSpot"
+  | "DeleteSpot"
+  | "GetSpot"
+  | "GetSpots"
+  | "CreateProfile"
+  | "GetProfile"
+  | "GetProfiles"
+  | "DeleteProfile"
+  | "UpdateProfile"
+  | "FollowProfile"
+  | "UnfollowProfile"
+  | "SaveTrip"
+  | "DeleteTrip"
+  | "UpdateTrip"
+  | "GetTrip";
 
 type State<T extends Type> = {
   loading: boolean;
@@ -18,26 +31,38 @@ type State<T extends Type> = {
   };
 };
 
-type GetBasedOnIdentifier = {
-  id: string;
-  identifier: string;
-};
-
-type Input<T extends Type> = T extends "CreateProject"
-  ? {
-      id: string;
-      name: string;
-    }
-  : T extends "GetWalletNFTs"
-  ? GetBasedOnIdentifier
-  : T extends "GetHighlightedCollections"
-  ? { id: string }
-  : T extends "GetHighlightedNfts"
-  ? { id: string }
-  : T extends "GetHighlightedProfiles"
-  ? { id: string }
+type Input<T extends Type> = T extends "CreateSpot"
+  ? SpotInfoProps
+  : T extends "UpdateSpot"
+  ? SpotInfoProps
+  : T extends "DeleteSpot"
+  ? { spotId: string }
+  : T extends "GetSpot"
+  ? { spotId: string }
+  : T extends "GetSpots"
+  ? {}
+  : T extends "CreateProfile"
+  ? ProfileProps
   : T extends "GetProfile"
-  ? GetBasedOnIdentifier
+  ? { profileId: string }
+  : T extends "GetProfiles"
+  ? {}
+  : T extends "DeleteProfile"
+  ? { profileId: string }
+  : T extends "UpdateProfile"
+  ? ProfileProps
+  : T extends "FollowProfile"
+  ? { profileId: string; followingId: string }
+  : T extends "UnfollowProfile"
+  ? { profileId: string; followingId: string }
+  : T extends "SaveTrip"
+  ? TripProps
+  : T extends "DeleteTrip"
+  ? { creatorId: string; tripId: string }
+  : T extends "UpdateTrip"
+  ? TripProps
+  : T extends "GetTrip"
+  ? { tripId: string }
   : null;
 
 export interface SiteData {
@@ -45,116 +70,16 @@ export interface SiteData {
   name?: string;
 }
 
-export interface WalletNFTData {
-  eth: {
-    ownedNfts: {
-      rawMetadata: {
-        name: string;
-        image: string;
-        external_link: string;
-        description: string;
-      };
-      tokenType: string;
-    }[];
-  };
-  polygon: {
-    ownedNfts: {
-      rawMetadata: {
-        name: string;
-        image: string;
-        external_link: string;
-        description: string;
-      };
-      tokenType: string;
-    }[];
-  };
-}
-
-export interface HighlightedCollectionData {
-  highlightedCollections: {
-    collections: {
-      voucher: any;
-      nfts: { ipfsPin: string }[];
-      userId: string;
-      userAddress: string;
-      chainId: string;
-      collectionId: string;
-      collectionName: string;
-      collectionDescription: string;
-      collectionAvatar: string;
-    }[];
-    objectID: string;
-  };
-}
-export interface HighlightedNftData {
-  highlightedNfts: {
-    nfts: {
-      objectID: string;
-      collectionId: string;
-      registrationId: string;
-      name: string;
-      external_url: string;
-      price: any;
-      supply: number;
-      file: string;
-      pin: {
-        supply: string;
-        bucketFileName: string;
-        originalType: string;
-        ipfsPinUrl: string;
-        type: string;
-        originalName: string;
-        price: string;
-        url: string;
-        name: string;
-        ipfsPin: string;
-      };
-    }[];
-    objectID: string;
-  };
-}
-export interface HighlightedProfileData {
-  highlightedProfiles: {
-    profiles: {
-      profileId: string;
-      name: string;
-      bio: string;
-      userId: string;
-      siteUrl: string;
-      avatar: string;
-      [key: string]: any;
-    }[];
-    objectID: string;
-  };
-}
-
-export interface FirebaseProfileData {
-  name: string;
-  bio: string;
-  avatar: string;
-  telegram: string;
-  title: string;
-  siteUrl: string;
-  instagram: string;
-  twitter: string;
-  address: string;
-  project: string;
-  userId: string;
-  [key: string]: any;
-}
-
-type FunctionResponseTypes<T extends Type> = T extends "GetWalletNFTs"
-  ? WalletNFTData
-  : T extends "GetHighlightedCollections"
-  ? HighlightedCollectionData
-  : T extends "GetHighlightedNfts"
-  ? HighlightedNftData
-  : T extends "GetHighlightedProfiles"
-  ? HighlightedProfileData
-  : T extends "CreateProject"
-  ? SiteData | undefined
+type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
+  ? TripProps
+  : T extends "GetProfiles"
+  ? ProfileProps[]
   : T extends "GetProfile"
-  ? FirebaseProfileData
+  ? ProfileProps
+  : T extends "GetSpot"
+  ? SpotInfoProps
+  : T extends "GetSpot"
+  ? SpotInfoProps[]
   : any;
 
 export type Mutation<T extends Type> = State<T> & {
@@ -163,6 +88,8 @@ export type Mutation<T extends Type> = State<T> & {
 };
 
 // #endregion
+
+const apiBaseUrl = "http://localhost:3001";
 
 export function useMutation<T extends Type>(type: T): Mutation<T> {
   const [state, setState] = React.useState<State<T>>({
@@ -186,46 +113,141 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
         let res: Response;
 
         switch (type) {
-          case "CreateProject":
-            res = await fetch(`/api/projects/create`, {
+          case "CreateSpot":
+            res = await fetch(`${apiBaseUrl}/api/spots`, {
               method: "POST",
               headers,
               body: JSON.stringify({ ...input }),
             });
             break;
-          case "GetWalletNFTs": {
-            const walletIdentifier = (input as GetBasedOnIdentifier).identifier;
+          case "UpdateSpot": {
+            const spotId = (input as SpotInfoProps).id;
+            res = await fetch(`${apiBaseUrl}/api/spots/${spotId}`, {
+              method: "UPDATE",
+              headers,
+              body: JSON.stringify({ ...input }),
+            });
+            break;
+          }
+          case "DeleteSpot": {
+            res = await fetch(`${apiBaseUrl}/api/spots`, {
+              method: "DELETE",
+              headers,
+              body: JSON.stringify({ ...input }),
+            });
+            break;
+          }
+          case "GetSpot": {
+            const spotId = (input as { spotId: string }).spotId;
+            res = await fetch(`${apiBaseUrl}/api/spots/${spotId}`, {
+              method: "GET",
+              headers,
+            });
+            break;
+          }
+          case "GetSpot": {
+            res = await fetch(`${apiBaseUrl}/api/spots`, {
+              method: "GET",
+              headers,
+            });
+            break;
+          }
+          case "CreateProfile": {
+            res = await fetch(`${apiBaseUrl}/api/users`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...input }),
+            });
+            break;
+          }
+          case "GetProfile": {
+            const profileId = (input as { profileId: string }).profileId;
+            res = await fetch(`${apiBaseUrl}/api/users/${profileId}`, {
+              method: "GET",
+              headers,
+            });
+            break;
+          }
+          case "GetProfiles": {
+            res = await fetch(`${apiBaseUrl}/api/users`, {
+              method: "GET",
+              headers,
+            });
+            break;
+          }
+          case "DeleteProfile": {
+            const profileId = (input as { profileId: string }).profileId;
+            res = await fetch(`${apiBaseUrl}/api/users/${profileId}`, {
+              method: "DELETE",
+              headers,
+            });
+            break;
+          }
+          case "FollowProfile": {
+            const castedInput = input as {
+              profileId: string;
+              followingId: string;
+            };
             res = await fetch(
-              `/api/nft/walletNFTs/${walletIdentifier}/${input.id}`,
+              `${apiBaseUrl}/api/users/follow/${castedInput.profileId}/${castedInput.followingId}`,
               {
-                method: "GET",
+                method: "PUT",
                 headers,
               }
             );
             break;
           }
-          case "GetHighlightedCollections":
-            res = await fetch(`api/nft/highlightedCollections/${input.id}`, {
-              method: "GET",
-              headers,
-            });
+          case "UnfollowProfile": {
+            const castedInput = input as {
+              profileId: string;
+              followingId: string;
+            };
+            res = await fetch(
+              `${apiBaseUrl}/api/users/unfollow/${castedInput.profileId}/${castedInput.followingId}`,
+              {
+                method: "PUT",
+                headers,
+              }
+            );
             break;
-          case "GetHighlightedNfts":
-            res = await fetch(`api/nft/highlightedNfts/${input.id}`, {
-              method: "GET",
-              headers,
-            });
+          }
+          case "SaveTrip": {
+            const castedInput = input as { creatorId: string; id: string };
+            res = await fetch(
+              `${apiBaseUrl}/api/trips/${castedInput.creatorId}/${castedInput.id}`,
+              {
+                method: "PUT",
+                headers,
+              }
+            );
             break;
-          case "GetHighlightedProfiles":
-            res = await fetch(`api/nft/highlightedProfiles/${input.id}`, {
-              method: "GET",
-              headers,
-            });
+          }
+          case "DeleteTrip": {
+            const castedInput = input as { creatorId: string; tripId: string };
+            res = await fetch(
+              `${apiBaseUrl}/api/trips/${castedInput.creatorId}/${castedInput.tripId}`,
+              {
+                method: "DELETE",
+                headers,
+              }
+            );
             break;
-          case "GetProfile": {
-            const profileIdentifier = (input as GetBasedOnIdentifier)
-              .identifier;
-            res = await fetch(`/api/sites/${profileIdentifier}/${input.id}`, {
+          }
+          case "UpdateTrip": {
+            const castedInput = input as { creatorId: string; id: string };
+            res = await fetch(
+              `${apiBaseUrl}/api/trips/${castedInput.id}/${castedInput.creatorId}`,
+              {
+                method: "POST",
+                headers,
+                body: JSON.stringify({ ...input }),
+              }
+            );
+            break;
+          }
+          case "GetTrip": {
+            const tripId = (input as { tripId: string }).tripId;
+            res = await fetch(`${apiBaseUrl}/api/trips/${tripId}`, {
               method: "GET",
               headers,
             });
