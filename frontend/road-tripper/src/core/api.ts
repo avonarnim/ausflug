@@ -12,6 +12,8 @@ type Type =
   | "DeleteSpot"
   | "GetSpot"
   | "GetSpots"
+  | "GetSpotsByCenter"
+  | "GetSpotsInBox"
   | "CreateProfile"
   | "GetProfile"
   | "GetProfiles"
@@ -41,6 +43,15 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? { spotId: string }
   : T extends "GetSpots"
   ? {}
+  : T extends "GetSpotsByCenter"
+  ? { longitude: number; latitude: number }
+  : T extends "GetSpotsInBox"
+  ? {
+      longitude1: number;
+      latitude1: number;
+      longitude2: number;
+      latitude2: number;
+    }
   : T extends "CreateProfile"
   ? ProfileProps
   : T extends "GetProfile"
@@ -79,6 +90,10 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   : T extends "GetSpot"
   ? SpotInfoProps
   : T extends "GetSpot"
+  ? SpotInfoProps[]
+  : T extends "GetSpotsByCenter"
+  ? SpotInfoProps[]
+  : T extends "GetSpotsInBox"
   ? SpotInfoProps[]
   : any;
 
@@ -145,11 +160,38 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             });
             break;
           }
-          case "GetSpot": {
+          case "GetSpots": {
             res = await fetch(`${apiBaseUrl}/api/spots`, {
               method: "GET",
               headers,
             });
+            break;
+          }
+          case "GetSpotsByCenter": {
+            const inputCast = input as { longitude: number; latitude: number };
+            res = await fetch(
+              `${apiBaseUrl}/api/spots/${inputCast.latitude}/${inputCast.longitude}`,
+              {
+                method: "GET",
+                headers,
+              }
+            );
+            break;
+          }
+          case "GetSpotsInBox": {
+            const inputCast = input as {
+              longitude1: number;
+              latitude1: number;
+              longitude2: number;
+              latitude2: number;
+            };
+            res = await fetch(
+              `${apiBaseUrl}/api/spots/${inputCast.latitude1}/${inputCast.longitude1}/${inputCast.latitude2}/${inputCast.longitude2}`,
+              {
+                method: "GET",
+                headers,
+              }
+            );
             break;
           }
           case "CreateProfile": {
