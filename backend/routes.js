@@ -30,6 +30,14 @@ router.route("/api/trips/:tripId").get((req, res) => {
 router.route("/api/spots").get((req, res) => {
   spot.search_spots(req, res);
 });
+router.route("/api/spots/:latitude/:longitude").get((req, res) => {
+  spot.search_spots_by_area(req, res);
+});
+router
+  .route("/api/spots/:latitude1/:longitude1/:latitude2/:longitude2")
+  .get((req, res) => {
+    spot.search_spots_by_area(req, res);
+  });
 router.route("/api/spots").post((req, res) => {
   spot.insert_spot(req, res);
 });
