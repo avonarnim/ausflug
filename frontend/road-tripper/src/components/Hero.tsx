@@ -39,7 +39,7 @@ export function Hero(): JSX.Element {
               </Link>
             </Box>
             <Box ml={2}>
-              <Link to="/spots" style={{ textDecoration: "none" }}>
+              <Link to="/addSpot" style={{ textDecoration: "none" }}>
                 <Button variant="contained">Suggest a new stop</Button>
               </Link>
             </Box>

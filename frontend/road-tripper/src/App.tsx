@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider, Toolbar } from "@mui/material";
 import { NavBar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { useTheme } from "./core/theme";
@@ -31,6 +31,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <NavBar />
+        <Toolbar />
         <Routes>
           <Route index element={<React.Suspense children={<Home />} />} />
           <Route

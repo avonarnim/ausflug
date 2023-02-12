@@ -28,6 +28,8 @@ export function RouteMap(): JSX.Element {
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
 
+  const getSpots = useMutation("GetSpots");
+
   async function calculateRoute() {
     console.log(
       "calculateRoute",
@@ -62,33 +64,55 @@ export function RouteMap(): JSX.Element {
     }
   }
 
-  const onLoad = React.useCallback(function callback(map: google.maps.Map) {
+  const onLoad = React.useCallback(async function callback(
+    map: google.maps.Map
+  ) {
     const bounds = new window.google.maps.LatLngBounds(center);
     map.fitBounds(bounds);
 
     setMap(map);
-  }, []);
+
+    const spotResults = await getSpots.commit({});
+    console.log(spotResults);
+    console.log(map);
+    if (map) {
+      const markers = spotResults.map(
+        (spotResult: { location: { latitude: any; longitude: any } }) => {
+          return new google.maps.Marker({
+            position: {
+              lat: spotResult.location.latitude,
+              lng: spotResult.location.longitude,
+            },
+            map: map,
+          });
+        }
+      );
+      console.log(markers);
+    }
+  },
+  []);
 
   const onUnmount = React.useCallback(function callback(map: google.maps.Map) {
     setMap(undefined);
   }, []);
-  const spotResults = [
-    { location: { latitude: 48, longitude: 50 } },
-    { location: { latitude: 51, longitude: 40 } },
-    { location: { latitude: 50.5, longitude: 50.5 } },
-    { location: { latitude: 49, longitude: 49 } },
-  ];
-  console.log(spotResults);
-  const markers = spotResults.map((spot) => {
-    return new google.maps.Marker({
-      position: {
-        lat: spot.location.latitude,
-        lng: spot.location.longitude,
-      },
-      map: map,
-    });
-  });
-  console.log(markers);
+
+  // const spotResults = [
+  //   { location: { latitude: 48, longitude: 50 } },
+  //   { location: { latitude: 51, longitude: 40 } },
+  //   { location: { latitude: 50.5, longitude: 50.5 } },
+  //   { location: { latitude: 49, longitude: 49 } },
+  // ];
+  // console.log(spotResults);
+  // const markers = spotResults.map((spot) => {
+  //   return new google.maps.Marker({
+  //     position: {
+  //       lat: spot.location.latitude,
+  //       lng: spot.location.longitude,
+  //     },
+  //     map: map,
+  //   });
+  // });
+  // console.log(markers);
 
   return isLoaded ? (
     <>
