@@ -89,7 +89,7 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? ProfileProps
   : T extends "GetSpot"
   ? SpotInfoProps
-  : T extends "GetSpot"
+  : T extends "GetSpots"
   ? SpotInfoProps[]
   : T extends "GetSpotsByCenter"
   ? SpotInfoProps[]

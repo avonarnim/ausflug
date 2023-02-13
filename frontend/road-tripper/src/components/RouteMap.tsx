@@ -5,10 +5,20 @@ import {
   Autocomplete,
   DirectionsRenderer,
 } from "@react-google-maps/api";
-import React, { useRef, useState } from "react";
-import { Box, Button, Input, Typography, IconButton } from "@mui/material";
+import React, { useRef, useState, createRef } from "react";
+import {
+  Box,
+  Button,
+  Input,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  IconButton,
+} from "@mui/material";
 import { useMutation } from "../core/api";
-import { NearMe, Delete } from "@mui/icons-material";
+import { NearMe, Delete, Add } from "@mui/icons-material";
+import { SpotInfoProps } from "./SpotInfo";
 
 const center = { lat: 48.8584, lng: 2.2945 };
 
@@ -24,6 +34,8 @@ export function RouteMap(): JSX.Element {
     useState<google.maps.DirectionsResult>();
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
+  const [chosenDetours, setChosenDetours] = useState<SpotInfoProps[]>([]);
+  const [wayPointElements, setWayPointElements] = useState<JSX.Element[]>([]);
 
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
@@ -41,9 +53,20 @@ export function RouteMap(): JSX.Element {
     if (originRef.current && destinationRef.current) {
       // eslint-disable-next-line no-undef
       const directionsService = new google.maps.DirectionsService();
+      const wayPoints = chosenDetours.map((spot) => {
+        return {
+          location: {
+            lat: spot.location.latitude,
+            lng: spot.location.longitude,
+          },
+          stopover: true,
+        };
+      });
       const results = await directionsService.route({
         origin: originRef.current.value,
         destination: destinationRef.current.value,
+        waypoints: wayPoints,
+        optimizeWaypoints: true,
         // eslint-disable-next-line no-undef
         travelMode: google.maps.TravelMode.DRIVING,
       });
@@ -64,6 +87,17 @@ export function RouteMap(): JSX.Element {
     }
   }
 
+  function addSpotToRoute(spot: SpotInfoProps) {
+    console.log("addSpotToRoute");
+    setChosenDetours([...chosenDetours, spot]);
+  }
+
+  function removeSpotFromRoute(index: number) {
+    console.log("removeSpotFromRoute", index);
+    const newDetours = chosenDetours.filter((detour, i) => i !== index);
+    setChosenDetours(newDetours);
+  }
+
   const onLoad = React.useCallback(async function callback(
     map: google.maps.Map
   ) {
@@ -76,21 +110,62 @@ export function RouteMap(): JSX.Element {
     console.log(spotResults);
     console.log(map);
     if (map) {
-      const markers = spotResults.map(
-        (spotResult: { location: { latitude: any; longitude: any } }) => {
-          return new google.maps.Marker({
-            position: {
-              lat: spotResult.location.latitude,
-              lng: spotResult.location.longitude,
-            },
-            map: map,
-          });
-        }
-      );
+      const markers = spotResults.map((spotResult: SpotInfoProps) => {
+        const infoWindow = new google.maps.InfoWindow({
+          content: `<div>
+              <h2>${spotResult.name}</h2>
+              <p>${spotResult.description}</p>
+              <p>${spotResult.category}</p>
+              <p>${spotResult.category}</p>
+              <p>${spotResult.location.latitude} ${spotResult.location.longitude}</p>
+            </div>`,
+        });
+
+        const marker = new google.maps.Marker({
+          position: {
+            lat: spotResult.location.latitude,
+            lng: spotResult.location.longitude,
+          },
+          map: map,
+        });
+
+        const waypointRef = createRef<HTMLDivElement>();
+
+        setWayPointElements([
+          ...wayPointElements,
+          <ListItem
+            secondaryAction={
+              <IconButton edge="end" onClick={() => addSpotToRoute(spotResult)}>
+                <Add />
+              </IconButton>
+            }
+          >
+            <ListItemText
+              ref={waypointRef}
+              primary={spotResult.name}
+              secondary={spotResult.description}
+            />
+          </ListItem>,
+        ]);
+
+        marker.addListener("click", () => {
+          infoWindow.open({ anchor: marker, map });
+          scrollToMarkerElement(waypointRef);
+        });
+
+        return marker;
+      });
+
       console.log(markers);
     }
   },
   []);
+
+  function scrollToMarkerElement(markerRef: React.RefObject<HTMLDivElement>) {
+    if (markerRef.current) {
+      markerRef.current.scrollIntoView();
+    }
+  }
 
   const onUnmount = React.useCallback(function callback(map: google.maps.Map) {
     setMap(undefined);
@@ -119,7 +194,7 @@ export function RouteMap(): JSX.Element {
       <GoogleMap
         mapContainerStyle={{ width: "400px", height: "400px" }}
         center={center}
-        zoom={10}
+        zoom={4}
         onLoad={onLoad}
         onUnmount={onUnmount}
       >
@@ -144,6 +219,41 @@ export function RouteMap(): JSX.Element {
                 inputRef={destinationRef}
               />
             </Autocomplete>
+          </Box>
+          <Box>
+            <Typography>Browse Stops</Typography>
+            <List
+              dense
+              sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+            >
+              {wayPointElements}
+            </List>
+          </Box>
+          <Box>
+            <Typography>Waypoints</Typography>
+            <List
+              dense
+              sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+            >
+              {chosenDetours.map((detour, index) => {
+                return (
+                  <ListItem
+                    secondaryAction={
+                      <IconButton
+                        edge="end"
+                        aria-label="comments"
+                        onClick={() => removeSpotFromRoute(index)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemText primary={detour.name}></ListItemText>
+                    <ListItemText primary={detour.description}></ListItemText>
+                  </ListItem>
+                );
+              })}
+            </List>
           </Box>
 
           <Button type="submit" onClick={calculateRoute}>
