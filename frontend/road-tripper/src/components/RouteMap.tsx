@@ -113,7 +113,7 @@ export function RouteMap(): JSX.Element {
       const markers = spotResults.map((spotResult: SpotInfoProps) => {
         const infoWindow = new google.maps.InfoWindow({
           content: `<div>
-              <h2>${spotResult.name}</h2>
+              <h2>${spotResult.title}</h2>
               <p>${spotResult.description}</p>
               <p>${spotResult.category}</p>
               <p>${spotResult.category}</p>
@@ -142,7 +142,7 @@ export function RouteMap(): JSX.Element {
           >
             <ListItemText
               ref={waypointRef}
-              primary={spotResult.name}
+              primary={spotResult.title}
               secondary={spotResult.description}
             />
           </ListItem>,
@@ -248,7 +248,7 @@ export function RouteMap(): JSX.Element {
                       </IconButton>
                     }
                   >
-                    <ListItemText primary={detour.name}></ListItemText>
+                    <ListItemText primary={detour.title}></ListItemText>
                     <ListItemText primary={detour.description}></ListItemText>
                   </ListItem>
                 );

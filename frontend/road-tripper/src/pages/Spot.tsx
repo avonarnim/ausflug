@@ -31,7 +31,7 @@ export default function Spot(): JSX.Element {
   return spot ? (
     <Container sx={{ marginTop: 10 }}>
       <Box>
-        <Typography>{spot.name}</Typography>
+        <Typography>{spot.title}</Typography>
         <Typography>{spot.description}</Typography>
         <Typography>{spot.category}</Typography>
       </Box>

@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { SpotInfoProps } from "../components/SpotInfo";
 import { useMutation } from "../core/api";
 
 export function QueueSpotFormDetailsSection(props: {
@@ -82,11 +83,26 @@ export function QueueSpotFormConfirm(props: {
     try {
       const spotInfo = {
         id: "",
-        name: props.values.title,
+        title: props.values.title,
         description: props.values.description,
         location: {
           latitude: props.values.latitude,
           longitude: props.values.longitude,
+        },
+        mapLocation: {
+          formatted_address: "",
+          formatted_phone_number: "",
+          geometry: {
+            location: {
+              lat: props.values.latitude,
+              lng: props.values.longitude,
+            },
+          },
+          rating: 0,
+          user_ratings_total: 0,
+          price_level: 0,
+          types: [],
+          place_id: "",
         },
         category: "",
         cost: 0,
@@ -98,7 +114,7 @@ export function QueueSpotFormConfirm(props: {
         duration: 0,
         status: "pending",
         openTimes: [new Date().getTime()],
-      };
+      } as SpotInfoProps;
       const createSpotResponse = await createSpot.commit(spotInfo);
       console.log(createSpotResponse);
       props.handleNext();

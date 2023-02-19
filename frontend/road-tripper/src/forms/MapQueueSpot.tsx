@@ -1,6 +1,6 @@
 import {
   Button,
-  Dialog,
+  Box,
   Input,
   List,
   ListItem,
@@ -8,17 +8,73 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useMutation } from "../core/api";
-import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
+import {
+  useJsApiLoader,
+  Autocomplete,
+  GoogleMap,
+  Marker,
+} from "@react-google-maps/api";
+import { SpotInfoProps } from "../components/SpotInfo";
 
 export function QueueSpotFormDetailsSection(props: {
   values: MapQueueSpotFormState;
   handleNext: () => void;
   handleBack: () => void;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  map: google.maps.Map;
+  center: { lat: number; lng: number };
+  onLoad: (map: google.maps.Map) => void;
+  onUnmount: (map: google.maps.Map) => void;
 }): JSX.Element {
+  const [autoComplete, setAutoComplete] =
+    useState<google.maps.places.Autocomplete | null>(null);
+  const onLoad = (autoC: google.maps.places.Autocomplete) =>
+    setAutoComplete(autoC);
+
+  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+  const onPlaceChanged = () => {
+    if (autoComplete !== null) {
+      const place = autoComplete.getPlace();
+      console.log(
+        "place",
+        place.geometry?.location,
+        place.geometry?.location?.lat(),
+        place.geometry?.location?.lng()
+      );
+      if (!place.geometry || !place.geometry.location) {
+        console.log("No details available for input: '" + place.name + "'");
+        return;
+      }
+
+      if (place.geometry.viewport) {
+        props.map.fitBounds(place.geometry.viewport);
+      } else {
+        props.map.setCenter(place.geometry.location);
+        props.map.setZoom(17);
+      }
+
+      marker?.setMap(null);
+      setMarker(
+        new google.maps.Marker({
+          position: place.geometry?.location,
+          map: props.map,
+        })
+      );
+
+      props.handleChange({
+        target: {
+          name: "mapLocation",
+          value: place,
+        },
+      } as React.ChangeEvent<HTMLInputElement>);
+    } else {
+      console.log("Autocomplete is not loaded yet!");
+    }
+  };
+
   const attemptContinue = () => {
     console.log("attempting to continue...", props.values);
     if (props.values.title.length > 0 && props.values.description.length > 0) {
@@ -29,7 +85,7 @@ export function QueueSpotFormDetailsSection(props: {
   const locationRef = useRef<HTMLInputElement>();
 
   return (
-    <Dialog open fullWidth maxWidth="sm">
+    <Box>
       <TextField
         placeholder="Enter the Title"
         name="title"
@@ -48,7 +104,7 @@ export function QueueSpotFormDetailsSection(props: {
         fullWidth
       />
       <br />
-      <Autocomplete>
+      <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
         <Input
           type="text"
           placeholder="Location"
@@ -57,10 +113,17 @@ export function QueueSpotFormDetailsSection(props: {
         />
       </Autocomplete>
       <br />
+      <GoogleMap
+        mapContainerStyle={{ width: "400px", height: "400px" }}
+        center={props.center}
+        zoom={4}
+        onLoad={props.onLoad}
+        onUnmount={props.onUnmount}
+      ></GoogleMap>
       <Button color="primary" variant="contained" onClick={attemptContinue}>
         Continue
       </Button>
-    </Dialog>
+    </Box>
   );
 }
 
@@ -76,11 +139,27 @@ export function QueueSpotFormConfirm(props: {
     try {
       const spotInfo = {
         id: "",
-        name: props.values.title,
+        title: props.values.title,
         description: props.values.description,
         location: {
-          latitude: parseInt(props.values.mapLocation),
-          longitude: parseInt(props.values.mapLocation),
+          latitude: props.values.mapLocation.geometry.location.lat(),
+          longitude: props.values.mapLocation.geometry.location.lng(),
+        },
+        mapLocation: {
+          formatted_address: props.values.mapLocation.formatted_address,
+          formatted_phone_number:
+            props.values.mapLocation.formatted_phone_number,
+          geometry: {
+            location: {
+              lat: props.values.mapLocation.geometry.location.lat(),
+              lng: props.values.mapLocation.geometry.location.lng(),
+            },
+          },
+          place_id: props.values.mapLocation.place_id,
+          types: props.values.mapLocation.types,
+          rating: props.values.mapLocation.rating,
+          user_ratings_total: props.values.mapLocation.user_ratings_total,
+          price_level: props.values.mapLocation.price_level,
         },
         category: "",
         cost: 0,
@@ -92,7 +171,7 @@ export function QueueSpotFormConfirm(props: {
         duration: 0,
         status: "pending",
         openTimes: [new Date().getTime()],
-      };
+      } as SpotInfoProps;
       const createSpotResponse = await createSpot.commit(spotInfo);
       console.log(createSpotResponse);
       props.handleNext();
@@ -103,7 +182,7 @@ export function QueueSpotFormConfirm(props: {
   };
 
   return (
-    <Dialog open fullWidth maxWidth="sm">
+    <Box>
       <List>
         <ListItem>
           <ListItemText primary="Title" secondary={props.values.title} />
@@ -116,10 +195,32 @@ export function QueueSpotFormConfirm(props: {
         </ListItem>
         <ListItem>
           <ListItemText
-            primary="MapLocation"
-            secondary={props.values.mapLocation}
+            primary="Address"
+            secondary={props.values.mapLocation.formatted_address}
           />
         </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Location"
+            secondary={
+              props.values.mapLocation.geometry.location.lat() +
+              " " +
+              props.values.mapLocation.geometry.location.lng()
+            }
+          />
+        </ListItem>
+        {props.values.mapLocation.rating ? (
+          <ListItem>
+            <ListItemText
+              primary="Rating"
+              secondary={
+                props.values.mapLocation.rating +
+                " " +
+                props.values.mapLocation.user_ratings_total
+              }
+            />
+          </ListItem>
+        ) : null}
       </List>
       <br />
       <Button color="primary" variant="contained" onClick={props.handleBack}>
@@ -129,7 +230,7 @@ export function QueueSpotFormConfirm(props: {
       <Button color="primary" variant="contained" onClick={attemptContinue}>
         Confirm
       </Button>
-    </Dialog>
+    </Box>
   );
 }
 
@@ -140,7 +241,7 @@ export function QueueSpotFormSuccess(props: {
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }): JSX.Element {
   return (
-    <Dialog open fullWidth maxWidth="sm">
+    <Box>
       <Typography variant="h5">
         Success! Thank you for your submission. We'll be reviewing it shortly.
       </Typography>
@@ -148,11 +249,11 @@ export function QueueSpotFormSuccess(props: {
       <Button>
         <Link to="/">Return Home</Link>
       </Button>
-    </Dialog>
+    </Box>
   );
 }
 
-export function QueueSpotForm(): JSX.Element {
+export function MapQueueSpotForm(): JSX.Element {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_MAPS_KEY!,
@@ -162,9 +263,25 @@ export function QueueSpotForm(): JSX.Element {
   const [queueSpotState, setQueueSpotState] = useState<MapQueueSpotFormState>({
     title: "",
     description: "",
-    mapLocation: "",
+    mapLocation: {
+      formatted_address: "",
+      formatted_phone_number: "",
+      geometry: {
+        location: {
+          lat: () => 0,
+          lng: () => 0,
+        },
+      },
+      place_id: "",
+      types: [],
+      rating: 0,
+      user_ratings_total: 0,
+      price_level: 0,
+    },
   });
   const [step, setStep] = useState(0);
+  const [map, setMap] = useState<google.maps.Map>();
+  const [center, setCenter] = useState({ lat: 48.8584, lng: 2.2945 });
 
   const handleNext = () => {
     console.log("advancing", step);
@@ -184,6 +301,20 @@ export function QueueSpotForm(): JSX.Element {
     });
   };
 
+  const onLoad = React.useCallback(async function callback(
+    map: google.maps.Map
+  ) {
+    const bounds = new window.google.maps.LatLngBounds(center);
+    map.fitBounds(bounds);
+
+    setMap(map);
+  },
+  []);
+
+  const onUnmount = React.useCallback(function callback(map: google.maps.Map) {
+    setMap(undefined);
+  }, []);
+
   const returnForm = () => {
     switch (step) {
       case 0:
@@ -193,6 +324,10 @@ export function QueueSpotForm(): JSX.Element {
             handleNext={handleNext}
             handleBack={handleBack}
             handleChange={handleChange}
+            map={map as google.maps.Map}
+            center={center}
+            onLoad={onLoad}
+            onUnmount={onUnmount}
           />
         );
       case 1:
@@ -224,5 +359,19 @@ export function QueueSpotForm(): JSX.Element {
 export type MapQueueSpotFormState = {
   title: string;
   description: string;
-  mapLocation: string;
+  mapLocation: {
+    formatted_address: string;
+    formatted_phone_number: string;
+    geometry: {
+      location: {
+        lat: () => number;
+        lng: () => number;
+      };
+    };
+    place_id: string;
+    types: string[];
+    rating: number;
+    user_ratings_total: number;
+    price_level: number;
+  };
 };
