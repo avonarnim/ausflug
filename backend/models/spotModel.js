@@ -33,6 +33,8 @@ const SpotSchema = new Schema({
   sponsored: Boolean,
   duration: Number,
   status: String,
+  externalLink: String,
+  image: String,
   openTimes: [Number],
 });
 

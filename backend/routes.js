@@ -1,8 +1,9 @@
 "use strict";
 const router = require("express").Router();
-const spot = require("./controllers/spotController");
-const trip = require("./controllers/tripController");
-const user = require("./controllers/userController");
+const spot = require("./controllers/spot");
+const trip = require("./controllers/trip");
+const user = require("./controllers/user");
+const scraper = require("./controllers/scrapers/scraperWrapper");
 
 // trip-user Routes
 router.route("/api/trips/:tripId").get((req, res) => {
@@ -70,5 +71,10 @@ router.route("/api/users/follow/:userId/:followingId").put((req, res) => {
 router.route("/api/users/unfollow/:userId/:followingId").put((req, res) => {
   user.remove_user_from_following(req, res);
 });
+
+// // scraper Routes
+// router.route("/api/scrapers/michelin").get((req, res) => {
+//   scraper.runMichelinScraper();
+// });
 
 module.exports = router;
