@@ -1,4 +1,5 @@
 const michelin = require("./michelinRestaurant");
+const atlasObscura = require("./atlasObscura");
 const atlasObscuraLocations = require("./atlasObscuraLocations");
 
 // Run as:
@@ -9,12 +10,14 @@ exports.runMichelinScraper = async () => {
   console.log("should now upload to db");
 };
 
+// Gets atlas obscura items across all locations
 exports.runAtlasObscuraScraper = async () => {
-  const items = await AtlasObscuraScraper.getItems();
+  const items = await atlasObscura.getItems();
   console.log(items, items.length);
   console.log("should now upload to db");
 };
 
+// Gets atlas obscura locations
 exports.runAtlasObscuraLocationScraper = async () => {
   const items = await atlasObscuraLocations.getItems();
   console.log(items, items.length);

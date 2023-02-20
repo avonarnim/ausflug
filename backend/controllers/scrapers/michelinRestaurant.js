@@ -140,8 +140,8 @@ const uploadRestaurantsToDb = (restaurants) => {
       numberOfRatings: 0,
       avgTimeSpent: 0,
       location: {
-        lat: restaurant.lng,
-        lng: restaurant.lat,
+        lat: restaurant.lat,
+        lng: restaurant.lng,
       },
       cost: restaurant.price,
       mapLocation: {

@@ -3,7 +3,7 @@ const cheerio = require("cheerio");
 
 const { timeout, countries } = require("./utils");
 
-const baseUrl = "https://www.atlasobscura.com/things-to-do/";
+const baseUrl = "https://www.atlasobscura.com/things-to-do";
 
 const query = "/places?page=";
 
@@ -11,10 +11,9 @@ const itemsPerPage = 20;
 
 const selectors = {
   cards: "A.Card",
-  img: ".card__menu-image>a>noscript",
-  name: ".card__menu-content--title>a",
-  link: ".card__menu-content--title>a",
-  type: ".card__menu-footer--price",
+  img: "img",
+  name: ".Card__heading>span",
+  description: ".Card__content",
 };
 
 const regEx = {
@@ -24,25 +23,41 @@ const regEx = {
 
 class AtlasObscuraScraper {
   constructor() {
-    this.rateLimiterDelay = 1500;
+    this.rateLimiterDelay = 2000;
     this.items = [];
     this.totalPages = 1;
   }
 
   run = async () => {
-    countries.map(async (country) => {
+    // for (let i = 0; i < countries.length; i++) {
+    for (let i = 0; i < 3; i++) {
+      const country = countries[i];
+      console.log("country", country);
+      const initialNumItems = this.items.length;
+      const start = new Date();
+
       await this.scrape(1, country);
-    });
+
+      const end = new Date();
+      const delay = this.rateLimiterDelay - (end - start);
+      await timeout(delay);
+
+      if (this.items.length === initialNumItems) {
+        console.log("No items found for country:", country, "... retrying");
+        this.rateLimiterDelay += 250;
+        console.log("new rate limiter delay", this.rateLimiterDelay);
+        await timeout(this.rateLimiterDelay);
+        await this.scrape(1, country);
+        if (this.items.length === initialNumItems) {
+          console.log("Still no result");
+        }
+        await timeout(this.rateLimiterDelay);
+      }
+      // });
+    }
   };
 
   getItems = () => this.items;
-
-  //   removeDuplicates = () => {
-  //     this.items = this.items.filter(
-  //       (r, index, self) =>
-  //         index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(r))
-  //     );
-  //   };
 
   setTotalPages = ($) => {
     const totalItems = Number(
@@ -52,62 +67,41 @@ class AtlasObscuraScraper {
     // this.totalPages = Math.ceil(totalItems / itemsPerPage);
   };
 
-  scrape = async (currentPage) => {
-    const start = new Date();
-    const options = {
-      uri: baseUrl + country + query + "1",
-      transform: (body) => {
-        return cheerio.load(body);
-      },
-    };
-
-    const $ = await rp(options).catch((err) => {
-      delete err.response;
-      console.log(err);
-    });
+  scrape = async (currentPage, country) => {
+    const res = await fetch(baseUrl + "/" + country + query + currentPage).then(
+      (res) => res.text()
+    );
+    const $ = cheerio.load(res);
 
     const cards = $(selectors.cards);
     cards.each((idx, ref) => {
       const $card = $(ref);
-      //   const $title = $card.find(selectors.name);
-      //   const name = $title.text().trim();
-      //   const link = `${baseUrl}${$title.attr("href")}`;
-      //   const img = $card.find(selectors.img).html().match(regEx.img)[0];
-      //   const priceType = $card.find(selectors.type).text().trim();
-      //   const price = priceType.indexOf("\n");
-      //   const typeIndex = priceType.lastIndexOf("\n");
-      //   const type = priceType.slice(typeIndex + 1).trim();
+      const name = $card.find(selectors.name).text().trim();
+      const link = `${baseUrl}${$card.attr("href")}`;
+      const img = $card.find(selectors.img).data("src");
+      const description = $card.find(selectors.description).text().trim();
       const lat = $card.data("lat");
       const lng = $card.data("lng");
 
-      console.log($card);
-      console.log(lat);
-      console.log(lng);
-
-      //   this.items.push({
-      //     name,
-      //     link,
-      //     price,
-      //     type,
-      //     img,
-      //     lat,
-      //     lng,
-      //   });
+      this.items.push({
+        name,
+        description,
+        link,
+        lat,
+        lng,
+        img,
+      });
     });
 
-    const end = new Date();
-    const delay = this.rateLimiterDelay - (end - start);
-    await timeout(delay);
-
-    if (currentPage < this.totalPages) {
-      return this.scrape(currentPage + 1);
-    }
+    // if (currentPage < this.totalPages) {
+    //   return this.scrape(currentPage + 1);
+    // }
     return;
   };
 }
 
 const getItems = async function () {
-  const scraper = new MichelinScraper();
+  const scraper = new AtlasObscuraScraper();
 
   // Scraping can be flaky. Attempt scraping multiple times
   for (let i = 0; i < 1; i++) {
@@ -130,49 +124,45 @@ const uploadItemsToDb = (items) => {
   // create a new spot object for each restaurant
   // save each spot object to the db
 
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-    const new_spot = new Spot({
+  const spotDocs = items.map((item) => {
+    return new Spot({
       title: item.name,
-      description: item.type,
+      description: item.description,
       specialty: 0,
       quality: 0,
       numberOfRatings: 0,
       avgTimeSpent: 0,
       location: {
-        lat: restaurant.lng,
-        lng: restaurant.lat,
+        lat: item.lat,
+        lng: item.lng,
       },
-      cost: restaurant.price,
+      cost: 0,
       mapLocation: {
         formatted_address: "",
         formatted_phone_number: "",
         geometry: {
           location: {
-            lat: restaurant.lat,
-            lng: restaurant.lng,
+            lat: item.lat,
+            lng: item.lng,
           },
         },
         place_id: "",
         types: [],
         rating: 0,
         user_ratings_total: 0,
-        price_level: restaurant.price,
+        price_level: 0,
       },
       status: "Approved",
       sponsored: false,
       duration: 0,
-      image: restaurant.img,
-      externalLink: restaurant.link,
+      image: item.img,
+      externalLink: item.link,
       openTimes: [],
     });
+  });
 
-    console.log(`spot: ${new_spot}`);
-    new_spot.save(function (err, spot) {
-      if (err) res.send(err);
-      res.json(spot);
-    });
-  }
+  console.log(`spots: ${spotDocs.length} ${spotDocs[0]}`);
+  Spot.insertMany(spotDocs, function (error, docs) {});
 };
 
 module.exports = { AtlasObscuraScraper, getItems, uploadItemsToDb };
