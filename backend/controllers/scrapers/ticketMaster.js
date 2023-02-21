@@ -1,11 +1,12 @@
 const { timeout, countries } = require("./utils");
+require("dotenv").config();
 const fs = require("fs");
 
 class TicketMasterClient {
   constructor() {
     this.events = [];
     this.currentPage = 0;
-    this.numPages = 49;
+    this.numPages = 1;
     this.rateLimiterDelay = 1500;
   }
 
@@ -23,7 +24,7 @@ class TicketMasterClient {
     const start = new Date();
 
     const res = await fetch(
-      `https://app.ticketmaster.com/discovery/v2/venues.json?page=${this.currentPage}&apikey=CNskcGRwUJESaCecxA3A1EypdHsAicqc`
+      `https://app.ticketmaster.com/discovery/v2/venues.json?page=${this.currentPage}&apikey=${process.env.TICKETMASTER_API_KEY}`
     ).then((res) => res.text());
 
     console.log(res);
