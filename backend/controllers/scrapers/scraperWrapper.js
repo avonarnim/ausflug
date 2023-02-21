@@ -1,6 +1,7 @@
 const michelin = require("./michelinRestaurant");
 const atlasObscura = require("./atlasObscura");
 const atlasObscuraLocations = require("./atlasObscuraLocations");
+const ticketMaster = require("./ticketMaster");
 
 // Run as:
 // node -e 'require("./scraperWrapper.js").runMichelinScraper()'
@@ -20,6 +21,12 @@ exports.runAtlasObscuraScraper = async () => {
 // Gets atlas obscura locations
 exports.runAtlasObscuraLocationScraper = async () => {
   const items = await atlasObscuraLocations.getItems();
+  console.log(items, items.length);
+  console.log("should now upload to db");
+};
+
+exports.runTicketMasterScraper = async () => {
+  const items = await ticketMaster.getItems();
   console.log(items, items.length);
   console.log("should now upload to db");
 };

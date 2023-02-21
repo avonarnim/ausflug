@@ -1,0 +1,957 @@
+{
+  "_embedded": {
+    "venues": [
+      {
+        "name": "Honda Center",
+        "type": "venue",
+        "id": "KovZpakTme",
+        "test": false,
+        "url": "https://www.ticketmaster.com/honda-center-tickets-anaheim/venue/73797",
+        "locale": "en-us",
+        "aliases": ["anaheim stadium", "arrowhead pond of anaheim"],
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/21798v.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "92806",
+        "timezone": "America/Los_Angeles",
+        "city": { "name": "Anaheim" },
+        "state": { "name": "California", "stateCode": "CA" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "2695 E. Katella" },
+        "location": { "longitude": "-117.87653112", "latitude": "33.80780364" },
+        "markets": [{ "name": "Los Angeles", "id": "27" }],
+        "dmas": [{ "id": 223 }, { "id": 324 }, { "id": 354 }, { "id": 383 }],
+        "social": { "twitter": { "handle": "@HondaCenter" } },
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "Box office phones are answered during regular box office hours. Please note, the box office does not sell tickets by phone. Call (714) 704-2500 for general information",
+          "openHoursDetail": "Monday through Friday 10am to 3pm. The box office will remain open through the beginning of weeknight events. On event Saturdays and event Sundays, the box office will open three (3) hours prior to the event and remain open through the beginning of the event. The box office is located on the east side of the building, near the East Entrance, facing the Santa Ana riverbed.",
+          "acceptedPaymentDetail": "American Express, Discover, MasterCard, and Visa are accepted. Honda Center is a cashless venue.",
+          "willCallDetail": "A photo ID matching the name the tickets are placed under is required. VIP, Artist, Promoter, or other special will call requirements and locations are subject to change. Will call windows are located at the Box Office. Will call is generally available beginning 1-1/2 hours prior to the event, and closes after the start of the event (after the first intermission for Anaheim Ducks games). Late pick up will be available at the East Entrance after the box office closes."
+        },
+        "parkingDetail": "We encourage guests to consider walking, biking, taking public transit, or carpooling to avoid traffic, save on gas and parking, and reduce your carbon footprint. General Parking: $25.00 Preferred Parking (if available): $35.00 Limo/RV/Bus Parking: $50.00. Additional information available at https://www.hondacenter.com/plan-your-visit/parking-directions/",
+        "accessibleSeatingDetail": "Wheelchair accessible seating is available in most areas of Honda Center including Plaza, Club, and Terrace levels. Availability of locations is dependent upon event seating configuration. For availability and exact locations based on a particular event, please toggle the Accessibility icon in the seat map filters on the Ticketmaster.com event page. The box office will have the same availability as Ticketmaster. Please note, semi-ambulatory or limited mobility seating is also available and requires the guest to navigate some steps. Wheelchair accessible seats have no steps. Hearing Impaired Guests: Assistive listening devices are available, with a picture ID as a deposit, at the Guest Services Desk located at Section 214. Requests for sign language interpreters must be received at least 14 business days prior to the event you are attending. To arrange for courtesy sign language interpreters, please either email accessibilityservices@hondacenter.com or call 714-704-2400. For a full list of ADA policies, please visit https://www.hondacenter.com/arena-info/ada-accessibility/",
+        "generalInfo": {
+          "generalRule": "Please visit https://www.hondacenter.com/arena-info/admission-requirements/ for current bag policy and admission requirements. You can also download the HONDA CENTER + DUCKS app to pre-purchase parking, order food & drinks for pickup directly from your seat, and manage tickets using your Ticketmaster.com account.Please visit https://www.hondacenter.com/arena-info/admission-requirements/ for current bag policy and admission requirements. You can also download the HONDA CENTER + DUCKS app to pre-purchase parking, order food & drinks for pickup directly from your seat, and manage tickets using your Ticketmaster.com account.",
+          "childRule": "Children 23 months and under are free, if on parents lap. 2 years old and over must have a ticket. Child policy is subject to change on an event by event basis."
+        },
+        "upcomingEvents": { "_total": 26, "ticketmaster": 26, "_filtered": 0 },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpakTme?locale=en-us" }
+        }
+      },
+      {
+        "name": "Levi's® Stadium",
+        "type": "venue",
+        "id": "KovZpZAJaFkA",
+        "test": false,
+        "url": "https://www.ticketmaster.com/levis-stadium-tickets-santa-clara/venue/229947",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/15991v.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "95054",
+        "timezone": "America/Los_Angeles",
+        "city": { "name": "Santa Clara" },
+        "state": { "name": "California", "stateCode": "CA" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "4900 Marie P. DeBartolo Way" },
+        "location": { "longitude": "-121.97034311", "latitude": "37.40367671" },
+        "markets": [{ "name": "N. California/N. Nevada", "id": "41" }],
+        "dmas": [
+          { "id": 250 },
+          { "id": 273 },
+          { "id": 282 },
+          { "id": 341 },
+          { "id": 368 },
+          { "id": 374 },
+          { "id": 382 }
+        ],
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "415-GO-49ERS (415-464-9377)",
+          "openHoursDetail": "9AM to 5PM Monday through Friday,",
+          "acceptedPaymentDetail": "Visa, American Express, Mastercard",
+          "willCallDetail": "Will Call tickets may be picked up at the Visa Box Office at Levi's® Stadium. The Will Call windows open three (8) hours prior to the event. Will call tickets can be claimed only by the person whose name appears on the Will Call envelope. Government issued photo identification is required. ***** Bag Policy - All Events ***** In compliance with the NFL's Bag Policy, Levi's® Stadium prohibits all bags, backpacks and other carriers from being brought into the stadium with the following exceptions: NFL approved clear plastic bags (12 x 6 x 12) One gallon clear plastic zip lock type bags Small Clutch Bag (the size of an adult hand) (4.5 x 6.5) All approved bags are subject to inspection upon entry and are subject to additional inspections within the stadium."
+        },
+        "parkingDetail": "Levi’s® Stadium parking is available in various lots surrounding the building. Please refer to your parking pass (if available) for information regarding your assigned lot, or to staff and signage on the roadways for cash lots and further instruction. Public transportation is strongly recommended. Visit www.levisstadium.com/parking for directions and details.",
+        "accessibleSeatingDetail": "Accessible seating for patrons requiring wheelchair access is available with up to 3 companions. FOR ALL OTHER ACCESSIBLE AND LIMITED MOBILITY CONCERNS, PLEASE CALL (415) 467-9377",
+        "generalInfo": {
+          "generalRule": "ALL INDIVIDUALS AND THEIR BELONGINGS ARE SUBJECT TO SEARCH. THE FOLLOWING INFORMATION IS SUBJECT TO CHANGE WITHOUT NOTICE. You and your belongings may be searched upon entry into the Stadium. The 49ers strongly encourage fans to not bring any type of bags. Fans will be able to carry the following style and size bag, package, or container at stadium plaza areas, stadium gates, or when approaching queue lines of fans awaiting entry into the stadium: Bags that are clear plastic, vinyl or PVC and do not exceed 12 x 6 x 12. (Official NFL team logo clear plastic tote bags are available through club merchandise outlets or at nflshop.com), or One-gallon clear plastic freezer bag (Ziploc bag or similar). Small clutch bags, approximately the size of a hand, with or without a handle or strap, may be carried into the stadium along with one of the clear bag options. An exception will be made for medically necessary items after proper inspection at a gate designated for this purpose. Prohibited items include, but are not limited to: purses larger than a clutch bag, coolers, briefcases, backpacks, fanny packs, cinch bags, luggage of any kind, seat cushions, computer bags and camera bags or any bag larger than the permissible size. By tendering the ticket and entering the Stadium, you consent to such searches and waive any related claims that you might have against the NFL, its member clubs, their affiliates and stadium landlord, or their agents. If you elect not to consent to the searches, you will be denied entry into the Stadium. PLEASE ARRIVE EARLY TO AVOID LAST MINUTE GATE PRESSURE.",
+          "childRule": "CHILDREN UNDER THE AGE OF TWO (2) ARE ADMITTED FREE PROVIDED THEY SIT ON AN ADULT'S LAP. CHILDREN, AGED TWO (2) AND OVER MUST HAVE A VALID TICKET FOR ADMISSION. For additional Stadium information including permitted and prohibited items please visit http://www.levisstadium.com/stadium-info/about-levis-stadium/ Miscellaneous For additional Stadium information including permitted and prohibited items please call 415-656-4949 or visit www.49ers.com/stadium"
+        },
+        "upcomingEvents": { "_total": 5, "ticketmaster": 5, "_filtered": 0 },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZAJaFkA?locale=en-us" }
+        }
+      },
+      {
+        "name": "The Chicago Theatre",
+        "type": "venue",
+        "id": "KovZpZA6AJ6A",
+        "test": false,
+        "url": "https://www.ticketmaster.com/the-chicago-theatre-tickets-chicago/venue/57522",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/11953v.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "60601",
+        "timezone": "America/Chicago",
+        "city": { "name": "Chicago" },
+        "state": { "name": "Illinois", "stateCode": "IL" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "175 N State St" },
+        "location": { "longitude": "-87.627457", "latitude": "41.88537" },
+        "markets": [{ "name": "Chicagoland and Northern Il", "id": "3" }],
+        "dmas": [{ "id": 249 }, { "id": 373 }],
+        "social": { "twitter": { "handle": "@chicagotheatre" } },
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "General information, call 312-462-6300.",
+          "openHoursDetail": "Mon through Fri: 12 Noon to 6:00 PM The Box Office is open extended and weekend hours for performances and ticket onsales",
+          "acceptedPaymentDetail": "The box office accepts Visa, Mastercard, Discover, American Express and cash",
+          "willCallDetail": "Patrons may pick up Will Call tickets one hour prior to show time on the day of performance at the Will Call window located in the theatre lobby. The customer must present the actual credit card used to place the order, a valid picture ID, and the confirmation number."
+        },
+        "parkingDetail": "Discount self-parking is available at the InterPark Self-Park garage located at 30 E. Randolph Street. Enter from Randolph or Wabash.",
+        "accessibleSeatingDetail": "For more information on accessibility or to inquire about purchasing wheelchair accessible seating, please call 312-462-6300, press 0 and ask to be connected to the box office.",
+        "generalInfo": {
+          "generalRule": "Cameras and recording devices of any kind are not permitted in the building. By law, smoking in all areas of The Chicago Theatre is prohibited. For the comfort, safety and security of all patrons, backpacks and other large items are not allowed into the theatre. All such items must be checked for a nominal fee.",
+          "childRule": "Minimum Age Requirement Policy for Children For most events, all children who have reached their second birthday require a ticket to gain admittance to The Chicago Theatre. Any child who has yet to reach their second birthday does not require a ticket, however, they may not occupy their own seat and must sit on a parent's or guardian's lap. Please note, that for certain children's events, all children who have reached their first birthday require a ticket. For more information on your specific event, please refer to the event's profile at The Chicago Theatre's website at www.TheChicagoTheatre.com You may also contact The Chicago Theatre at (312) 462-6300."
+        },
+        "upcomingEvents": { "_total": 42, "ticketmaster": 42, "_filtered": 0 },
+        "ada": {
+          "adaPhones": "Inquiries or requests concerning accessibility should be directed to the Accessible Services Department for The Chicago Theatre at (888) 609-7599.",
+          "adaCustomCopy": "Wheelchair seating is reserved for the exclusive use of patrons with a disability and their guests and the purchase or use of these seating locations by non-disabled individuals is strictly prohibited and can result in ejection and/or forfeiture of ticket price. If the individual with a disability cannot attend an event for which he/she has purchased tickets, call the Disabled Services Department prior to the event taking place for further instructions.\n\nTHE CHICAGO THEATRE WHEELCHAIR SEATING POLICY: \n\nYou may choose from two types of Accessible seating: Wheelchair or Wheelchair Transfer.\n\nOnly one Wheelchair (your wheelchair used as seat) with one companion ticket can be purchased per transaction. Only one Wheelchair Transfer (transfer from your wheelchair to an aisle seat) with one companion ticket can be purchased per transaction. Any additional companion seats must be purchased in a separate transaction using the Standard Admission. \n\nTickets for people with accessible needs, subject to availability, may be purchased in several ways: \n\n1) Order Online - To order online: \na) Get to the order form for the event you wish to purchase. \nb) When the order form is displayed, choose the type (Wheelchair OR Wheelchair Transfer) and quantity (1 or 2) of tickets you desire. \nc) Select the section and delivery method, then press the \"Look for Tickets\" Button.\n\n2) Call Ticketmaster at (312) 902-1500. \n\n3) Call The Chicago Theatre's Accessible Services Department at (888) 609-7599. \n\n4) Visit The Chicago Theatre's Box Office. \n\nFor additional information regarding accessing The Chicago Theatre or to request any other accommodations, please call The Chicago Theatre’s Disabled Services Department at (888) 609-7599. \n\nAssistive Listening Devices (ALD) devices are available upon request. \nADA tickets are not available via Ticketmaster Outlets.\n\n* Box office information is subject to change.",
+          "adaHours": "Monday through Friday, 12:00 PM to  6:00 PM.   \n   \nOn days of show (Monday through Friday): 12:00 PM to Show Time.\nOn days of show (Saturday and Sunday): Call for hours\n"
+        },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZA6AJ6A?locale=en-us" }
+        }
+      },
+      {
+        "name": "PPG Paints Arena",
+        "type": "venue",
+        "id": "KovZpZA6taeA",
+        "test": false,
+        "url": "https://www.ticketmaster.com/ppg-paints-arena-tickets-pittsburgh/venue/180938",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/18703v.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "15219",
+        "timezone": "America/New_York",
+        "city": { "name": "Pittsburgh" },
+        "state": { "name": "Pennsylvania", "stateCode": "PA" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "1001 Fifth Avenue" },
+        "location": { "longitude": "-79.9908551", "latitude": "40.4388401" },
+        "markets": [{ "name": "Pittsburgh", "id": "19" }],
+        "dmas": [{ "id": 271 }, { "id": 307 }, { "id": 360 }],
+        "social": { "twitter": { "handle": "@ppgpaintsarena" } },
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "412-642-1800",
+          "openHoursDetail": "During the Pittsburgh Penguins hockey season, the DICK'S Sporting Goods Box Office at PPG Paints Arena will be open: Monday – Friday, 10:00 AM – 5:00 PM and Saturday, 10:00 AM – 2:00 PM. Sundays that are event days will vary based on the event time but opening hours will always be 10:00 AM with the Box Office remaining open up through the start of the event."
+        },
+        "parkingDetail": "Parking is available in the PPG Paints Arena lots as well as the PPG Paints Arena Garage for non-hockey events. Event parking rates vary. Check your event’s information page or email info@ppgpaintsarena.com for specific parking rates. Charter and school busses park for free on the street (follow directions of event staff).",
+        "generalInfo": {
+          "childRule": "For most events, children under the age of two are not required to have a ticket. However, should you wish for your child to have their own seat, a ticket is required. Shows intended for a younger audience (i.e., Sesame Street Live, The Wiggles) require that children who have celebrated their first birthday have a ticket. Please check each event individually for age requirements. Children under the age of 2 do not require a ticket to attend a Pittsburgh Penguins home game provided they sit on the lap of an adult throughout the game. Any child who has celebrated their 2nd birthday will need a ticket to enter the building."
+        },
+        "upcomingEvents": { "_total": 38, "ticketmaster": 38, "_filtered": 0 },
+        "ada": {
+          "adaPhones": "Penguins Hockey: 412-642-1842\n",
+          "adaCustomCopy": "Ticketmaster, on behalf of its clients, strives to make it as easy as possible to purchase accessible seating tickets for venues across the country. Most venues offer accessible seating areas to accommodate their guests. Availability and type of accessible seating tickets will vary based on each venue's policies and/or the type of event taking place. Note: Venues are solely responsible for establishing their own accessible seating ticket policies. Some venues sell all or a portion of their accessible seating tickets only through their box office and not through Ticketmaster.\nFor further information on purchasing accessible tickets, visit our FAQ. \n\nFor special seating accommodations for Penguins home games, please contact the Pittsburgh Penguins Customer Service Department at 412-642-1842 or via email at cservice@pittsburghpenguins.com.  Advance purchase is encouraged.  ",
+          "adaHours": "The Penguins Customer Service Department is available Mon – Fri: 9:00 AM-5:00 PM EST"
+        },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZA6taeA?locale=en-us" }
+        }
+      },
+      {
+        "name": "Enterprise Center",
+        "type": "venue",
+        "id": "KovZpa2DJe",
+        "test": false,
+        "url": "https://www.ticketmaster.com/enterprise-center-tickets-st-louis/venue/49678",
+        "locale": "en-us",
+        "aliases": [
+          "savis center",
+          "scottrade center",
+          "savvis center",
+          "scott trade center"
+        ],
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/20586v.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "63103",
+        "timezone": "America/Chicago",
+        "city": { "name": "St Louis" },
+        "state": { "name": "Missouri", "stateCode": "MO" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "1401 Clark Ave" },
+        "location": { "longitude": "-90.202617", "latitude": "38.626432" },
+        "markets": [
+          { "name": "Saint Louis and More", "id": "39" },
+          { "name": "All of US", "id": "51" }
+        ],
+        "dmas": [{ "id": 200 }, { "id": 255 }, { "id": 365 }, { "id": 376 }],
+        "social": { "twitter": { "handle": "@Enterprise_Cntr" } },
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "See Miscellaneous Info section for phone numbers.",
+          "openHoursDetail": "Service Hours: The Enterprise Center Box Office is currently open Monday-Friday 10:00am-5:00pm. Short-term parking is available in front of the building, or in the garage attached to Enterprise Center. Enter the garage from Clark Avenue or 16th Street. Cash is accepted. Checks and credit cards are not accepted for garage parking. DOORS OPEN: -60 minutes prior to game time for Blues -Other events vary by show",
+          "acceptedPaymentDetail": "Box Office Accepts Cash, Money Orders, MasterCard, Visa, American Express, Discover and Diners Club Card.",
+          "willCallDetail": "Customer must present actual credit card used to place the order, the confirmation number and a photo ID. Tickets held at Will Call may be picked up beginning 2 hours prior to show time."
+        },
+        "parkingDetail": "GUEST PARKING: Approximately 6500 parking spaces are available within 1,800 feet of Enterprise Center, including at 1,270-car garage situated immediately adjacent to the building. In addition, many nearby parking garages and surface lots offer affordable, convenient access to Enterprise Center. \"Enterprise Center Parking\" signs at the entrances to these parking facilities should help in directing Enterprise Center guests to appropriate parking. Ample street parking is also available. BOX OFFICE PARKING: Short-term daytime parking for ticket purchases at Enterprise Center's Box Office is available on Clark Avenue in front of the Box Office (15 min. limit) as well as in the attached Enterprise Center Garage. DROP-OFF / PICK-UP: Drop-off and pick-up for guests attending events at Enterprise Center should be made at the 14th Street Entrance at the east end of the building. After an event, 14th Street is closed by the St. Louis Police.",
+        "accessibleSeatingDetail": "PERSONS WITH DISABILITIES: Please call Enterprise Center at (314)622-5420 to reserve seats. To arrange seating for a group with special needs, please call Enterprise Center Group Sales at (314) 622-5454. SEATING: Enterprise Center has an ample number of reserved seats for guests with disabilities dispersed throughout the plaza, club, mezzanine and penthouse levels as well as the event level for concerts. One companion seat is available for each seat reserved for a guest with a disability. These seats are provided in a wide variety of price ranges for all events. All seats for guests with limited mobility have been selected to allow convenient entry and exit, as well as for accessibility to restrooms and concession stands. In addition, Enterprise Center's private suites, club seats and private restaurant are accessible to guests with disabilities. TICKET SALES: Tickets to Enterprise Center events are sold to persons with disabilities on a first-come, first-serve basis. When purchasing tickets, please inform your ticket seller about any needs that may require accommodation, including companion seating or use of a service animal.",
+        "generalInfo": {
+          "generalRule": "For information on specific events, phone (314)622-5400. General rules are as follows: BAG POLICY: To reduce contamination, bags, including clear bags, purses and clutches, will not be permitted at games or events. Medical and parent bags are exceptions, but will be subject to Xray screening at designated locations for entry into Enterprise Center. STILL CAMERAS: Policy varies by event, is determined solely at the discretion of the show, and is subject to change without notice. Still cameras are permitted for St. Louis Blues games, most other sporting events and most family shows. Still cameras are not permitted for most concerts. VIDEO CAMERAS: Are NOT permitted for most events. RECORDING DEVICES: Are NOT permitted. PROHIBITED ITEMS: Cans, bottles, coolers, plastic beverage containers, food or beverage of any kind, helium balloons, pets (other than service animals), laser pointers, sticks (excluding those on pennants or flags) and weapons of any sort. SMOKING: For most events, Guests are permitted to exit and re-enter the Enterprise Center at the 14th Street Entrance (section 122) and the West Entrance (section 109). Smoking is permitted at these locations. Hand stamps and ticket stub are required to re-enter the building.",
+          "childRule": "Discounts are offered for children on a show by show basis. For more information regarding specific performances, please phone (314)622-5400."
+        },
+        "upcomingEvents": { "_total": 33, "ticketmaster": 33, "_filtered": 0 },
+        "ada": {
+          "adaPhones": "Please call Enterprise Center at (314)622-5420 to reserve seats.  To arrange seating for a group with special needs, please call Enterprise Center Group Sales at (314) 622-5454.  \n  \nSEATING:  Enterprise Center has an ample number of reserved seats for guests with disabilities dispersed throughout the plaza, club, mezzanine and penthouse levels as well as the event level for concerts.  One companion seat is available for each seat reserved for a guest with a disability.  These seats are provided in a wide variety of price ranges for all events.  All seats for guests with limited mobility have been selected to allow convenient entry and exit, as well as for accessibility to restrooms and concession stands.  In addition, Enterprise Centers private suites, club seats and private restaurant are accessible to guests with disabilities.  \n  \nTICKET SALES:  Tickets to Enterprise Center events are sold to persons with disabilities on a first-come, first-serve basis.  When purchasing tickets, please inform your ticket seller about any needs that may require accommodation, including companion seating or use of a service animal.",
+          "adaCustomCopy": "To better accommodate your needs, Enterprise Center has requested that all accessible seating ticket accommodations be solicited only through their representatives. Please contact a Enterprise Center representative for further help with your ticket purchase.*   Advance ticket purchase may be required.  \n  \n* Box office information is subject to change.",
+          "adaHours": "The Enterprise Center Box Office is open Monday-Friday from 10 a.m. until 5 p.m., except on event days. The Box Office will be closed on non-event weekends.  Limited parking is available for ticket buyers in front of the building on Clark Avenue. You can contact the Box Office by phone by calling 314-622-2551.\n\nShort-term parking is available in front of the building, or in the garage attached to Enterprise Center. Enter the garage from Clark Avenue or 16th Street. Cash is accepted. Checks and credit cards are not accepted for garage parking.\n\nDOORS OPEN:\n-90 minutes prior to game time for Blues\n-Other events vary by show\n"
+        },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpa2DJe?locale=en-us" }
+        }
+      },
+      {
+        "name": "Lincoln Financial Field",
+        "type": "venue",
+        "id": "KovZpa2yme",
+        "test": false,
+        "url": "https://www.ticketmaster.com/lincoln-financial-field-tickets-philadelphia/venue/16752",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/22350v.jpg",
+            "width": 640,
+            "height": 360,
+            "fallback": false
+          }
+        ],
+        "postalCode": "19148",
+        "timezone": "America/New_York",
+        "city": { "name": "Philadelphia" },
+        "state": { "name": "Pennsylvania", "stateCode": "PA" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "One Lincoln Financial Way" },
+        "location": { "longitude": "-75.167406", "latitude": "39.900706" },
+        "markets": [{ "name": "Philadelphia", "id": "18" }],
+        "dmas": [{ "id": 358 }],
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "General Info - 215.463.2500 Ticket Office - 215.463.5500 Accessible Seating - 215.463.5500",
+          "openHoursDetail": "Monday - Friday 9am - 5pm Event Day - Remote ticket booth located 11th st. side of main parking lot. Non event day:Headhouse",
+          "acceptedPaymentDetail": "MasterCard, Visa, Discover, Traveler's Checks, Cash, & American Express.",
+          "willCallDetail": "Pick up tickets one hour prior to show. Customer must present actual credit card used to place the order, the confirmation number and a photo I.D. Doors and plaza gates open 3 hours prior to event - seating gates - 2 hours prior to event. For non Eagles events - Will Call is on 11th St. facing the Wachovia Ctr. Will Call for the Lacrosse Event, May 28 - May 30, 2005 will be at the Chrysler Jeep Entrance/Main Ticket office."
+        },
+        "parkingDetail": "See map in playbook. There is a charge to park with ample surrounding lots.",
+        "accessibleSeatingDetail": "Accessible seating is available in all levels. Limited accessible seating through Ticketmaster. Please call 215.463.5500 for accessible procedures.",
+        "generalInfo": {
+          "generalRule": "Cameras allowed, smoking in designated areas only, no recording devices. see page 17 of guest playbook.",
+          "childRule": "No discounts for Eagles - varies with other events."
+        },
+        "upcomingEvents": { "_total": 8, "ticketmaster": 8, "_filtered": 0 },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpa2yme?locale=en-us" }
+        }
+      },
+      {
+        "name": "Crypto.com Arena",
+        "type": "venue",
+        "id": "KovZpZAEdntA",
+        "test": false,
+        "url": "https://www.ticketmaster.com/cryptocom-arena-tickets-los-angeles/venue/360457",
+        "locale": "en-us",
+        "aliases": ["staples", "staples center"],
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/22291v.jpg",
+            "width": 640,
+            "height": 360,
+            "fallback": false
+          }
+        ],
+        "postalCode": "90015",
+        "timezone": "America/Los_Angeles",
+        "city": { "name": "Los Angeles" },
+        "state": { "name": "California", "stateCode": "CA" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "1111 S. Figueroa St" },
+        "location": { "longitude": "-118.267253", "latitude": "34.043003" },
+        "markets": [{ "name": "Los Angeles", "id": "27" }],
+        "dmas": [{ "id": 223 }, { "id": 324 }, { "id": 354 }, { "id": 383 }],
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "213-742-7340",
+          "openHoursDetail": "Box office is located on North side of building at 11th and South Figueroa. Box office hours are 10am to 6pm, Monday through Saturday. It is open extended hours on event day. Phone: 213-742-7340 SUMMER HOURS Closed Saturdays and Sundays unless there is an event, the box office will open at 9am on Saturdays or 10am on Sundays only if there is an event. The box office will have extended hours on all event days.",
+          "willCallDetail": "Crypto.com Arena does not accept Will Call drop off. Alternate Will Call Procedure (Alternate Pick Up) If a person (other than the person ordering and paying for the tickets) is picking up a Will Call order, the Alternate Pick-Up's name MUST be on the account. To add the name of an alternate pick-up to the account, the original purchaser must contact Ticketmaster Customer Service at 1-800-745-3000, verify their account information and request the addition an alternate pick-up."
+        },
+        "parkingDetail": "Parking for Guests with Disabilities: Designated parking is available in LOT W and LOT 7 for guests with disabilities at Crypto.com Arena, including van accessible spaces. These spaces are designated for vehicles displaying a current State-issued disability placard or license plate, and can be accessed 2 and a half hour prior to show time, general parking fees apply. Parking Passes for Guests with Disabilities can be purchased 10 days prior to the day of the event through Crypto.com Arena Parking Department. Please call 213-765-6815 for further information. Limousines: Limousines may drop guests off on 11th Street (Figueroa between Chick Hearn Court and 12th Street). Parking for Limousines is in Lot # 7 and the parking rate is $50.00.(Rate may increase depending on the Size of the Limousine). Limousines will not have access to the 11th street drop-off and may not drop off or pick up on Chick Hearn Court. Clients will need to walk across Figueroa St into Lot # 7 to their limousines. Crypto.com Arena Parking Office: 213-765-6815",
+        "generalInfo": {
+          "generalRule": "No Bottles, Cans, Or Coolers. No Smoking In Arena. No Cameras Or Recording Devices At Concerts! Cameras w/No Flash Allowed For Sporting Events Only!",
+          "childRule": "Some events require all attendees, regardless of age, to present a ticket for entry. Please check the event ticket policies at the time of purchase. Children age three (3) and above require a ticket for Los Angeles Lakers, Los Angeles Clippers, Los Angeles Kings and Los Angeles Sparks games."
+        },
+        "upcomingEvents": {
+          "_total": 74,
+          "tmr": 55,
+          "ticketmaster": 19,
+          "_filtered": 0
+        },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZAEdntA?locale=en-us" }
+        }
+      },
+      {
+        "name": "BMO Stadium",
+        "type": "venue",
+        "id": "KovZ917A3c0",
+        "test": false,
+        "url": "https://www.ticketmaster.com/bmo-stadium-tickets-los-angeles/venue/82799",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/22510v.jpg",
+            "width": 640,
+            "height": 360,
+            "fallback": false
+          }
+        ],
+        "postalCode": "90037",
+        "timezone": "America/Los_Angeles",
+        "city": { "name": "Los Angeles" },
+        "state": { "name": "California", "stateCode": "CA" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "3939 S. Figueroa St" },
+        "location": { "longitude": "-118.284926", "latitude": "34.012879" },
+        "markets": [{ "name": "Los Angeles", "id": "27" }],
+        "dmas": [{ "id": 223 }, { "id": 324 }, { "id": 354 }, { "id": 383 }],
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "(213) 519-9900",
+          "openHoursDetail": "Tuesday 2:00 pm - 6:00 pm. Hours are extended to accommodate the needs of specific events.",
+          "acceptedPaymentDetail": "All major credit cards are accepted, including Visa, MasterCard, Discover and American Express. Cash is also accepted. Contactless payment including Apple Pay, Android Pay, and Samsung pay are accepted at all points of sale and encouraged. You can also pay by loading your credit card into your digital wallet.",
+          "willCallDetail": "Will Call is located at the Box Office off Pepsi Plaza on Christmas Tree Lane. Hours of operation are 2pm-6pm every Tuesday and 10am until halftime on match days."
+        },
+        "parkingDetail": "Parking at Expo Park is limited; plan to arrive early. Parking at Expo Park is $50 day of event.",
+        "accessibleSeatingDetail": "BMO Stadium is committed to providing an enjoyable experience for all guests in attendance at each event, including guests with disabilities. The venue has been designed and built to meet or exceed the requirements of the Americans with Disabilities Act (ADA). BMO Stadium staff will assist you with any specific accommodations you have before, during, and after an event. Services include: Wheelchair escorts & storage, Assisted Listening Devices, Captioning Services & Devices, and Interpretation Services (requires at least 2-week lead time)",
+        "generalInfo": {
+          "generalRule": "We aim to provide an enjoyable, yet exciting environment for ALL fans attending games. In order to achieve that, the following are prohibited: Abusive, foul or disruptive language or clothing, Alcohol and illegal drugs, All bags, including clear bags, backpacks, and purses, that are larger than 12 x 6 x 12, Animals (with the exception of service animals), Any type of marketing collateral such as pamphlets, product samples, etc., Balloons, beach balls, frisbees, markers, brooms, skateboards, roller blades, skates, etc., Clothing containing wires, batteries, or other electronic components, Coolers, outside food, beverages (with the exception of a single factory sealed plastic water bottle no more than 20oz), cans, flasks, bottles, etc. (F&B needed for infants or medical reason will be permitted with approval), Drums & Drumsticks, Explosives, pepper spray, tear gas, etc., Flags larger than 3 x 4, Flag/banner poles, Folding/beach chairs, Items containing adhesive ie. Stickers, Decals, etc., Laptops & tablets, Loud noisemaking devices such as air horns, plastic horns, vuvuzelas, whistles, megaphones, etc., Objects that can be thrown or viewed as projectiles, Professional camera equipment, tripods, GoPros, etc., Selfie Sticks, Smoking of any kind including E cigarettes & Vaporizers, Streamers, Confetti, Register tape, etc., Umbrellas, Unmanned and RemoteControlled Aircraft Systems, Water guns, toy/replica weapons, squirt bottles, etc., Weapons of any kind, fireworks, slingshots, smoke/stink bombs, laser pointers, etc., 2way radio devices, At the discretion of BMO Stadium Management, any other item determined to be prohibited. , Any attempt to bring alcohol into the Stadium will be considered a violation of the Code of Conduct and may result in an ejection or refusal of entry, arrested, or tickets being revoked. All persons and/or their belongings are subject to search. Violators of the rules of any State or City laws will be refused admission, asked to leave, or ejected from Stadium property. BMO Stadium cannot safeguard items which are not permitted to be brought into the stadium. Please keep in mind that permitted or prohibited items may vary depending on the event. BMO management will communicate any deviations from the standard house policy as necessary.",
+          "childRule": "Children two and under will be admitted free but will be required to sit on a ticket holders lap. Children who have had their third birthday, or who require their own seat will require a ticket."
+        },
+        "upcomingEvents": { "_total": 32, "ticketmaster": 32, "_filtered": 0 },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZ917A3c0?locale=en-us" }
+        }
+      },
+      {
+        "name": "AT&T Center",
+        "type": "venue",
+        "id": "KovZpZAJJEdA",
+        "test": false,
+        "url": "https://www.ticketmaster.com/att-center-tickets-san-antonio/venue/475590",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/18702v.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "78219",
+        "timezone": "America/Chicago",
+        "city": { "name": "San Antonio" },
+        "state": { "name": "Texas", "stateCode": "TX" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "1 AT&T Center" },
+        "location": { "longitude": "-98.4337987", "latitude": "29.4330386" },
+        "markets": [
+          { "name": "San Antonio and Austin", "id": "40" },
+          { "name": "All of US", "id": "51" },
+          { "name": "South Texas", "id": "122" }
+        ],
+        "dmas": [
+          { "id": 200 },
+          { "id": 222 },
+          { "id": 260 },
+          { "id": 293 },
+          { "id": 318 },
+          { "id": 379 },
+          { "id": 380 },
+          { "id": 407 }
+        ],
+        "social": { "twitter": { "handle": "@attcenter" } },
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "(210) 444-5870",
+          "openHoursDetail": "Open Event Days Only. Open 3 hours prior to event time. All AT&T Center event tickets can also be purchased at www.ticketmaster.com or the Ticketmaster App.",
+          "acceptedPaymentDetail": "All valid debit and credit cards as well as the digital payment wallets Apple Pay and Google Pay",
+          "willCallDetail": "The box office is Open Event Days Only starting 3 hours prior to event time. Will call tickets may be picked at the AT&T Center Box Office. Policies for will call for each event may vary."
+        },
+        "parkingDetail": "Onsite parking is available in Lots 1, 2,3,4, 5 and 6 and is sold based on availability by event. Parking passes can be purchased online at www.ticketmaster.com or the Ticketmaster App. Limited availability is sold at the AT&T Center Box Office. If guests have not pre-purchased parking, some lots may be available to purchase on arrival. Prices range from $15 to $25 based on event. All parking transactions are valid debit and credit cards only.",
+        "accessibleSeatingDetail": "AT&T Center is an accessible venue. Accessible seating tickets can be purchased online at www.ticketmaster.com or the Ticketmaster App. A limited number of accessible seating tickets can be purchased at the AT&T Center Box Office, Open Event Days Only, opens 3 hours prior to event time. Certified service animals for guests with disabilities are welcome at the AT&T Center and must remain on leash or in a harness. If interpretive services are needed, please contact a Fan Experience coordinator at 210-444-5140 a minimum of three weeks prior to the event so appropriate accommodations can be made. Interpreters are provided free of charge, but event tickets are required prior to scheduling.",
+        "generalInfo": {
+          "generalRule": "The safety of our fans, partners, staff, players, and coaches in attendance remains Spurs Sports & Entertainment’s top priority. Guests in attendance will be required to wear masks, maintain physical distancing, undergo temperature checks and complete a health screening through the CLEAR app prior to entering. SS&E has made numerous safety and health changes to policies, procedures, and operations within the AT&T Center. For a full list of enhanced updates and protocols, please visit our website www.attcenter.com/arena/ourcommitment. No professional cameras or video equipment may be brought into the arena. All bags are subject to security search, bags up to 6” x 8” in size with a maximum of one compartment are permitted into the arena. For all other bags, fans may utilize two Binbox storage locations conveniently located outside of the East and Courtyard entrances at the AT&T Center. Doors open for most AT&T Center events one hour prior to event time. Spurs Sports & Entertainment has designated the AT&T Center as a tobacco and smoke-free building. The new policy includes all forms of smoking and tobacco use, including but not limited to, cigarettes, cigars, electronic cigarettes, personal vaporizers, smokeless tobacco and tobacco pipes. There will be no designated smoking areas anywhere inside the AT&T Center. The tobacco and smoke-free environment extends 500 feet from the AT&T Center.",
+          "childRule": "Yes. For most AT&T Center events (some family shows may be excluded) children 2 years and older are required to have a ticket."
+        },
+        "upcomingEvents": { "_total": 43, "ticketmaster": 43, "_filtered": 0 },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZAJJEdA?locale=en-us" }
+        }
+      },
+      {
+        "name": "Lumen Field",
+        "type": "venue",
+        "id": "KovZpZAEknnA",
+        "test": false,
+        "url": "https://www.ticketmaster.com/lumen-field-tickets-seattle/venue/123449",
+        "locale": "en-us",
+        "aliases": ["seahawk stadium", "seahawks stadium", "qwest field"],
+        "postalCode": "98134",
+        "timezone": "America/Los_Angeles",
+        "city": { "name": "Seattle" },
+        "state": { "name": "Washington", "stateCode": "WA" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "800 Occidental Ave S" },
+        "location": { "longitude": "-122.331607", "latitude": "47.595083" },
+        "markets": [{ "name": "Seattle Area", "id": "42" }],
+        "dmas": [{ "id": 385 }, { "id": 391 }, { "id": 418 }],
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "Gameday: (206) 381-7848",
+          "openHoursDetail": "Open 3 hours prior to kickoff on gameday. Weekday hours will vary. Located in the Northwest corner of the Stadium.",
+          "acceptedPaymentDetail": "Visa, MasterCard, American Express, Discover and Cash.",
+          "willCallDetail": "Located at Northwest corner of Lumen Field. Opens 3 Hours prior to kickoff on gameday."
+        },
+        "parkingDetail": "Lumen Field manages three parking lots: the North Lot, Lumen Field Event Center Garage, and Union Station Garage. Gameday parking costs may vary. For further information please call the Seahawks ticket office at 1-888-NFL-HAWK (1-888-635-4295) or visit www.ipmseattle.com",
+        "accessibleSeatingDetail": "There are disabled seats (wheelchair convertible) dispersed through all areas and price levels of Lumen Field. Disabled seating and access for all is fully compliant with the Americans with Disabilities Act, (ADA).",
+        "generalInfo": {
+          "generalRule": "Due to NFL policy, no soft-sided containers, coolers, or large bags (bigger than 12\" X 12\" X 12\") are permitted into Lumen Field for any event. Guests may bring in items in small, clear plastic bags. Event security is required to open all bags at the gates for a visual inspection before allowing guests' entry. Fans may bring food into the stadium on game days in clear plastic bags only, but no beverages will be allowed per NFL policy. Flash photography, video cameras and support tools (such as tripods, large lens, etc.) are not allowed. Smoking and tobacco use are prohibited in all areas of Lumen Field and Event Center. All fans must abide by the Fan Code of Conduct. For full rules and policies please visit www.seahawks.com.",
+          "childRule": "Children under the age of 3 are free but must sit on adult's lap."
+        },
+        "upcomingEvents": { "_total": 46, "ticketmaster": 46, "_filtered": 0 },
+        "ada": {
+          "adaPhones": "206-381-7848",
+          "adaCustomCopy": "ADA seats are available",
+          "adaHours": "Varies by event.    \n    \nSeahawks:    \n3 hours prior to game.    \n    \nFor Concerts and other events:    \nGenerally 90 minutes prior to event.    \n    \nLumen Field & Lumen Field Field Event Center is located in the Northwest corner of the Stadium. Box Office hours vary by season. \n    \n    \n"
+        },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZAEknnA?locale=en-us" }
+        }
+      },
+      {
+        "name": "House of Blues Myrtle Beach",
+        "type": "venue",
+        "id": "KovZpZAEkeIA",
+        "test": false,
+        "url": "https://www.ticketmaster.com/house-of-blues-myrtle-beach-tickets-north-myrtle-beach/venue/368934",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/21939v.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "29582",
+        "timezone": "America/New_York",
+        "city": { "name": "North Myrtle Beach" },
+        "state": { "name": "South Carolina", "stateCode": "SC" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "4640 Highway 17 South" },
+        "location": { "longitude": "-78.7398774", "latitude": "33.800872" },
+        "markets": [
+          { "name": "Raleigh and Durham", "id": "38" },
+          { "name": "South Carolina", "id": "121" }
+        ],
+        "dmas": [
+          { "id": 243 },
+          { "id": 256 },
+          { "id": 278 },
+          { "id": 289 },
+          { "id": 290 },
+          { "id": 291 },
+          { "id": 292 },
+          { "id": 366 },
+          { "id": 417 }
+        ],
+        "social": { "twitter": { "handle": "@HOBMB" } },
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "To contact House of Blues, please call 843-272-3000",
+          "openHoursDetail": "Service Hours: Varies by season: Call (843) 272-3000 / Choose option 1, then option 2 to speak to the Box Office. The Box Office is located past the wrought iron gate inside the courtyard. (Blue neon signage on roof).",
+          "acceptedPaymentDetail": "Cash, Visa, MC, AMX, DSC, House Of Blues Gift Certificates",
+          "willCallDetail": "Available at the Ticket Office, beginning at 11am on the day of the show and up until a half hour before the show is over. Will call ticket can only be picked up by the cardholder. Customer must present the actual Credit Card used for the purchase, their Photo ID and confirmation number in order to receive tickets."
+        },
+        "parkingDetail": "Approximately 600 spaces available free of charge immediately adjacent to the venue, plus available parking in the Barefoot Landing area around the venue. There are 10 accessible spaces available just to the left of the main entrance.",
+        "accessibleSeatingDetail": "This venue is wheelchair accessible. Those in need of Accessible Seating need to first purchase a General Admission Ticket, then arrive at the venue 30 minutes prior to doors to reserve accommodations through our Security Team. Special seating accommodations can also be made prior to arrival. Please contact the Box Office at 843-272-3000. Elevator Access: Convenient elevator access to 2nd level.",
+        "generalInfo": {
+          "generalRule": "Camera Policy: Personal cameras are allowed in the venue. Flash photography, video and removable lens cameras are not permitted without venue approval. No weapons, pocket knives, drugs, laser pointers, or any hazardous items are allowed inside the venue. No refunds of exchanges on ticket purchases. No outside food or beverages (including alcohol) to be brought in. House of Blues Myrtle Beach is a Smoke Free Facility Dress code is casual. Lost / Stolen Tickets - There is NO replacement of tickets for general admission shows.",
+          "childRule": "All Ages welcome (unless otherwise stated on the ticket). Everyone needs a ticket to enter. Ages 0-12 must be accompanied by an adult to enter."
+        },
+        "upcomingEvents": { "_total": 99, "ticketmaster": 99, "_filtered": 0 },
+        "ada": {
+          "adaPhones": "800-877-7575",
+          "adaCustomCopy": "To better accommodate your needs, House of Blues Myrtle Beach has requested that all special seating accommodations be solicited only through their representatives. Please contact a House of Blues Myrtle Beach representative for further help with your ticket purchase.* Advance ticket purchase may be required.",
+          "adaHours": "Service Hours:\nVaries by season:\nCall (843) 272-3000 / Choose option 1, then option 2 to speak to the Box Office. \n\n    \nBox office is located past the wrought iron gate inside the courtyard. (Blue neon signage on roof)."
+        },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZAEkeIA?locale=en-us" }
+        }
+      },
+      {
+        "name": "Empower Field At Mile High",
+        "type": "venue",
+        "id": "KovZpa3Wne",
+        "test": false,
+        "url": "https://www.ticketmaster.com/empower-field-at-mile-high-tickets-denver/venue/246376",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/21318v.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "80204",
+        "timezone": "America/Denver",
+        "city": { "name": "Denver" },
+        "state": { "name": "Colorado", "stateCode": "CO" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "1701 Bryant St." },
+        "location": { "longitude": "-105.020127", "latitude": "39.743853" },
+        "markets": [{ "name": "Denver and More", "id": "6" }],
+        "dmas": [
+          { "id": 248 },
+          { "id": 254 },
+          { "id": 264 },
+          { "id": 285 },
+          { "id": 347 }
+        ],
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "(720)258-3333",
+          "openHoursDetail": "8:00am-5:00pm Monday - Friday 9:00-End of half time on Game Day",
+          "acceptedPaymentDetail": "Cash, Visa, MC, Discover and American Express only.",
+          "willCallDetail": "Photo ID is required for all events. Tickets will only be released to the person whose name is on the envelope. Note: Broncos half-price tickets are only available via mobile delivery. There is no will call for half-price tickets."
+        },
+        "parkingDetail": "Parking Information Line Updated parking information for Empower Field at Mile High is available through the Stadium Main Office Line at 720-258-3000 or 720-258-3727. Fans may also email parking@broncos.nfl.net. Denver Broncos Parking Pay lots for Broncos games are located on the south side of Colfax Avenue in lots C, $30 per space, and N, $20 a space. These lots are sold on a first-come, first-serve basis. Lot C opens at 8am for afternoon games and at 12pm for night games. All parking lots, besides Lot C, open five hours prior to game time. Additional cash parking is located on the east side of Empower Field at Mile High at the Pepsi Center, Auraria Campus, and in the Lodo area of downtown for most Broncos games. There is a pedestrian walkway between these lots and the stadium. Please do not park in the neighborhoods surrounding Empower Field at Mile High. Permits are required to park in the neighborhoods and vehicles without permits are subject to citation and towing. Parking in the neighborhoods is strictly enforced by the City of Denver Disabled Parking for Denver Broncos Handicap accessible parking for all Broncos games for those without pre-purchased parking permits, is available on a first come, first serve basis in Parking Lot L located on the north end of the stadium. Parking Lot L is sold only on a cash-only basis on day of game; the fee for parking is $20 per space with the lot opening five hours prior to game time. Historically, Lot L has sold out one to two hours prior to game time, so please arrive early. A limited number of handicap accessible parking spaces for those without pre-purchased parking permits, will additionally be available on a first come, first serve basis in Lots D and G located on the southwest and northwest sides of the stadium. The parking fee for Lots D and G is $30 per space with the lots opening five hours prior to game time. It is strongly recommended that you arrive no later than one hour prior to game time as all day of game handicap accessible parking spaces sell out early. Denver Outlaws Lacrosse Parking All parking for Denver Outlaws games will be $10 per space in stadium lots. Parking is available on the south side of the stadium in Lots A, B and C for most games. Disabled patrons should park in Lot C for access to disabled parking. All parking lots will open four hours prior to the beginning of the game. Bus parking will be available in Lot A for $30.00 per bus. Please do not park in the neighborhoods surrounding Empower Field at Mile High. Permits are required to park in the neighborhoods and vehicles without permits are subject to citation and towing. Parking in the neighborhoods is strictly enforced by the City of Denver. Disabled Parking Parking for disabled patrons for Outlaws Lacrosse games is located in parking lot C on the south side of the stadium. Disabled parking spaces are located on the east side of lot C between the players parking lot (fenced lot) and the Sports Legends Mall.",
+        "accessibleSeatingDetail": "ADA seating may be purchased via Ticketmaster at Ticketmaster.com or by calling 800-745-3000. Limit of 4 ADA seats per customer. For ADA assistance/inquiries, please call 720-258-3337.",
+        "generalInfo": {
+          "generalRule": "The following items are permitted into the stadium: â€¢ Clear plastic or vinyl bag no larger than 12â€  x 6â€  x 12â€  - Officially licensed NFL team logo clear plastic tote bag measuring 12 x 6 x 12; available through club merchandise outlets or nflshop.com â€¢ Small clutch bag approximately the size of a hand, with or without a handle strap â€¢ 1 gallon clear plastic freezer bag â€¢ Factory-sealed, soft-sided plastic bottles containing non-alcoholic beverages â€¢ Empty plastic water or Nalgene bottles â€¢ Small, compact umbrellas will be allowed. No large golf umbrellas are permitted. The following items are not permitted into the stadium: â€¢ Hard-sided containers of any size or style including hard-sided coolers or thermoses. â€¢ Bags or containers larger than 12\" x 6\" x 12\" â€¢ Alcohol â€¢ Glass bottles or cans â€¢ Previously opened plastic bottles must be emptied. This includes water bottles or Nalgene bottles. â€¢ Firearms or weapons of any type â€¢ Artificial noise makers â€¢ Signs or flags on sticks, regardless of the length â€¢ Large golf umbrellas â€¢ Laser pointers of any type â€¢ Any other item deemed dangerous or unacceptable by security Gate Security Screening: Guests and their belongings may be searched upon entry into the stadium. By tendering a ticket and entering the stadium, guests consent to such searches and waive any related claims they they might have against the NFL, its member clubs, their affiliates and stadium landlord or their agents. Persons electing not to consent to the searches will be denied entry into the stadium. Please plan on arriving at gates no later than 45 minutes prior to the event start time to ensure you are in your seat on time. During Broncos games and other designated events, express lanes may be designated at each gate for patrons without any bags or containers. Small purses are permitted through express lanes. Please contact us with any additional questions at 720-258-3000.",
+          "childRule": "All guests 2 years of age and older are required to have a ticket for entry. Infants under 2 years may sit in an adults lap, so long as it does not disturb others."
+        },
+        "upcomingEvents": { "_total": 8, "ticketmaster": 8, "_filtered": 0 },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpa3Wne?locale=en-us" }
+        }
+      },
+      {
+        "name": "NRG Stadium",
+        "type": "venue",
+        "id": "KovZpZAEdFeA",
+        "test": false,
+        "url": "https://www.ticketmaster.com/nrg-stadium-tickets-houston/venue/475596",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/18743v.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "77054",
+        "timezone": "America/Chicago",
+        "city": { "name": "Houston" },
+        "state": { "name": "Texas", "stateCode": "TX" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "One NRG Park" },
+        "location": { "longitude": "-95.410875", "latitude": "29.684885" },
+        "markets": [
+          { "name": "Houston and More", "id": "22" },
+          { "name": "All of US", "id": "51" },
+          { "name": "Beaumont", "id": "123" }
+        ],
+        "dmas": [{ "id": 200 }, { "id": 227 }, { "id": 300 }, { "id": 408 }],
+        "social": { "twitter": { "handle": "@NRGparkfan" } },
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "For NRG Stadium information 832-667-1400.",
+          "openHoursDetail": "Monday-Friday 10am-5pm Saturday 10am-2pm. Hours subject to change.",
+          "acceptedPaymentDetail": "cash, visa, mc, amex & discover - no checks",
+          "willCallDetail": "TO PICK UP Will Call -- you must present your confirmation number, a picture ID and the credit card used to purchase your tickets. You must wait 48 hours after ordering to pick up your tickets."
+        },
+        "parkingDetail": "Price per car varies per event. Buses and oversized vehicles are more.",
+        "generalInfo": {
+          "generalRule": "No outside items including food or beverages may be brought in. No video cameras or equipment",
+          "childRule": "Children ages 2 and older need a ticket."
+        },
+        "upcomingEvents": {
+          "_total": 39,
+          "tmr": 21,
+          "ticketmaster": 18,
+          "_filtered": 0
+        },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZAEdFeA?locale=en-us" }
+        }
+      },
+      {
+        "name": "Nationwide Arena",
+        "type": "venue",
+        "id": "KovZpZA6kelA",
+        "test": false,
+        "url": "https://www.ticketmaster.com/nationwide-arena-tickets-columbus/venue/41498",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/20004v.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "43215",
+        "timezone": "America/New_York",
+        "city": { "name": "Columbus" },
+        "state": { "name": "Ohio", "stateCode": "OH" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "200 West Nationwide Blvd." },
+        "location": { "longitude": "-83.00636203", "latitude": "39.96939661" },
+        "markets": [
+          { "name": "Columbus", "id": "13" },
+          { "name": "All of US", "id": "51" }
+        ],
+        "dmas": [{ "id": 200 }, { "id": 259 }, { "id": 321 }, { "id": 421 }],
+        "social": { "twitter": { "handle": "@nationwidearena" } },
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "Nationwide Arena: 800 645 2657 or 614 246 3350 for hockey, 614 246 2000 for events. Chiller Dublin: 614 764 1000; Chiller Easton: 614 475 7575 Chiller North: 740 549 0009 Group Sales Information: For more information on group reservations or premium seating opportunities, call 614 246 7224",
+          "openHoursDetail": "Closed except on game or event days. Opens at 12 p.m. on game or event days.",
+          "acceptedPaymentDetail": "Visa, Master Card, American Express & Discover",
+          "willCallDetail": "Will Call windows are located inside the Nationwide Arena Box Office at the southwest corner of Nationwide Blvd. and McConnell Blvd. Customer must present actual credit card, confirmation number and a photo ID."
+        },
+        "parkingDetail": "There are more than 15,000 parking spaces available within a 10-minute walk of Nationwide Arena, including surface lots and parking garages. To purchase advanced parking, go to https://arenadistrict.parkmobile.io/.",
+        "accessibleSeatingDetail": "WHEELCHAIR ACCESS: Tickets available at all prices. Available at Ticketmaster, The Chillers and the Box Office. HEARING IMPAIRED: RF style assisted listening devices available through guest services at Nationwide Arena.",
+        "generalInfo": {
+          "generalRule": "Use of video cameras is prohibited within Nationwide Arena. For Blue Jackets games, professional cameras with attached lenses are permitted. For special events including concerts, the camera policies are determined by the show or tour. Generally, cameras are not permitted for special events, but please call (614)246-2000 with specific inquiries. Cameras with detachable lenses are not permitted at any time during special events. Bags are generally NOT permitted. There is an exception for medical bags, diaper bags OR clutches no larger than 8 inches x 5 inches x 1 inch. Medical bags, diaper bags AND clutches will be X-rayed via dedicated screening lines (identified at each entry). For more information visit https://www.nationwidearena.com/plan-your-visit.",
+          "childRule": "Children ages 2 and over require a ticket for all Columbus Blue Jackets hockey games. Children under two years may enter without a ticket but must sit on the lap of a parent/guardian. Rules for children vary for other events at the Nationwide Arena. Check individual show for more information."
+        },
+        "upcomingEvents": {
+          "_total": 38,
+          "tmr": 1,
+          "ticketmaster": 37,
+          "_filtered": 0
+        },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZA6kelA?locale=en-us" }
+        }
+      },
+      {
+        "name": "Footprint Center",
+        "type": "venue",
+        "id": "KovZpZAE617A",
+        "test": false,
+        "url": "https://www.ticketmaster.com/footprint-center-tickets-phoenix/venue/205079",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/22218v.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "85004",
+        "timezone": "America/Phoenix",
+        "city": { "name": "Phoenix" },
+        "state": { "name": "Arizona", "stateCode": "AZ" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "201 East Jefferson Street" },
+        "location": { "longitude": "-112.071313", "latitude": "33.445899" },
+        "markets": [{ "name": "Phoenix and Tucson", "id": "36" }],
+        "dmas": [{ "id": 359 }, { "id": 402 }, { "id": 420 }],
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "Northwest side of Footprint Center in the Pavilion.(602)379-7800 Suns Game Nights call (602)379-7867",
+          "openHoursDetail": "Monday - Friday: 10:00am - 5:00pm Saturday - Sunday: closed except on event days and special on sales.",
+          "acceptedPaymentDetail": "The Footprint Center accepts the following methods of payment at the Box Office:VISA MASTERCARD DISCOVER AMERICAN EXPRESS CASH, PHX ARENA NO LONGER ACCEPTS CHECKS",
+          "willCallDetail": "The WILL CALL windows open two hours prior to events and are located on the Northwest side of the building in the Pavilion. WILL CALL PICK-UP: The Footprint Center requires that customers picking up WILL CALL tickets furnish the following: 1) PICTURE IDENTIFICATION THAT MATCHES THE PICK-UP NAME 2) CONFIRMATION NUMBER THAT MATCHES THE CUSTOMER ACCOUNT ALTERNATE WILL CALL PICK-UP: If another person, other than the person ordering and paying for the tickets, is picking up a WILL CALL order, the ALTERNATE PICK-UP name MUST be on the account. To get the alternate pick-up name noted on the account, the original purchaser MUST contact Ticketmaster at (1-800-745-3000), ask for customer service to verify account information and request alternate pick-up."
+        },
+        "parkingDetail": "Adjacent parking structure at 1st and Madison. Many other parking lots and structures within a 10 minute walk of Footprint Center. Prices vary by event. Parking and Direction hotline (602)514-8472",
+        "accessibleSeatingDetail": "PHOENIX SUNS: To purchase Phoenix Suns tickets for people with disabilities, subject to availability, please call Footprint Center at (602)379-7867 or visit Footprint Center ticket office. Accessible tickets can also be purchased at all Ticketmaster locations, by calling (800)745-3000 or online at ticketmaster.com. ARIZONA RATTLERS: To purchase Arizona Rattlers tickets for people with disabilities, Subject to availability, please call Footprint Center at (602)379-7800 or visit the Footprint Center ticket office. Accessible tickets can also be purchased at all Ticketmaster locations, by calling (800)745-3000 or online at ticketmaster.com. PHOENIX MERCURY: To purchase Phoenix Mercury tickets for people with disabilities, subject to availability, please call Footprint Center at (602)252-9622 or visit the Footprint Center ticket office. Accessible tickets can also be purchased at all Ticketmaster locations, by calling (800)745-3000 or online at ticketmaster.com. ARENA CONCERTS AND OTHER EVENTS: To purchase concert or other event tickets for people with disabilities, subject to availability, please call Footprint Center at (602)379-7800 or visit Footprint Center ticket office. Accessible tickets can also be purchased at all Ticketmaster locations, by calling (800)745-3000 or online at ticketmaster.com.",
+        "generalInfo": {
+          "generalRule": "New security procedures have been implemented at Footprint Center. No backpacks or large purses will be allowed. Small purses and fanny packs will be subject to search. Every individual entering the arena will be subject to search. Every vehicle entering the building will be subject to search. Sealed water bottles (1 litre or smaller) allowed in building. No other outside concessions allowed. No pets other than \"assisting\" animals. Smoking in Facility: Footprint Center is a non-smoking facility. Smoking areas outside building are available, depending on event. NON professional cameras only (depending on event) No Laser Pointers allowed No Video Cameras allowed No Recorders allowed",
+          "childRule": "Please contact the Footprint Center ticket office at (602)379-7800, for information. Child policy Varies by event. Children age three (3) and above require a ticket for Phoenix Suns, Phoenix Mercury, and Arizona Rattlers games."
+        },
+        "upcomingEvents": { "_total": 52, "ticketmaster": 52, "_filtered": 0 },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZAE617A?locale=en-us" }
+        }
+      },
+      {
+        "name": "Paycom Center",
+        "type": "venue",
+        "id": "KovZpa2Wre",
+        "test": false,
+        "url": "https://www.ticketmaster.com/paycom-center-tickets-oklahoma-city/venue/98958",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/22211v.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "73102",
+        "timezone": "America/Chicago",
+        "city": { "name": "Oklahoma City" },
+        "state": { "name": "Oklahoma", "stateCode": "OK" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "100 West Reno" },
+        "location": { "longitude": "-97.514594", "latitude": "35.463391" },
+        "markets": [{ "name": "Oklahoma", "id": "125" }],
+        "dmas": [{ "id": 349 }, { "id": 403 }],
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "Arena: 405-602-8700 Thunder Ticket Office: 405.208.HOOP (4667)",
+          "openHoursDetail": "Paycom Center's Box Office is located just off West Reno between the two main entrances on the north side of the arena. Currently, it is temporarily closed on non-event days. On event days, the Box Office is open at 12pm (noon) on Mondays-Saturdays, or four hours prior to the event time on Sundays. Some events may have additional hours.",
+          "acceptedPaymentDetail": "Paycom Center is a cashless venue. The Box Office accepts, Visa, MasterCard, American Express and Discover cards, as well as mobile wallet (Apple Pay, Google Pay) payments.",
+          "willCallDetail": "When purchasing tickets by phone or online, you may choose to pick them up at the Box Office Will Call window on the day of the show. Please be prepared to present the credit card used to purchase the tickets, as well as a photo I.D. Press and VIP tickets, or tickets left by a third party, may also be picked up at Will Call on the day of the event. A photo I.D. is required."
+        },
+        "parkingDetail": "Parking is available just across the street from Paycom Center in the underground parking garage at the neighboring Prairie Surf Studios, which is managed by Republic Parking Systems. Parking garage entrances are located on the east side on E.K. Gaylord and the west side on N. Robinson. Parking spaces for disabled guests driving properly licensed or tagged vehicles and are located near all four elevator entrances. Additional parking is available throughout Downtown and Bricktown. There are more than 18,000 parking spaces including approximately 1,300 parking meters. For further information on Oklahoma City parking facilities, you may call (405) 235-PARK or visit www.parkingokc.com.",
+        "accessibleSeatingDetail": "Paycom Center meets or exceeds all structural and service requirements as stipulated by the Americans with Disabilities Act. Restrooms, drinking fountains, and concession counters are accessible to guests with disabilities. Additional services are listed below. Accessible Tickets/Seating: Wheelchair accessible seats are available in all price levels. Up to three companion tickets may be purchased with each wheelchair accessible ticket. Please indicate at the time of purchase if you require accessible seating. Accessible Drop-off: Passengers may be dropped off at Reno and Robinson near the northwest entrance to Paycom Center. Elevators: Elevators are located throughout the facility for wheelchair access to all levels. The elevators near Section 101, just inside the northwest entrance, provide access to the arena floor. Elevator on club level nearest Section 205. See the maps at the center of this guide for exact locations. Emergency Evacuation: Paycom Center staff members have been trained in emergency preparedness and evacuation procedures. Key employees are assigned to assist patrons with disabilities to safety. Listening Devices: Listening devices may be rented free of charge at the Guest Relations Desks located at each of the main entrances. A credit card or check deposit, as well as a valid I.D., are required to ensure the return of equipment. Parking: Accessible parking is available in the parking lots on the south side of Paycom Center. Entrances are available on S.W. 3rd Street, east of Robinson. Accessible parking spaces are also available in the underground parking garage at the neighboring Prairie Surf Studios. See Parking for additional information. Service Animals: Trained guide dogs or service animals are permitted to assist guests inside the arena. If special accommodations are required for your service animal, please notify us at the time of your ticket purchase. All other animals are prohibited. Sign Interpreters: Guests who require interpreting services during an event, should contact the Guest Relations Manager by calling (405) 602-8700 within three weeks of the event. Telephones: Telephones are provided at Guest Relations locations and throughout Paycom Center, courtesy of Cox Communications. TDD machines and volume-enhanced phones are available. Wheelchair Assistance: Paycom Center offers wheelchair service for guests who may need assistance to and from their seats. Please contact a Guest Relations representative for assistance. Wheelchair assistance is provided on a first-come, first-served basis. Due to the limited number of wheelchairs available, they may not be borrowed or rented as seating during the event. If wheelchair assistance becomes necessary during an event, please notify the nearest staff member.",
+        "generalInfo": {
+          "generalRule": "For your safety, once a person exits Paycom Center, re-entry is strictly prohibited. For safety reasons, prohibited items include but are not limited to: - Alcohol, illegal drugs or any paraphernalia associated with drug use - Cans, bottles, coolers or other similar containers - Fireworks - Flags/Signs with poles - Laser pens/pointers of any type - Noisemakers such as air horns - Outside food or drinks - Oversized bags, including backpacks, duffel bags or diaper bags - Weapons of any type, including chains, knives and firearms - Any other item deemed unacceptable by event or building management For safety reasons, prohibited items include but are not limited to: - Alcohol, illegal drugs or any paraphernalia associated with drug use - Cans, bottles, coolers or other similar containers - Fireworks - Flags/Signs with poles - Laser pens/pointers of any type - Noisemakers such as air horns - Outside food or drinks - Oversized bags, including backpacks, duffel bags or diaper bags - Weapons of any type, including chains, knives and firearms - Any other item deemed unacceptable by event or building management",
+          "childRule": "Most events do not require a ticket for children under the age of two. However, in order for a child to have his or her own seat, a ticket is required. Some shows intended for young children do require children over the age of one to have a ticket. Please call (405) 602-8700 in advance to verify the policy for a specific event."
+        },
+        "upcomingEvents": { "_total": 39, "ticketmaster": 39, "_filtered": 0 },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpa2Wre?locale=en-us" }
+        }
+      },
+      {
+        "name": "Acrisure Stadium",
+        "type": "venue",
+        "id": "KovZpZAFa6nA",
+        "test": false,
+        "url": "https://www.ticketmaster.com/acrisure-stadium-tickets-pittsburgh/venue/180306",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/22395v.jpg",
+            "width": 640,
+            "height": 360,
+            "fallback": false
+          }
+        ],
+        "postalCode": "15212",
+        "timezone": "America/New_York",
+        "city": { "name": "Pittsburgh" },
+        "state": { "name": "Pennsylvania", "stateCode": "PA" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "100 Art Rooney Avenue" },
+        "location": { "longitude": "-80.015884", "latitude": "40.446093" },
+        "markets": [{ "name": "Pittsburgh", "id": "19" }],
+        "dmas": [{ "id": 271 }, { "id": 307 }, { "id": 360 }],
+        "social": { "twitter": { "handle": "@acrisurefield" } },
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "(412) 323-1200",
+          "willCallDetail": "Must have photo ID and credit card that the tickets were purchased in order to pick up tickets."
+        },
+        "parkingDetail": "There are surface lots and parking garages all around the stadium.",
+        "generalInfo": { "childRule": "Everyone must have a ticket." },
+        "upcomingEvents": { "_total": 5, "ticketmaster": 5, "_filtered": 0 },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZAFa6nA?locale=en-us" }
+        }
+      },
+      {
+        "name": "Bank of America Stadium",
+        "type": "venue",
+        "id": "KovZpa3hje",
+        "test": false,
+        "url": "https://www.ticketmaster.com/bank-of-america-stadium-tickets-charlotte/venue/368876",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/22383v.jpg",
+            "width": 640,
+            "height": 360,
+            "fallback": false
+          }
+        ],
+        "postalCode": "28202",
+        "timezone": "America/New_York",
+        "city": { "name": "Charlotte" },
+        "state": { "name": "North Carolina", "stateCode": "NC" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "800 South Mint Street" },
+        "location": { "longitude": "-80.852829", "latitude": "35.225789" },
+        "markets": [
+          { "name": "Charlotte", "id": "2" },
+          { "name": "South Carolina", "id": "121" }
+        ],
+        "dmas": [
+          { "id": 243 },
+          { "id": 245 },
+          { "id": 256 },
+          { "id": 291 },
+          { "id": 292 }
+        ],
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "Carolina Panthers box office - (704) 358-7800",
+          "openHoursDetail": "Open Mon-Fri 8:30am-5:30pm Opens 2 Hours Prior To Game Time Located at the Southeast corner between South and East Gates",
+          "acceptedPaymentDetail": "Advance sales - Cash, Visa, MCGame days - Cash only",
+          "willCallDetail": "Open 4 hours prior to game time. Located at box office-southeast corner PLEASE BRING A PICTURE ID, THE ACTUAL CREDIT CARD USED TO PURCHASE THE TICKETS, AND YOUR ORDER NUMBER."
+        },
+        "parkingDetail": "Public and private parking available throughout the uptown Charlotte area. Rates vary according to proximity to the stadium.",
+        "accessibleSeatingDetail": "This venue is accessible.",
+        "generalInfo": {
+          "generalRule": "-NO Weapons (weapons with permits are not allowed) -NO Illegal Drugs -NO Alcoholic Beverages -NO Food or Beverages -NO Fireworks or Explosives -NO Pets - except service animals assisting those with disabilities -NO Folding chairs -NO Noise makers, horns, helium balloons and beach balls -NO Laser pointers -NO Coolers -NO Umbrellas -NO Videocameras -NO Backpacks -NO Baby Strollers -NO Dufflebags",
+          "childRule": "Chilren age one year (12 months) and up must have a ticket"
+        },
+        "upcomingEvents": { "_total": 19, "ticketmaster": 19, "_filtered": 0 },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpa3hje?locale=en-us" }
+        }
+      },
+      {
+        "name": "Chase Field",
+        "type": "venue",
+        "id": "KovZpZA6tdtA",
+        "test": false,
+        "url": "https://www.ticketmaster.com/chase-field-tickets-phoenix/venue/204801",
+        "locale": "en-us",
+        "postalCode": "85004",
+        "timezone": "America/Phoenix",
+        "city": { "name": "Phoenix" },
+        "state": { "name": "Arizona", "stateCode": "AZ" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "401 E. Jefferson" },
+        "location": { "longitude": "-112.066662", "latitude": "33.444799" },
+        "markets": [{ "name": "Phoenix and Tucson", "id": "36" }],
+        "dmas": [{ "id": 359 }, { "id": 402 }, { "id": 420 }],
+        "social": { "twitter": { "handle": "@Dbacks" } },
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "Ticket office information line-(602)514-8400 Main Number-(602)462-6500 SMG/SAA Ventures, LLC-(480)994-0471",
+          "openHoursDetail": "Hours: Monday-Friday 9:00-5:00 and Event Days only Location: Main Ticket Office-Southwest corner of ballpark on 4th St. and Jackson. Additional Ticket Windows-Gate K Northeast corner of ballpark-near 7th St. on Jefferson The Box Office opens for the winter season TBA",
+          "acceptedPaymentDetail": "Visa, Mastercard, American Express, Cash",
+          "willCallDetail": "All will call can be picked up at the main box office or ticketing kiosks on the southwest corner of the ballpark during regular business hours."
+        },
+        "parkingDetail": "Chase Field Parking Garage-4th St. north of Buchanan. Civic Plaza East Garage-7th St. And Washington Arizona Center Garage-5th St. and Fillmore Arizona CenterLot-3rd St. and Van Buren Jefferson St. Garage-3rd St. and Jefferson Chase Field Lot-north side of Van Buren between Central and 1st St. US Airways Center Garage-1st St. between Jefferson and Jackson",
+        "accessibleSeatingDetail": "Accessible Seats are reserved for individuals with accessible needs. These seats are restricted to no more than six (6) companions. If someone is wanting more than the allowed limit, please have them call the Box Office at 602 514-8400. Only 1 companion is guaranteed to be in the same section as the guest, depending on availability.",
+        "generalInfo": {
+          "generalRule": "Chase Field Regulations and Security Measures Heightened security measures established by Major League Baseball and the Arizona Diamondbacks. These measures include: Increased presence of uniformed law enforcement at all games. Daily facility inspections by stadium and law enforcement personnel prior to gates opening to the public. Identification and inspection of all ballpark deliveries. Unauthorized vehicle parking prohibited within 100 feet of any ballpark entrance Continued coordination and communication with all local and federal law enforcement In order to accommodate the desires of baseball fans at Chase Field: 1. No backpacks are authorized 2. Beverages: a. Only non-flavored water in SEALED plastic bottles. b. EMPTY plastic water bottles. c. SEALED single serving juice boxes. d. Formula / baby food. 3. No metal or glass containers for food or beverages containers will be permitted. 4. For fan safety and enjoyment the following items are prohibited at Chase Field Firearms or fireworks Blow horns Noisemakers Fishing Nets Beach Balls or Frisbees Laser Pens Flags with hollow poles or poles not sold in the Team Shop. Brooms that exceed 4 feet in length. (must be solid, no hollow poles) Anything that can obstruct a fans view. Wrapped presents and or gifts of any kind* *Please note that if you have a planned party of any kind that includes gifts, wrap gifts after you enter the facility. If any of the above items are discovered at our gates our security staff member will request you return the items to your vehicle Fan Ground Rules 1. Guests interfering with a ball in play will be ejected. 2. Guests interfering with the progress of the game or going onto the field will be ejected and subject to arrest. 3. Guests wearing obscene or indecent clothing will not be allowed entry to the ballpark. 4. Guests using foul or abusive language or gestures will be ejected from the ballpark. 5. Guests appearing intoxicated will be denied entry or ejected from the ballpark. 6. Any guest found throwing objects on the field or in the seating areas will be ejected.",
+          "childRule": "2 and under are free."
+        },
+        "upcomingEvents": { "_total": 94, "ticketmaster": 94, "_filtered": 0 },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZA6tdtA?locale=en-us" }
+        }
+      },
+      {
+        "name": "Beacon Theatre",
+        "type": "venue",
+        "id": "KovZpZAEAd6A",
+        "test": false,
+        "url": "https://www.ticketmaster.com/beacon-theatre-tickets-new-york/venue/483425",
+        "locale": "en-us",
+        "aliases": ["Beacon Theater"],
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dbimages/12533v.",
+            "width": 205,
+            "height": 115,
+            "fallback": false
+          }
+        ],
+        "postalCode": "10023",
+        "timezone": "America/New_York",
+        "city": { "name": "New York" },
+        "state": { "name": "New York", "stateCode": "NY" },
+        "country": { "name": "United States Of America", "countryCode": "US" },
+        "address": { "line1": "2124 Broadway @ 74th St" },
+        "location": { "longitude": "-73.980673", "latitude": "40.779925" },
+        "markets": [
+          { "name": "New York/Tri-State Area", "id": "35" },
+          { "name": "Northern New Jersey", "id": "55" },
+          { "name": "Connecticut", "id": "124" }
+        ],
+        "dmas": [{ "id": 296 }, { "id": 345 }, { "id": 422 }],
+        "social": { "twitter": { "handle": "@BeaconTheatre" } },
+        "boxOfficeInfo": {
+          "phoneNumberDetail": "Beacon Theatre Telephone Numbers General Information: (212) 247-4777 Disabled Services: (212) 465-6085 Guest Relations: (212) 465-6225 Event Hotline/Venue Information: (212) 465-6500 Group Sales: (212) 465-6080 Lost and Found: (212) 465-6501 Special Event Sales: (212) 465-6106",
+          "openHoursDetail": "Monday to Saturday 10:00am - 6:00pm If an event starts prior to 1:00pm, the Box Office will open 1 hour before the event start time. If an event starts after 6:30pm, the Box Office will remain open 1 hour after the event start time. Sunday - CLOSED However, if an event takes place on a Sunday, the Box Office will open at 12:00pm or 90 minutes prior the scheduled event start time (whichever is earlier) and remain open 30 minutes after event start time for will call and tickets sales for that days event only.",
+          "acceptedPaymentDetail": "Visa, Mastercard, Amex, Discover, Cash",
+          "willCallDetail": "Patrons who have tickets being held at Will Call may pick up their tickets on the day of the event during regular box office hours (see above). Patrons must present the physical credit card used to place the order and a valid photo ID along with their order/confirmation number. Beacon Theatre will not accept third party or \"drop off\" will tickets from individual patrons"
+        },
+        "parkingDetail": "Local Parking Lots Champion Parking 74 LLC 2109 Broadway between 73rd and 74th Street Champion Parking 77 LLC 219 West 77th Street between Amsterdam and Broadway Wilfred 19 Street Garage Inc. 203 West 77th Street between Amsterdam and Broadway Carousel Parking (Champion Parking) 201 West 75th Street between Amsterdam and Broadway (Amsterdam Avenue entrance) The Beacon Theatre has no affiliation with nor do we endorse any parking garages. The Beacon Theatre is not responsible for any parking tickets, vandalism, etc, while parking for an event or otherwise.",
+        "accessibleSeatingDetail": "*Please note: there are no public elevators in The Beacon Theatre, which opened in 1929. In 1979, the historic venue was designated a national landmark and is on the National Register of Historic Places. Tickets for patrons with disabilities may be purchased via the following methods: Visiting www.ticketmaster.com Calling Ticketmaster Sales Line at (866) 858 0008 Calling Beacon Theatre Disabled Services Department at (212) 465 6085 In Person at Beacon Box Office (see box office hours above) Wheelchair and Transfer seating is reserved exclusively for patrons with accessible needs and their companions. Accessible seating is intended for use by an individual with a mobility disability or other disability who requires the accessible features of accessible seating due to a disability, and that individuals companions. Radio City Music Hall reserves the right to investigate potential misuse of accessible seating and to take all appropriate action against individuals who fraudulently obtain tickets for accessible seating. While tickets for accessible seating legitimately purchased for the use of an individual with disability may be transferred to another individual under the same terms and conditions applicable to other tickets, in the event such ticket is transferred to a non-disabled individual, Radio City reserves the right to transfer that individual to other available seating Service Animals Pets are not permitted at The Beacon Theatre The Beacon has very specific policies related to service and emotional support animals. Please visit www.beacontheatre.com to obtain more information for admitting your animal. Assistive Listening Devices (ALDAs) These devices are available upon request from guest services. There is no charge for this service. However some form of identification will be requested and returned to you once the device is checked back in. Wheelchair Storage For patrons who wish to transfer to a seat from their wheelchair, we will store your wheelchair in the rear of the seating section and issue you a claim check.",
+        "generalInfo": {
+          "generalRule": "*There are no public elevators in The Beacon Theatre, which opened in 1928.",
+          "childRule": "A child under two years does not require a ticket, but will sit on the parent or guardians lap during the show. If a child has celebrated a second birthday, a ticket is required. Some shows are age restricted. Please refer to the venue website for more information."
+        },
+        "upcomingEvents": { "_total": 74, "ticketmaster": 74, "_filtered": 0 },
+        "ada": {
+          "adaPhones": "212-465-6085",
+          "adaCustomCopy": "Tickets for patrons with disabilities may be purchased via the following methods: \nVisiting www.Ticketmaster.com\nCalling Ticketmaster Phones at 866-858-0008\nIn Person at Beacon Box Office\nCalling Beacon Theatre Disabled Services Department at 212 465-6085\n\nDisabled seating is reserved for the exclusive use of patrons with disabilities and their guests and the purchase or use of these seating locations by non-disabled individuals is strictly prohibited and can result in ejection and/or forfeiture of ticket price. If the individual with a disability cannot attend an event for which he/she has purchased tickets, call the Disabled Services Department prior to the event taking place for further instructions. ",
+          "adaHours": "Monday - Friday, between the hours of 9:30am and 4:30pm."
+        },
+        "_links": {
+          "self": { "href": "/discovery/v2/venues/KovZpZAEAd6A?locale=en-us" }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "first": { "href": "/discovery/v2/venues.json?page=0&size=20" },
+    "prev": { "href": "/discovery/v2/venues.json?page=1&size=20" },
+    "self": { "href": "/discovery/v2/venues.json?page=2" },
+    "next": { "href": "/discovery/v2/venues.json?page=3&size=20" },
+    "last": { "href": "/discovery/v2/venues.json?page=3748&size=20" }
+  },
+  "page": {
+    "size": 20,
+    "totalElements": 74979,
+    "totalPages": 3749,
+    "number": 2
+  }
+}

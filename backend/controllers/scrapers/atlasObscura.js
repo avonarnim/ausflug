@@ -29,10 +29,10 @@ class AtlasObscuraScraper {
   }
 
   run = async () => {
-    // for (let i = 0; i < countries.length; i++) {
-    for (let i = 0; i < 3; i++) {
-      const country = countries[i];
+    for (let i = 0; i < countries.length; i++) {
+      let country = countries[i];
       console.log("country", country);
+      country = country.replace(" ", "-");
       const initialNumItems = this.items.length;
       const start = new Date();
 
@@ -44,7 +44,7 @@ class AtlasObscuraScraper {
 
       if (this.items.length === initialNumItems) {
         console.log("No items found for country:", country, "... retrying");
-        this.rateLimiterDelay += 250;
+        this.rateLimiterDelay += 1000;
         console.log("new rate limiter delay", this.rateLimiterDelay);
         await timeout(this.rateLimiterDelay);
         await this.scrape(1, country);
