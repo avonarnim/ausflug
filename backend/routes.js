@@ -5,6 +5,11 @@ const trip = require("./controllers/trip");
 const user = require("./controllers/user");
 const scraper = require("./controllers/scrapers/scraperWrapper");
 
+// Health Test
+router.route("/").get((req, res) => {
+  res.send("Hello World!");
+});
+
 // trip-user Routes
 router.route("/api/trips/:tripId").get((req, res) => {
   trip.get_trip(req, res);
