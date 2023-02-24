@@ -2,7 +2,7 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { CssBaseline, ThemeProvider, Toolbar } from "@mui/material";
-import { NavBar } from "./components/Navbar.js";
+import { NavBar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { useTheme } from "./core/theme";
 import { Route, Routes } from "react-router-dom";
