@@ -104,7 +104,10 @@ export type Mutation<T extends Type> = State<T> & {
 
 // #endregion
 
-const apiBaseUrl = "http://localhost:3001";
+const apiBaseUrl =
+  process.env.REACT_APP_STAGE === "dev"
+    ? "http://localhost:3001"
+    : process.env.REACT_APP_PUBLIC_API_URL;
 
 export function useMutation<T extends Type>(type: T): Mutation<T> {
   const [state, setState] = React.useState<State<T>>({
