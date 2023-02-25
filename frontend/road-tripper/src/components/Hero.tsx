@@ -1,6 +1,6 @@
 import { Box, Button, CardMedia, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import logo250 from "../assets/logo250.png";
+import logo250 from "../assets/logo250-removebg.png";
 
 export function Hero(): JSX.Element {
   return (
@@ -24,11 +24,11 @@ export function Hero(): JSX.Element {
         >
           <Box mb={2} mt={2}>
             <Typography variant="h2" align="left">
-              Explore the world. Make every trip special.
+              Make every trip special.
             </Typography>
           </Box>
           <Box mb={4} mt={2}>
-            <Typography align="left">
+            <Typography variant="h5" align="left">
               Feel like a local on your next trip.
             </Typography>
           </Box>

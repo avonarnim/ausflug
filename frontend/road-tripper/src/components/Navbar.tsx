@@ -15,8 +15,8 @@ import { useAuth } from "../core/AuthContext";
 import { Logout as LogoutIcon } from "../icons/Logout";
 import { Logout } from "./Logout";
 import { useState } from "react";
-import logo from "../assets/logo.png";
-import logo250 from "../assets/logo250.png";
+import logo from "../assets/logo-removebg.png";
+import logo250 from "../assets/logo250-removebg.png";
 
 export function NavBar(props: AppBarProps): JSX.Element {
   const { sx, ...other } = props;
@@ -59,6 +59,7 @@ export function NavBar(props: AppBarProps): JSX.Element {
               underline="none"
               to="/trips"
               component={NavLink}
+              sx={{ pl: 2, pr: 2 }}
             >
               Trips
             </Link>
@@ -67,6 +68,7 @@ export function NavBar(props: AppBarProps): JSX.Element {
               underline="none"
               to="/spots"
               component={NavLink}
+              sx={{ pl: 2, pr: 2 }}
             >
               Spots
             </Link>
@@ -75,17 +77,21 @@ export function NavBar(props: AppBarProps): JSX.Element {
               underline="none"
               to="/profile"
               component={NavLink}
+              sx={{ pl: 2, pr: 2 }}
             >
               Profile
             </Link>
-            <Link
-              color="inherit"
-              underline="none"
-              to="/login"
-              component={NavLink}
-            >
-              Login Stuff
-            </Link>
+            {!currentUser && (
+              <Link
+                color="inherit"
+                underline="none"
+                to="/login"
+                component={NavLink}
+                sx={{ pl: 2, pr: 2 }}
+              >
+                Login
+              </Link>
+            )}
             {currentUser && (
               <>
                 <button
