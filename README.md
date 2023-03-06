@@ -58,3 +58,22 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+
+## Deploying the Backend
+
+The backend API server is hosted in GCP. It is built using Docker. The following commands are used:
+
+```
+<!-- This creates an image named backend -->
+1  docker build -t backend .
+<!-- This will show that the backend image has been created -->
+2  docker images
+<!-- This will run the image in a container -->
+3  PORT=8080 && docker run --rm backend
+4  gcloud run deploy
+<!-- Options: deploying from source w default name, region 35 -->
+```
+
+## Deploying the Frontend
+
+Vercel is used to serve the frontend. Vercel is mostly a frontend-oriented hosting service. It is automatically updated when the master branch is pushed-to. This connection was established from the Vercel dashboard.
