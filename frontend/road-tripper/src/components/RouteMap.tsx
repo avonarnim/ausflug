@@ -191,7 +191,6 @@ export function RouteMap(): JSX.Element {
         return marker;
       });
 
-      console.log(markers);
       new MarkerClusterer({ map, markers });
     }
   },
