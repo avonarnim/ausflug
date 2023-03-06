@@ -3,7 +3,6 @@ const router = require("express").Router();
 const spot = require("./controllers/spot");
 const trip = require("./controllers/trip");
 const user = require("./controllers/user");
-const scraper = require("./controllers/scrapers/scraperWrapper");
 
 // Health Test
 router.route("/").get((req, res) => {
@@ -11,9 +10,6 @@ router.route("/").get((req, res) => {
 });
 
 // trip-user Routes
-router.route("/api/trips/:tripId").get((req, res) => {
-  trip.get_trip(req, res);
-});
 router.route("/api/trips").post((req, res) => {
   trip.create_trip(req, res);
 });

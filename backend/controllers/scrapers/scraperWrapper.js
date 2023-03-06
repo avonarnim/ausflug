@@ -3,30 +3,47 @@ const atlasObscura = require("./atlasObscura");
 const atlasObscuraLocations = require("./atlasObscuraLocations");
 const ticketMaster = require("./ticketMaster");
 
+const mongoose = require("mongoose");
+require("dotenv").config();
+
 // Run as:
 // node -e 'require("./scraperWrapper.js").runMichelinScraper()'
 exports.runMichelinScraper = async () => {
-  const items = await michelin.getItems();
-  console.log(items, items.length);
-  console.log("should now upload to db");
+  const uri = process.env.ATLAS_URI;
+  mongoose.connect(uri);
+  const connection = mongoose.connection;
+  connection.once("open", async () => {
+    console.log("Connection established w MongoDB");
+    const items = await michelin.getItems();
+    console.log("should now upload " + items.length + " spots to db");
+  });
+
+  // await michelin.uploadRestaurantsToDb(items);
+  // console.log("finished uploading");
 };
 
 // Gets atlas obscura items across all locations
 exports.runAtlasObscuraScraper = async () => {
-  const items = await atlasObscura.getItems();
-  console.log(items, items.length);
-  console.log("should now upload to db");
+  const uri = process.env.ATLAS_URI;
+  mongoose.connect(uri);
+  const connection = mongoose.connection;
+  connection.once("open", async () => {
+    console.log("Connection established w MongoDB");
+    const items = await atlasObscura.getItems();
+    console.log("should now upload " + items.length + " spots to db");
+  });
+
+  // await atlasObscura.uploadItemsToDb(items);
 };
 
 // Gets atlas obscura locations
 exports.runAtlasObscuraLocationScraper = async () => {
   const items = await atlasObscuraLocations.getItems();
-  console.log(items, items.length);
-  console.log("should now upload to db");
+  console.log("should now write " + items.length + " locations to local file");
 };
 
 exports.runTicketMasterScraper = async () => {
   const items = await ticketMaster.getItems();
-  console.log(items, items.length);
-  console.log("should now upload to db");
+  console.log("should now upload " + items.length + " spots to db");
+  await ticketMaster.uploadItemsToDb(items);
 };

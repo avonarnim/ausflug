@@ -1,5 +1,6 @@
 const rp = require("request-promise");
 const cheerio = require("cheerio");
+const Spot = require("../../models/spotModel");
 
 const { timeout, countries } = require("./utils");
 
@@ -23,7 +24,7 @@ const regEx = {
 
 class AtlasObscuraScraper {
   constructor() {
-    this.rateLimiterDelay = 2000;
+    this.rateLimiterDelay = 4000;
     this.items = [];
     this.totalPages = 1;
   }
@@ -40,7 +41,7 @@ class AtlasObscuraScraper {
 
       const end = new Date();
       const delay = this.rateLimiterDelay - (end - start);
-      await timeout(delay);
+      await timeout(delay + Math.floor(Math.random() * 1000));
 
       if (this.items.length === initialNumItems) {
         console.log("No items found for country:", country, "... retrying");
@@ -73,6 +74,7 @@ class AtlasObscuraScraper {
     );
     const $ = cheerio.load(res);
 
+    var tempItems = [];
     const cards = $(selectors.cards);
     cards.each((idx, ref) => {
       const $card = $(ref);
@@ -83,7 +85,7 @@ class AtlasObscuraScraper {
       const lat = $card.data("lat");
       const lng = $card.data("lng");
 
-      this.items.push({
+      tempItems.push({
         name,
         description,
         link,
@@ -92,6 +94,9 @@ class AtlasObscuraScraper {
         img,
       });
     });
+
+    uploadItemsToDb(tempItems);
+    this.items = tempItems;
 
     // if (currentPage < this.totalPages) {
     //   return this.scrape(currentPage + 1);
@@ -161,7 +166,7 @@ const uploadItemsToDb = (items) => {
     });
   });
 
-  console.log(`spots: ${spotDocs.length} ${spotDocs[0]}`);
+  // console.log(`spots: ${spotDocs.length} ${spotDocs[0]}`);
   Spot.insertMany(spotDocs, function (error, docs) {});
 };
 

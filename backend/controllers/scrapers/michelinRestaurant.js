@@ -1,5 +1,6 @@
 const rp = require("request-promise");
 const cheerio = require("cheerio");
+const Spot = require("../../models/spotModel");
 
 const { timeout } = require("./utils");
 
@@ -30,7 +31,8 @@ class MichelinScraper {
   }
 
   run = async () => {
-    await this.scrape(1);
+    // await this.scrape(1);
+    await this.scrapeAndUpload(1);
   };
 
   getRestaurants = () => this.restaurants;
@@ -46,8 +48,7 @@ class MichelinScraper {
     const totalItems = Number(
       $("h1").text().match(regEx.totalItems)[0].replace(/[\.,]/g, "")
     );
-    console.log("total items", totalItems);
-    // this.totalPages = Math.ceil(totalItems / itemsPerPage);
+    this.totalPages = Math.ceil(totalItems / itemsPerPage);
   };
 
   scrape = async (currentPage) => {
@@ -99,6 +100,63 @@ class MichelinScraper {
 
     if (currentPage < this.totalPages) {
       return this.scrape(currentPage + 1);
+    }
+    return;
+  };
+
+  scrapeAndUpload = async (currentPage) => {
+    console.log("processing page " + currentPage);
+    const start = new Date();
+    const options = {
+      uri: baseUrl + query + currentPage,
+      transform: (body) => {
+        return cheerio.load(body);
+      },
+    };
+
+    const $ = await rp(options).catch((err) => {
+      delete err.response;
+      console.log(err);
+    });
+
+    if (this.totalPages === 1) {
+      this.setTotalPages($);
+    }
+
+    const cards = $(selectors.cards);
+    var pageRestaurants = [];
+    cards.each((idx, ref) => {
+      const $card = $(ref);
+      const $title = $card.find(selectors.name);
+      const name = $title.text().trim();
+      const link = `${baseUrl}${$title.attr("href")}`;
+      const img = $card.find(selectors.img).html().match(regEx.img)[0];
+      const priceType = $card.find(selectors.type).text().trim();
+      const price = priceType.indexOf("\n");
+      const typeIndex = priceType.lastIndexOf("\n");
+      const type = priceType.slice(typeIndex + 1).trim();
+      const lat = $card.data("lat");
+      const lng = $card.data("lng");
+
+      pageRestaurants.push({
+        name,
+        link,
+        price,
+        type,
+        img,
+        lat,
+        lng,
+      });
+    });
+
+    const end = new Date();
+    const delay = this.rateLimiterDelay - (end - start);
+    await timeout(delay);
+
+    uploadRestaurantsToDb(pageRestaurants);
+
+    if (currentPage < this.totalPages) {
+      return this.scrapeAndUpload(currentPage + 1);
     }
     return;
   };
@@ -167,10 +225,8 @@ const uploadRestaurantsToDb = (restaurants) => {
       openTimes: [],
     });
 
-    console.log(`spot: ${new_spot}`);
     new_spot.save(function (err, spot) {
-      if (err) res.send(err);
-      res.json(spot);
+      if (err) console.log("had an error", err);
     });
   }
 };

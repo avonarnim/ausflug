@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const usStates = [
@@ -58,7 +60,12 @@ const usStates = [
   "Wyoming",
 ];
 
-const countries = [
+var countries = [];
+data = fs.readFileSync("locations.txt", "utf8");
+data = data.replace(/["']/g, "");
+countries = data.split(",");
+
+const countriesList = [
   "Algeria",
   "Angola",
   "Benin",
