@@ -12,8 +12,8 @@ export function SpotInfo(props: SpotInfoProps): JSX.Element {
       <Typography>Specialty: {props.specialty}</Typography>
       <Typography>Quality: {props.quality}</Typography>
       <Typography>Time: {props.avgTimeSpent}</Typography>
-      <Typography>Longitude: {props.location.longitude}</Typography>
-      <Typography>Latitude: {props.location.latitude}</Typography>
+      <Typography>Longitude: {props.location.lng}</Typography>
+      <Typography>Latitude: {props.location.lat}</Typography>
     </Box>
   );
 }
@@ -29,8 +29,8 @@ export type SpotInfoProps = {
   numberOfRatings: number;
   avgTimeSpent: number;
   location: {
-    longitude: number;
-    latitude: number;
+    lng: number;
+    lat: number;
   };
   mapLocation: {
     formatted_address: string;

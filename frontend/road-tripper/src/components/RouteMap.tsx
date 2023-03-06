@@ -5,6 +5,7 @@ import {
   Autocomplete,
   DirectionsRenderer,
 } from "@react-google-maps/api";
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import React, { useRef, useState, createRef, useEffect } from "react";
 import {
   Box,
@@ -40,8 +41,10 @@ export function RouteMap(): JSX.Element {
 
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
+  const nameRef = useRef<HTMLInputElement>();
 
   const getSpots = useMutation("GetSpots");
+  const createTrip = useMutation("CreateTrip");
 
   function success(position: GeolocationPosition) {
     const latitude = position.coords.latitude;
@@ -71,8 +74,8 @@ export function RouteMap(): JSX.Element {
       const wayPoints = chosenDetours.map((spot) => {
         return {
           location: {
-            lat: spot.location.latitude,
-            lng: spot.location.longitude,
+            lat: spot.location.lat,
+            lng: spot.location.lng,
           },
           stopover: true,
         };
@@ -147,15 +150,16 @@ export function RouteMap(): JSX.Element {
               <h2>${spotResult.title}</h2>
               <p>${spotResult.description}</p>
               <p>${spotResult.category}</p>
-              <p>${spotResult.category}</p>
-              <p>${spotResult.location.latitude} ${spotResult.location.longitude}</p>
+              <p>Quality: ${spotResult.quality}</p>
+              <p>Specialty: ${spotResult.specialty}</p>
+              <p>${spotResult.location.lat} ${spotResult.location.lng}</p>
             </div>`,
         });
 
         const marker = new google.maps.Marker({
           position: {
-            lat: spotResult.location.latitude,
-            lng: spotResult.location.longitude,
+            lat: spotResult.location.lat,
+            lng: spotResult.location.lng,
           },
           map: map,
         });
@@ -188,6 +192,7 @@ export function RouteMap(): JSX.Element {
       });
 
       console.log(markers);
+      new MarkerClusterer({ map, markers });
     }
   },
   []);
@@ -305,6 +310,36 @@ export function RouteMap(): JSX.Element {
           >
             <NearMe />
           </IconButton>
+          <Input type="text" placeholder="Name" inputRef={nameRef} />
+          <Button
+            onClick={() => {
+              createTrip.commit({
+                name: nameRef.current?.value || "Unnamed Trip",
+                description: "",
+                creatorId: "1",
+                origin: originRef.current?.value || "",
+                destination: destinationRef.current?.value || "",
+                waypoints: chosenDetours.map((spot) => {
+                  return {
+                    location: {
+                      lat: spot.location.lat,
+                      lng: spot.location.lng,
+                    },
+                    stopover: true,
+                  };
+                }),
+                startDate: Date.now(),
+                endDate: Date.now(),
+                isPublic: false,
+                isComplete: false,
+                isArchived: false,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+              });
+            }}
+          >
+            Save
+          </Button>
         </Box>
       </Box>
     </>

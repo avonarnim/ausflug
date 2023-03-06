@@ -21,6 +21,7 @@ type Type =
   | "UpdateProfile"
   | "FollowProfile"
   | "UnfollowProfile"
+  | "CreateTrip"
   | "SaveTrip"
   | "DeleteTrip"
   | "UpdateTrip"
@@ -66,6 +67,8 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? { profileId: string; followingId: string }
   : T extends "UnfollowProfile"
   ? { profileId: string; followingId: string }
+  : T extends "CreateTrip"
+  ? Omit<TripProps, "id">
   : T extends "SaveTrip"
   ? TripProps
   : T extends "DeleteTrip"
@@ -95,6 +98,8 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? SpotInfoProps[]
   : T extends "GetSpotsInBox"
   ? SpotInfoProps[]
+  : T extends "CreateTrip"
+  ? TripProps
   : any;
 
 export type Mutation<T extends Type> = State<T> & {
@@ -254,6 +259,14 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
                 headers,
               }
             );
+            break;
+          }
+          case "CreateTrip": {
+            res = await fetch(`${apiBaseUrl}/api/trips`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...input }),
+            });
             break;
           }
           case "SaveTrip": {

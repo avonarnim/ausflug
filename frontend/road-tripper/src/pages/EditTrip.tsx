@@ -74,8 +74,8 @@ export default function EditTrip(): JSX.Element {
       const wayPoints = chosenDetours.map((spot) => {
         return {
           location: {
-            lat: spot.location.latitude,
-            lng: spot.location.longitude,
+            lat: spot.location.lat,
+            lng: spot.location.lng,
           },
           stopover: true,
         };
@@ -141,15 +141,16 @@ export default function EditTrip(): JSX.Element {
               <h2>${spotResult.title}</h2>
               <p>${spotResult.description}</p>
               <p>${spotResult.category}</p>
-              <p>${spotResult.category}</p>
-              <p>${spotResult.location.latitude} ${spotResult.location.longitude}</p>
+              <p>${spotResult.quality}</p>
+              <p>${spotResult.specialty}</p>
+              <p>${spotResult.location.lat} ${spotResult.location.lng}</p>
             </div>`,
         });
 
         const marker = new google.maps.Marker({
           position: {
-            lat: spotResult.location.latitude,
-            lng: spotResult.location.longitude,
+            lat: spotResult.location.lat,
+            lng: spotResult.location.lng,
           },
           map: map,
         });
@@ -294,16 +295,21 @@ export type TripProps = {
   name: string;
   description: string;
   creatorId: string;
-  spotIds: string[];
-  startLongitude: number;
-  startLatitude: number;
-  endLongitude: number;
-  endLatitude: number;
-  startDate: string;
-  endDate: string;
+  origin: string;
+  destination: string;
+  waypoints: {
+    location: { lat: number; lng: number };
+    stopover: boolean;
+  }[];
+  // startLongitude: number;
+  // startLatitude: number;
+  // endLongitude: number;
+  // endLatitude: number;
+  startDate: number;
+  endDate: number;
   isPublic: boolean;
   isComplete: boolean;
   isArchived: boolean;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: number;
+  updatedAt: number;
 };

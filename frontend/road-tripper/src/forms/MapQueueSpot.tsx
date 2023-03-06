@@ -142,8 +142,8 @@ export function QueueSpotFormConfirm(props: {
         title: props.values.title,
         description: props.values.description,
         location: {
-          latitude: props.values.mapLocation.geometry.location.lat(),
-          longitude: props.values.mapLocation.geometry.location.lng(),
+          lat: props.values.mapLocation.geometry.location.lat(),
+          lng: props.values.mapLocation.geometry.location.lng(),
         },
         mapLocation: {
           formatted_address: props.values.mapLocation.formatted_address,
