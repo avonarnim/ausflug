@@ -10,6 +10,7 @@ import React, { useRef, useState, createRef, useEffect } from "react";
 import {
   Box,
   Button,
+  Grid,
   Input,
   List,
   ListItem,
@@ -38,6 +39,7 @@ export function RouteMap(): JSX.Element {
   const [duration, setDuration] = useState("");
   const [chosenDetours, setChosenDetours] = useState<SpotInfoProps[]>([]);
   const [wayPointElements, setWayPointElements] = useState<JSX.Element[]>([]);
+  const [routeCreated, setRouteCreated] = useState(false);
 
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
@@ -91,6 +93,7 @@ export function RouteMap(): JSX.Element {
       setDirectionsResponse(results);
       setDistance(results.routes[0].legs[0].distance?.text || "");
       setDuration(results.routes[0].legs[0].duration?.text || "");
+      setRouteCreated(true);
       return;
     }
   }
@@ -99,6 +102,7 @@ export function RouteMap(): JSX.Element {
     setDirectionsResponse(undefined);
     setDistance("");
     setDuration("");
+    setRouteCreated(false);
     if (originRef.current && destinationRef.current) {
       originRef.current.value = "";
       destinationRef.current.value = "";
@@ -134,6 +138,19 @@ export function RouteMap(): JSX.Element {
   const onLoad = React.useCallback(async function callback(
     map: google.maps.Map
   ) {
+    const options = {
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -179,
+          east: 179,
+        },
+        strictBounds: true,
+      },
+    };
+    map.setOptions(options);
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
     }
@@ -206,28 +223,10 @@ export function RouteMap(): JSX.Element {
     setMap(undefined);
   }, []);
 
-  // const spotResults = [
-  //   { location: { latitude: 48, longitude: 50 } },
-  //   { location: { latitude: 51, longitude: 40 } },
-  //   { location: { latitude: 50.5, longitude: 50.5 } },
-  //   { location: { latitude: 49, longitude: 49 } },
-  // ];
-  // console.log(spotResults);
-  // const markers = spotResults.map((spot) => {
-  //   return new google.maps.Marker({
-  //     position: {
-  //       lat: spot.location.latitude,
-  //       lng: spot.location.longitude,
-  //     },
-  //     map: map,
-  //   });
-  // });
-  // console.log(markers);
-
   return isLoaded ? (
     <>
       <GoogleMap
-        mapContainerStyle={{ width: "100%", height: "400px" }}
+        mapContainerStyle={{ width: "100%", height: "800px" }}
         center={center}
         zoom={4}
         onLoad={onLoad}
@@ -239,106 +238,161 @@ export function RouteMap(): JSX.Element {
       </GoogleMap>
       <Box>
         <Box>
-          <Box>
-            <Autocomplete>
-              <Input type="text" placeholder="Origin" inputRef={originRef} />
-            </Autocomplete>
-          </Box>
-          <Box>
-            <Autocomplete>
-              <Input
-                type="text"
-                placeholder="Destination"
-                inputRef={destinationRef}
-              />
-            </Autocomplete>
-          </Box>
-          <Box>
-            <Typography>Browse Stops</Typography>
-            <List
-              dense
-              sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-            >
-              {wayPointElements}
-            </List>
-          </Box>
-          <Box>
-            <Typography>Waypoints</Typography>
-            <List
-              dense
-              sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-            >
-              {chosenDetours.map((detour, index) => {
-                return (
-                  <ListItem
-                    secondaryAction={
-                      <IconButton
-                        edge="end"
-                        aria-label="comments"
-                        onClick={() => removeSpotFromRoute(index)}
-                      >
-                        <Delete />
-                      </IconButton>
-                    }
-                  >
-                    <ListItemText primary={detour.title}></ListItemText>
-                    <ListItemText primary={detour.description}></ListItemText>
-                  </ListItem>
-                );
-              })}
-            </List>
-          </Box>
+          <Grid item container direction="row" alignItems="center">
+            <Grid item xs={6} sx={{ p: 4 }}>
+              <Autocomplete>
+                <Input
+                  type="text"
+                  placeholder="Origin"
+                  inputRef={originRef}
+                  fullWidth
+                />
+              </Autocomplete>
+            </Grid>
+            <Grid item xs={6} sx={{ p: 4 }}>
+              <Autocomplete>
+                <Input
+                  type="text"
+                  placeholder="Destination"
+                  inputRef={destinationRef}
+                  fullWidth
+                />
+              </Autocomplete>
+            </Grid>
+            <br />
+            <br />
+            <br />
+            <Grid item container direction="column" xs={6} sx={{ p: 4 }}>
+              <Grid item>
+                <Typography>Browse Stops</Typography>
+              </Grid>
+              <Grid item>
+                <List dense sx={{ width: "100%", maxWidth: 360 }}>
+                  {wayPointElements.length === 0 ? (
+                    <ListItem>
+                      Sorry, but we're having trouble loading destinations right
+                      now
+                    </ListItem>
+                  ) : (
+                    wayPointElements
+                  )}
+                </List>
+              </Grid>
+            </Grid>
+            <Grid item container direction="column" xs={6} sx={{ p: 4 }}>
+              <Grid item>
+                <Typography>Selected Detours</Typography>
+              </Grid>
+              <Grid item>
+                <List
+                  dense
+                  sx={{
+                    width: "100%",
+                    maxWidth: 360,
+                  }}
+                >
+                  {chosenDetours.length === 0 ? (
+                    <ListItem>No detours selected</ListItem>
+                  ) : (
+                    chosenDetours.map((detour, index) => {
+                      return (
+                        <ListItem
+                          secondaryAction={
+                            <IconButton
+                              edge="end"
+                              aria-label="comments"
+                              onClick={() => removeSpotFromRoute(index)}
+                            >
+                              <Delete />
+                            </IconButton>
+                          }
+                        >
+                          <ListItemText primary={detour.title}></ListItemText>
+                          <ListItemText
+                            primary={detour.description}
+                          ></ListItemText>
+                        </ListItem>
+                      );
+                    })
+                  )}
+                </List>
+              </Grid>
+            </Grid>
 
-          <Button type="submit" onClick={calculateRoute}>
-            Calculate Route
-          </Button>
+            <Grid container spacing={0} justifyContent="flex-begin">
+              <Grid item xs={3} sx={{ p: 4 }}>
+                <Button
+                  type="submit"
+                  onClick={calculateRoute}
+                  variant="contained"
+                >
+                  Calculate Route
+                </Button>
+              </Grid>
+            </Grid>
 
-          <IconButton aria-label="center back" onClick={clearRoute}>
-            <Delete />
-          </IconButton>
-        </Box>
-        <Box>
-          <Typography>Distance: {distance} </Typography>
-          <Typography>Duration: {duration} </Typography>
-          <IconButton
-            aria-label="center back"
-            onClick={() => {
-              map?.panTo(center);
-              map?.setZoom(4);
-            }}
-          >
-            <NearMe />
-          </IconButton>
-          <Input type="text" placeholder="Name" inputRef={nameRef} />
-          <Button
-            onClick={() => {
-              createTrip.commit({
-                name: nameRef.current?.value || "Unnamed Trip",
-                description: "",
-                creatorId: "1",
-                origin: originRef.current?.value || "",
-                destination: destinationRef.current?.value || "",
-                waypoints: chosenDetours.map((spot) => {
-                  return {
-                    location: {
-                      lat: spot.location.lat,
-                      lng: spot.location.lng,
-                    },
-                    stopover: true,
-                  };
-                }),
-                startDate: Date.now(),
-                endDate: Date.now(),
-                isPublic: false,
-                isComplete: false,
-                isArchived: false,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-              });
-            }}
-          >
-            Save
-          </Button>
+            {routeCreated ? (
+              <>
+                {" "}
+                <Grid item xs={6} sx={{ pl: 4, pr: 4 }}>
+                  <Typography>Distance: {distance} </Typography>
+                </Grid>
+                <Grid item xs={6} sx={{ pl: 4, pr: 4 }}>
+                  <Typography>Duration: {duration} </Typography>
+                </Grid>
+              </>
+            ) : (
+              <></>
+            )}
+
+            {/* <Grid item xs={6} sx={{ pl: 4, pr: 4 }}>
+              <IconButton
+                aria-label="center back"
+                onClick={() => {
+                  map?.panTo(center);
+                  map?.setZoom(4);
+                }}
+              >
+                <NearMe />
+              </IconButton>
+            </Grid> */}
+            <Grid item xs={6} sx={{ pl: 4, pr: 4 }}>
+              <Input type="text" placeholder="Name" inputRef={nameRef} />
+              <Button
+                onClick={() => {
+                  createTrip.commit({
+                    name: nameRef.current?.value || "Unnamed Trip",
+                    description: "",
+                    creatorId: "1",
+                    origin: originRef.current?.value || "",
+                    destination: destinationRef.current?.value || "",
+                    waypoints: chosenDetours.map((spot) => {
+                      return {
+                        location: {
+                          lat: spot.location.lat,
+                          lng: spot.location.lng,
+                        },
+                        stopover: true,
+                      };
+                    }),
+                    startDate: Date.now(),
+                    endDate: Date.now(),
+                    isPublic: false,
+                    isComplete: false,
+                    isArchived: false,
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
+                  });
+                }}
+              >
+                Save
+              </Button>
+
+              <IconButton aria-label="delete route" onClick={clearRoute}>
+                <Delete />
+              </IconButton>
+            </Grid>
+          </Grid>
         </Box>
       </Box>
     </>
