@@ -141,8 +141,8 @@ export function RouteMap(): JSX.Element {
     setMap(map);
 
     const spotResults = await getSpots.commit({});
-    console.log(spotResults);
-    console.log(map);
+    console.log("spot results", spotResults);
+    console.log("map", map);
     if (map) {
       const markers = spotResults.map((spotResult: SpotInfoProps) => {
         const infoWindow = new google.maps.InfoWindow({

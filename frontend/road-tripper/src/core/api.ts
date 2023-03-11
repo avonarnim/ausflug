@@ -135,6 +135,8 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
 
         let res: Response;
 
+        console.log("sending request");
+
         switch (type) {
           case "CreateSpot":
             res = await fetch(`${apiBaseUrl}/api/spots`, {
@@ -169,10 +171,14 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             break;
           }
           case "GetSpots": {
+            console.log("getting spots");
+
             res = await fetch(`${apiBaseUrl}/api/spots`, {
               method: "GET",
               headers,
             });
+
+            console.log("RES", res);
             break;
           }
           case "GetSpotsByCenter": {
