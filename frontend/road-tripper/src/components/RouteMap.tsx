@@ -240,7 +240,7 @@ export function RouteMap(): JSX.Element {
         <Box>
           <Grid item container direction="row" alignItems="center">
             <Grid item xs={6} sx={{ p: 4 }}>
-              <Autocomplete>
+              <Autocomplete fields={["formatted_address", "name", "place_id"]}>
                 <Input
                   type="text"
                   placeholder="Origin"
@@ -250,7 +250,7 @@ export function RouteMap(): JSX.Element {
               </Autocomplete>
             </Grid>
             <Grid item xs={6} sx={{ p: 4 }}>
-              <Autocomplete>
+              <Autocomplete fields={["formatted_address", "name", "place_id"]}>
                 <Input
                   type="text"
                   placeholder="Destination"
@@ -307,9 +307,9 @@ export function RouteMap(): JSX.Element {
                             </IconButton>
                           }
                         >
-                          <ListItemText primary={detour.title}></ListItemText>
                           <ListItemText
-                            primary={detour.description}
+                            primary={detour.title}
+                            secondary={detour.description}
                           ></ListItemText>
                         </ListItem>
                       );
@@ -333,7 +333,6 @@ export function RouteMap(): JSX.Element {
 
             {routeCreated ? (
               <>
-                {" "}
                 <Grid item xs={6} sx={{ pl: 4, pr: 4 }}>
                   <Typography>Distance: {distance} </Typography>
                 </Grid>
