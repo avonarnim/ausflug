@@ -17,6 +17,8 @@ import {
   ListItemText,
   Typography,
   IconButton,
+  ListItemButton,
+  Paper,
 } from "@mui/material";
 import { useMutation } from "../core/api";
 import { NearMe, Delete, Add } from "@mui/icons-material";
@@ -40,6 +42,10 @@ export function RouteMap(): JSX.Element {
   const [chosenDetours, setChosenDetours] = useState<SpotInfoProps[]>([]);
   const [wayPointElements, setWayPointElements] = useState<JSX.Element[]>([]);
   const [routeCreated, setRouteCreated] = useState(false);
+  const [startAutocomplete, setStartAutocomplete] =
+    useState<google.maps.places.Autocomplete>();
+  const [destinationAutocomplete, setDestinationAutocomplete] =
+    useState<google.maps.places.Autocomplete>();
 
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
@@ -160,49 +166,73 @@ export function RouteMap(): JSX.Element {
     const spotResults = await getSpots.commit({});
     console.log("spot results", spotResults);
     console.log("map", map);
-    if (map) {
-      const markers = spotResults.map((spotResult: SpotInfoProps) => {
-        const infoWindow = new google.maps.InfoWindow({
-          content: `<div>
-              <h2>${spotResult.title}</h2>
-              <p>${spotResult.description}</p>
-              <p>${spotResult.category}</p>
-              <p>Quality: ${spotResult.quality}</p>
-              <p>Specialty: ${spotResult.specialty}</p>
-              <p>${spotResult.location.lat} ${spotResult.location.lng}</p>
-            </div>`,
-        });
 
-        const marker = new google.maps.Marker({
-          position: {
-            lat: spotResult.location.lat,
-            lng: spotResult.location.lng,
-          },
-          map: map,
-        });
+    const wayPointsWithRefs = spotResults.map((spotResult: SpotInfoProps) => {
+      const waypointRef = createRef<HTMLDivElement>();
 
-        const waypointRef = createRef<HTMLDivElement>();
-
-        setWayPointElements([
-          ...wayPointElements,
-          <ListItem
-            secondaryAction={
-              <IconButton edge="end" onClick={() => addSpotToRoute(spotResult)}>
-                <Add />
-              </IconButton>
-            }
+      const element = (
+        <ListItem
+          key={
+            spotResult.title +
+            spotResult.id +
+            spotResult.location.lat +
+            spotResult.location.lng
+          }
+          secondaryAction={
+            <IconButton edge="end" onClick={() => addSpotToRoute(spotResult)}>
+              <Add />
+            </IconButton>
+          }
+        >
+          <ListItemButton
+            onClick={() => {
+              map.setCenter(spotResult.location);
+              map.setZoom(10);
+            }}
           >
             <ListItemText
               ref={waypointRef}
               primary={spotResult.title}
               secondary={spotResult.description}
-            />
-          </ListItem>,
-        ]);
+            ></ListItemText>
+          </ListItemButton>
+        </ListItem>
+      );
+      return {
+        spot: { spotResult, waypointRef },
+        element,
+      };
+    });
+
+    const elements = wayPointsWithRefs.map((wayPoint) => wayPoint.element);
+    const spotsWithRefs = wayPointsWithRefs.map((wayPoint) => wayPoint.spot);
+
+    setWayPointElements(elements);
+
+    if (map) {
+      const markers = spotsWithRefs.map((spot) => {
+        const infoWindow = new google.maps.InfoWindow({
+          content: `<div>
+              <h2>${spot.spotResult.title}</h2>
+              <p>${spot.spotResult.description}</p>
+              <p>${spot.spotResult.category}</p>
+              <p>Quality: ${spot.spotResult.quality}</p>
+              <p>Specialty: ${spot.spotResult.specialty}</p>
+              <p>${spot.spotResult.location.lat} ${spot.spotResult.location.lng}</p>
+            </div>`,
+        });
+
+        const marker = new google.maps.Marker({
+          position: {
+            lat: spot.spotResult.location.lat,
+            lng: spot.spotResult.location.lng,
+          },
+          map: map,
+        });
 
         marker.addListener("click", () => {
           infoWindow.open({ anchor: marker, map });
-          scrollToMarkerElement(waypointRef);
+          scrollToMarkerElement(spot.waypointRef);
         });
 
         return marker;
@@ -240,7 +270,24 @@ export function RouteMap(): JSX.Element {
         <Box>
           <Grid item container direction="row" alignItems="center">
             <Grid item xs={6} sx={{ p: 4 }}>
-              <Autocomplete fields={["formatted_address", "name", "place_id"]}>
+              <Autocomplete
+                fields={["formatted_address", "name", "geometry", "place_id"]}
+                onLoad={(autocomplete) => setStartAutocomplete(autocomplete)}
+                onPlaceChanged={() => {
+                  console.log("in here");
+                  console.log(startAutocomplete);
+                  console.log(startAutocomplete?.getPlace());
+                  const place = startAutocomplete?.getPlace();
+                  console.log(place);
+                  if (!place || !place.geometry || !place.geometry.location) {
+                    return;
+                  } else {
+                    console.log("setting center");
+                    map?.setCenter(place.geometry.location);
+                    map?.setZoom(10);
+                  }
+                }}
+              >
                 <Input
                   type="text"
                   placeholder="Origin"
@@ -250,7 +297,22 @@ export function RouteMap(): JSX.Element {
               </Autocomplete>
             </Grid>
             <Grid item xs={6} sx={{ p: 4 }}>
-              <Autocomplete fields={["formatted_address", "name", "place_id"]}>
+              <Autocomplete
+                fields={["formatted_address", "name", "geometry", "place_id"]}
+                onLoad={(autocomplete) =>
+                  setDestinationAutocomplete(autocomplete)
+                }
+                onPlaceChanged={() => {
+                  console.log("in here");
+                  const place = destinationAutocomplete?.getPlace();
+                  if (!place || !place.geometry || !place.geometry.location) {
+                    return;
+                  } else {
+                    map?.setCenter(place.geometry.location);
+                    map?.setZoom(10);
+                  }
+                }}
+              >
                 <Input
                   type="text"
                   placeholder="Destination"
@@ -267,16 +329,18 @@ export function RouteMap(): JSX.Element {
                 <Typography>Browse Stops</Typography>
               </Grid>
               <Grid item>
-                <List dense sx={{ width: "100%", maxWidth: 360 }}>
-                  {wayPointElements.length === 0 ? (
-                    <ListItem>
-                      Sorry, but we're having trouble loading destinations right
-                      now
-                    </ListItem>
-                  ) : (
-                    wayPointElements
-                  )}
-                </List>
+                <Paper style={{ height: 300, overflow: "auto", maxWidth: 360 }}>
+                  <List dense sx={{ width: "100%" }}>
+                    {wayPointElements.length === 0 ? (
+                      <ListItem>
+                        Sorry, but we're having trouble loading destinations
+                        right now
+                      </ListItem>
+                    ) : (
+                      wayPointElements
+                    )}
+                  </List>
+                </Paper>
               </Grid>
             </Grid>
             <Grid item container direction="column" xs={6} sx={{ p: 4 }}>
@@ -284,38 +348,40 @@ export function RouteMap(): JSX.Element {
                 <Typography>Selected Detours</Typography>
               </Grid>
               <Grid item>
-                <List
-                  dense
-                  sx={{
-                    width: "100%",
-                    maxWidth: 360,
-                  }}
-                >
-                  {chosenDetours.length === 0 ? (
-                    <ListItem>No detours selected</ListItem>
-                  ) : (
-                    chosenDetours.map((detour, index) => {
-                      return (
-                        <ListItem
-                          secondaryAction={
-                            <IconButton
-                              edge="end"
-                              aria-label="comments"
-                              onClick={() => removeSpotFromRoute(index)}
-                            >
-                              <Delete />
-                            </IconButton>
-                          }
-                        >
-                          <ListItemText
-                            primary={detour.title}
-                            secondary={detour.description}
-                          ></ListItemText>
-                        </ListItem>
-                      );
-                    })
-                  )}
-                </List>
+                <Paper style={{ height: 300, overflow: "auto", maxWidth: 360 }}>
+                  <List
+                    dense
+                    sx={{
+                      width: "100%",
+                      maxWidth: 360,
+                    }}
+                  >
+                    {chosenDetours.length === 0 ? (
+                      <ListItem>No detours selected</ListItem>
+                    ) : (
+                      chosenDetours.map((detour, index) => {
+                        return (
+                          <ListItem
+                            secondaryAction={
+                              <IconButton
+                                edge="end"
+                                aria-label="comments"
+                                onClick={() => removeSpotFromRoute(index)}
+                              >
+                                <Delete />
+                              </IconButton>
+                            }
+                          >
+                            <ListItemText
+                              primary={detour.title}
+                              secondary={detour.description}
+                            ></ListItemText>
+                          </ListItem>
+                        );
+                      })
+                    )}
+                  </List>
+                </Paper>
               </Grid>
             </Grid>
 
