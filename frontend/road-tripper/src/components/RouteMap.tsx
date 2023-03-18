@@ -46,6 +46,11 @@ export function RouteMap(): JSX.Element {
     useState<google.maps.places.Autocomplete>();
   const [destinationAutocomplete, setDestinationAutocomplete] =
     useState<google.maps.places.Autocomplete>();
+  const [savedSpots, setSavedSpots] = useState<SpotInfoProps[]>([]);
+  const [originPlace, setOriginPlace] =
+    useState<google.maps.places.PlaceResult>();
+  const [destinationPlace, setDestinationPlace] =
+    useState<google.maps.places.PlaceResult>();
 
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
@@ -126,6 +131,45 @@ export function RouteMap(): JSX.Element {
     setChosenDetours(newDetours);
   }
 
+  function generateRandomRoute() {
+    console.log("generateRandomRoute");
+
+    if (
+      originPlace &&
+      originPlace.geometry &&
+      originPlace.geometry.location &&
+      destinationPlace &&
+      destinationPlace.geometry &&
+      destinationPlace.geometry.location
+    ) {
+      const lat1 = originPlace.geometry.location.lat();
+      const lng1 = originPlace.geometry.location.lng();
+      const lat2 = destinationPlace.geometry.location.lat();
+      const lng2 = destinationPlace.geometry.location.lng();
+
+      const inRange = savedSpots.filter((spot) => {
+        const insideLat =
+          (spot.location.lat > lat1 && spot.location.lat < lat2) ||
+          (spot.location.lat < lat1 && spot.location.lat > lat2);
+        const insideLng =
+          (spot.location.lng > lng1 && spot.location.lng < lng2) ||
+          (spot.location.lng < lng1 && spot.location.lng > lng2);
+        return insideLat && insideLng;
+      });
+
+      const idealNumberOfSpots = 10;
+      const necessaryProbability = idealNumberOfSpots / inRange.length;
+
+      const randomChoice = inRange
+        .filter((spot) => {
+          return Math.random() > necessaryProbability;
+        })
+        .slice(0, idealNumberOfSpots);
+
+      setChosenDetours(randomChoice);
+    }
+  }
+
   // useEffect(() => {
   //   console.log("useEffect");
   //   if (!navigator.geolocation) {
@@ -164,6 +208,7 @@ export function RouteMap(): JSX.Element {
     setMap(map);
 
     const spotResults = await getSpots.commit({});
+    setSavedSpots(spotResults);
     console.log("spot results", spotResults);
     console.log("map", map);
 
@@ -278,6 +323,7 @@ export function RouteMap(): JSX.Element {
                   if (!place || !place.geometry || !place.geometry.location) {
                     return;
                   } else {
+                    setOriginPlace(place);
                     map?.setCenter(place.geometry.location);
                     map?.setZoom(10);
                   }
@@ -302,6 +348,7 @@ export function RouteMap(): JSX.Element {
                   if (!place || !place.geometry || !place.geometry.location) {
                     return;
                   } else {
+                    setDestinationPlace(place);
                     map?.setCenter(place.geometry.location);
                     map?.setZoom(10);
                   }
@@ -326,10 +373,7 @@ export function RouteMap(): JSX.Element {
                 <Paper style={{ height: 300, overflow: "auto", maxWidth: 360 }}>
                   <List dense sx={{ width: "100%" }}>
                     {wayPointElements.length === 0 ? (
-                      <ListItem>
-                        Sorry, but we're having trouble loading destinations
-                        right now
-                      </ListItem>
+                      <ListItem>Loading...</ListItem>
                     ) : (
                       wayPointElements
                     )}
@@ -343,17 +387,30 @@ export function RouteMap(): JSX.Element {
               </Grid>
               <Grid item>
                 <Paper style={{ height: 300, overflow: "auto", maxWidth: 360 }}>
-                  <List
-                    dense
-                    sx={{
-                      width: "100%",
-                      maxWidth: 360,
-                    }}
-                  >
-                    {chosenDetours.length === 0 ? (
-                      <ListItem>No detours selected</ListItem>
-                    ) : (
-                      chosenDetours.map((detour, index) => {
+                  {chosenDetours.length === 0 &&
+                  originRef.current?.value === "" &&
+                  destinationRef.current?.value === "" ? (
+                    <Box sx={{ p: 2 }}>
+                      <Typography>No detours selected</Typography>
+                      <Typography>
+                        Enter an origin and destination to get recommendations
+                      </Typography>
+                    </Box>
+                  ) : chosenDetours.length === 0 ? (
+                    <Box sx={{ p: 2 }}>
+                      <Typography>No detours selected</Typography>
+                      <Button onClick={generateRandomRoute}>
+                        Choose for me
+                      </Button>
+                    </Box>
+                  ) : (
+                    <List
+                      dense
+                      sx={{
+                        width: "100%",
+                      }}
+                    >
+                      {chosenDetours.map((detour, index) => {
                         return (
                           <ListItem
                             secondaryAction={
@@ -366,15 +423,22 @@ export function RouteMap(): JSX.Element {
                               </IconButton>
                             }
                           >
-                            <ListItemText
-                              primary={detour.title}
-                              secondary={detour.description}
-                            ></ListItemText>
+                            <ListItemButton
+                              onClick={() => {
+                                map?.setCenter(detour.location);
+                                map?.setZoom(10);
+                              }}
+                            >
+                              <ListItemText
+                                primary={detour.title}
+                                secondary={detour.description}
+                              ></ListItemText>
+                            </ListItemButton>
                           </ListItem>
                         );
-                      })
-                    )}
-                  </List>
+                      })}
+                    </List>
+                  )}
                 </Paper>
               </Grid>
             </Grid>
