@@ -43,7 +43,13 @@ exports.runAtlasObscuraLocationScraper = async () => {
 };
 
 exports.runTicketMasterScraper = async () => {
-  const items = await ticketMaster.getItems();
-  console.log("should now upload " + items.length + " spots to db");
-  await ticketMaster.uploadItemsToDb(items);
+  const uri = process.env.ATLAS_URI;
+  mongoose.connect(uri);
+  const connection = mongoose.connection;
+  connection.once("open", async () => {
+    console.log("Connection established w MongoDB");
+    const items = await ticketMaster.getItems();
+    console.log("should now upload " + items.length + " spots to db");
+    await ticketMaster.uploadItemsToDb(items);
+  });
 };

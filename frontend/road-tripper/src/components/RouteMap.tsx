@@ -274,15 +274,10 @@ export function RouteMap(): JSX.Element {
                 fields={["formatted_address", "name", "geometry", "place_id"]}
                 onLoad={(autocomplete) => setStartAutocomplete(autocomplete)}
                 onPlaceChanged={() => {
-                  console.log("in here");
-                  console.log(startAutocomplete);
-                  console.log(startAutocomplete?.getPlace());
                   const place = startAutocomplete?.getPlace();
-                  console.log(place);
                   if (!place || !place.geometry || !place.geometry.location) {
                     return;
                   } else {
-                    console.log("setting center");
                     map?.setCenter(place.geometry.location);
                     map?.setZoom(10);
                   }
@@ -303,7 +298,6 @@ export function RouteMap(): JSX.Element {
                   setDestinationAutocomplete(autocomplete)
                 }
                 onPlaceChanged={() => {
-                  console.log("in here");
                   const place = destinationAutocomplete?.getPlace();
                   if (!place || !place.geometry || !place.geometry.location) {
                     return;

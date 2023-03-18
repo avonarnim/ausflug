@@ -1,4 +1,6 @@
 const { timeout, countries } = require("./utils");
+const Spot = require("../../models/spotModel");
+
 require("dotenv").config();
 const fs = require("fs");
 
@@ -6,7 +8,7 @@ class TicketMasterClient {
   constructor() {
     this.events = [];
     this.currentPage = 0;
-    this.numPages = 1;
+    this.numPages = 50;
     this.rateLimiterDelay = 1500;
   }
 
@@ -125,6 +127,7 @@ const uploadItemsToDb = (items) => {
 
   console.log(`spots: ${spotDocs.length} ${spotDocs[0]}`);
   Spot.insertMany(spotDocs, function (error, docs) {});
+  return;
 };
 
 module.exports = { TicketMasterClient, getItems, uploadItemsToDb };
