@@ -2,6 +2,7 @@ const michelin = require("./michelinRestaurant");
 const atlasObscura = require("./atlasObscura");
 const atlasObscuraLocations = require("./atlasObscuraLocations");
 const ticketMaster = require("./ticketMaster");
+const algolia = require("./algolia");
 
 const mongoose = require("mongoose");
 require("dotenv").config();
@@ -16,6 +17,7 @@ exports.runMichelinScraper = async () => {
     console.log("Connection established w MongoDB");
     const items = await michelin.getItems();
     console.log("should now upload " + items.length + " spots to db");
+    mongoose.disconnect();
   });
 
   // await michelin.uploadRestaurantsToDb(items);
@@ -31,6 +33,7 @@ exports.runAtlasObscuraScraper = async () => {
     console.log("Connection established w MongoDB");
     const items = await atlasObscura.getItems();
     console.log("should now upload " + items.length + " spots to db");
+    mongoose.disconnect();
   });
 
   // await atlasObscura.uploadItemsToDb(items);
@@ -51,5 +54,17 @@ exports.runTicketMasterScraper = async () => {
     const items = await ticketMaster.getItems();
     console.log("should now upload " + items.length + " spots to db");
     await ticketMaster.uploadItemsToDb(items);
+    mongoose.disconnect();
+  });
+};
+
+exports.uploadAllSpotsToAlgoliaSearch = async () => {
+  const uri = process.env.ATLAS_URI;
+  mongoose.connect(uri);
+  const connection = mongoose.connection;
+  connection.once("open", async () => {
+    console.log("Connection established w MongoDB");
+    await algolia.transferFromMDBtoAlgolia();
+    mongoose.disconnect();
   });
 };

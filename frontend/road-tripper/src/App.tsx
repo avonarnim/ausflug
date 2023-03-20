@@ -9,12 +9,14 @@ import { Route, Routes } from "react-router-dom";
 import {
   AddSpot,
   Admin,
+  // Donate,
   EditTrip,
   Home,
   Login,
   Privacy,
   Profile,
   Register,
+  Search,
   Spot,
   Settings,
   Terms,
@@ -51,6 +53,10 @@ function App() {
             element={<React.Suspense children={<AddSpot />} />}
           />
           <Route
+            path="/search"
+            element={<React.Suspense children={<Search />} />}
+          />
+          <Route
             path="/profile"
             element={<React.Suspense children={<Profile />} />}
           />
@@ -78,6 +84,10 @@ function App() {
             path="/login"
             element={<React.Suspense children={<Login />} />}
           />
+          {/* <Route
+            path="/donate"
+            element={<React.Suspense children={<Donate />} />}
+          /> */}
         </Routes>
         <Footer />
       </ThemeProvider>

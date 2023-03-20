@@ -25,8 +25,8 @@ import "../styles/searchbar.css";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const searchClient = algoliasearch(
-  "BJP3I6DH75",
-  "8962b43f3c159564401bd78a77dea71d"
+  "S2P17HUIXR",
+  "f4deaa69b52860a576dc005a219738c9"
 );
 
 function CustomHits(props: UseHitsProps) {
@@ -42,10 +42,7 @@ function CustomHits(props: UseHitsProps) {
         <div className="toast toast-center">
           <div className="alert alert-error shadow-lg">
             <div>
-              <span>
-                No items in our collection match your query. Please search for
-                something else.
-              </span>
+              <span>Loading...</span>
             </div>
           </div>
         </div>
@@ -58,7 +55,7 @@ function CustomHits(props: UseHitsProps) {
 
 export function SearchBar() {
   return (
-    <InstantSearch searchClient={searchClient} indexName={`spots-prod`}>
+    <InstantSearch searchClient={searchClient} indexName={`spots`}>
       <Configure hitsPerPage={16} />
       <Grid item container direction="column" pb={2}>
         <Grid item pb={2}>

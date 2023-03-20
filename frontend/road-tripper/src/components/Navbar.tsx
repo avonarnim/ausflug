@@ -66,7 +66,7 @@ export function NavBar(props: AppBarProps): JSX.Element {
             <Link
               color="inherit"
               underline="none"
-              to="/spots"
+              to="/search"
               component={NavLink}
               sx={{ pl: 2, pr: 2 }}
             >
