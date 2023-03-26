@@ -36,16 +36,34 @@ router.route("/api/trips/:tripId").get((req, res) => {
 
 // spot Routes
 router.route("/api/spots").get((req, res) => {
+  console.log("all");
   spot.search_spots(req, res);
 });
-router.route("/api/spots/:latitude/:longitude").get((req, res) => {
-  spot.search_spots_by_area(req, res);
+router.route("/api/spots/center/:latitude/:longitude").get((req, res) => {
+  console.log("lat lng");
+  spot.search_spots_in_area(req, res);
 });
 router
-  .route("/api/spots/:latitude1/:longitude1/:latitude2/:longitude2")
+  .route("/api/spots/box/:latitude1/:longitude1/:latitude2/:longitude2")
   .get((req, res) => {
-    spot.search_spots_by_area(req, res);
+    console.log("box");
+    spot.search_spots_by_bounding_box(req, res);
   });
+// route for the search_spots_highlighted function
+router.route("/api/spots/highlighted").get((req, res) => {
+  console.log("highlighted");
+  spot.search_spots_highlighted(req, res);
+});
+// route for the search_spots_highlighted_for_subject function
+router.route("/api/spots/highlighted/:subject").get((req, res) => {
+  console.log("highlighted subject");
+  spot.search_spots_highlighted_for_subject(req, res);
+});
+// route for the search_spots_by_source function
+router.route("/api/spots/source/:source").get((req, res) => {
+  console.log("searching spots by source");
+  spot.search_spots_by_source(req, res);
+});
 router.route("/api/spots").post((req, res) => {
   spot.insert_spot(req, res);
 });
@@ -57,7 +75,7 @@ router.use("/api/spots/:spotId", VerifyToken);
 router.route("/api/spots").delete((req, res) => {
   spot.delete_spot(req, res);
 });
-router.route("/api/spots/:spotId").get((req, res) => {
+router.route("/api/spots/single/:spotId").get((req, res) => {
   spot.view_spot(req, res);
 });
 

@@ -19,8 +19,9 @@ export function SpotInfo(props: SpotInfoProps): JSX.Element {
 }
 
 export type SpotInfoProps = {
-  id: string;
+  _id: string;
   title: string;
+  image: string;
   description: string;
   category: string;
   cost: number;
@@ -48,6 +49,8 @@ export type SpotInfoProps = {
     price_level: number;
   };
   sponsored: boolean;
+  highlightedIn: string[];
+  featuredBy: string[];
   duration: number;
   status: string;
   openTimes: number[];

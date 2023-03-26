@@ -138,9 +138,10 @@ export function QueueSpotFormConfirm(props: {
   const attemptContinue = async () => {
     try {
       const spotInfo = {
-        id: "",
+        _id: "",
         title: props.values.title,
         description: props.values.description,
+        image: "",
         location: {
           lat: props.values.mapLocation.geometry.location.lat(),
           lng: props.values.mapLocation.geometry.location.lng(),
@@ -168,6 +169,8 @@ export function QueueSpotFormConfirm(props: {
         numberOfRatings: 0,
         avgTimeSpent: 0,
         sponsored: false,
+        featuredBy: [""],
+        highlightedIn: [""],
         duration: 0,
         status: "pending",
         openTimes: [new Date().getTime()],

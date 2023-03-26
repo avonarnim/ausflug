@@ -31,6 +31,8 @@ const SpotSchema = new Schema({
     price_level: Number,
   },
   sponsored: Boolean,
+  highlightedIn: [String],
+  featuredBy: [String],
   duration: Number,
   status: String,
   externalLink: String,

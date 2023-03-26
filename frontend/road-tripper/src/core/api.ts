@@ -14,6 +14,9 @@ type Type =
   | "GetSpots"
   | "GetSpotsByCenter"
   | "GetSpotsInBox"
+  | "GetHighlightedSpots"
+  | "GetSpotsByHighlightedGroup"
+  | "GetSpotsBySource"
   | "CreateProfile"
   | "GetProfile"
   | "GetProfiles"
@@ -53,6 +56,12 @@ type Input<T extends Type> = T extends "CreateSpot"
       longitude2: number;
       latitude2: number;
     }
+  : T extends "GetHighlightedSpots"
+  ? {}
+  : T extends "GetSpotsByHighlightedGroup"
+  ? { subject: string }
+  : T extends "GetSpotsBySource"
+  ? { source: string }
   : T extends "CreateProfile"
   ? ProfileProps
   : T extends "GetProfile"
@@ -97,6 +106,12 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   : T extends "GetSpotsByCenter"
   ? SpotInfoProps[]
   : T extends "GetSpotsInBox"
+  ? SpotInfoProps[]
+  : T extends "GetHighlightedSpots"
+  ? SpotInfoProps[]
+  : T extends "GetSpotsByHighlightedGroup"
+  ? SpotInfoProps[]
+  : T extends "GetSpotsByFeaturedSource"
   ? SpotInfoProps[]
   : T extends "CreateTrip"
   ? TripProps
@@ -146,7 +161,7 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             });
             break;
           case "UpdateSpot": {
-            const spotId = (input as SpotInfoProps).id;
+            const spotId = (input as SpotInfoProps)._id;
             res = await fetch(`${apiBaseUrl}/api/spots/${spotId}`, {
               method: "UPDATE",
               headers,
@@ -164,7 +179,7 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
           }
           case "GetSpot": {
             const spotId = (input as { spotId: string }).spotId;
-            res = await fetch(`${apiBaseUrl}/api/spots/${spotId}`, {
+            res = await fetch(`${apiBaseUrl}/api/spots/single/${spotId}`, {
               method: "GET",
               headers,
             });
@@ -184,7 +199,7 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
           case "GetSpotsByCenter": {
             const inputCast = input as { longitude: number; latitude: number };
             res = await fetch(
-              `${apiBaseUrl}/api/spots/${inputCast.latitude}/${inputCast.longitude}`,
+              `${apiBaseUrl}/api/spots/center/${inputCast.latitude}/${inputCast.longitude}`,
               {
                 method: "GET",
                 headers,
@@ -200,7 +215,36 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
               latitude2: number;
             };
             res = await fetch(
-              `${apiBaseUrl}/api/spots/${inputCast.latitude1}/${inputCast.longitude1}/${inputCast.latitude2}/${inputCast.longitude2}`,
+              `${apiBaseUrl}/api/spots/box/${inputCast.latitude1}/${inputCast.longitude1}/${inputCast.latitude2}/${inputCast.longitude2}`,
+              {
+                method: "GET",
+                headers,
+              }
+            );
+            break;
+          }
+          case "GetHighlightedSpots": {
+            res = await fetch(`${apiBaseUrl}/api/spots/highlighted`, {
+              method: "GET",
+              headers,
+            });
+            break;
+          }
+          case "GetSpotsByHighlightedGroup": {
+            const inputCast = input as { subject: string };
+            res = await fetch(
+              `${apiBaseUrl}/api/spots/highlighted/${inputCast.subject}`,
+              {
+                method: "GET",
+                headers,
+              }
+            );
+            break;
+          }
+          case "GetSpotsBySource": {
+            const inputCast = input as { source: string };
+            res = await fetch(
+              `${apiBaseUrl}/api/spots/source/${inputCast.source}`,
               {
                 method: "GET",
                 headers,

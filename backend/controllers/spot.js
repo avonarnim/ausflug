@@ -17,15 +17,21 @@ exports.search_spots_in_area = function (req, res) {
     {
       location: {
         $geoWithin: {
-          $centerSphere: [[req.params.longitude, req.params.latitude], 0.1],
+          $center: [[req.params.latitude, req.params.longitude], 1.0],
         },
       },
     },
     function (err, spot) {
       if (err) res.send(err);
+      console.log(
+        spot.length,
+        "spots found around",
+        req.params.latitude,
+        req.params.longitude
+      );
       res.json(spot);
     }
-  );
+  ).limit(10);
 };
 
 exports.search_spots_by_bounding_box = function (req, res) {
@@ -34,17 +40,67 @@ exports.search_spots_by_bounding_box = function (req, res) {
       location: {
         $geoWithin: {
           $box: [
-            [req.params.longitude1, req.params.latitude1],
-            [req.params.longitude2, req.params.latitude2],
+            [req.params.latitude1, req.params.longitude1],
+            [req.params.latitude2, req.params.longitude2],
           ],
         },
       },
     },
     function (err, spot) {
       if (err) res.send(err);
+      console.log(
+        spot.length,
+        "spots found around",
+        req.params.latitude1,
+        req.params.longitude1,
+        req.params.latitude2,
+        req.params.longitude2
+      );
       res.json(spot);
     }
   );
+};
+
+// retrieve all spots that are highlighted
+exports.search_spots_highlighted = function (req, res) {
+  Spot.find(
+    {
+      highlightedIn: { $exists: true, $ne: [] },
+    },
+    function (err, spot) {
+      if (err) res.send(err);
+      console.log(spot.length, "highlighted");
+      res.json(spot);
+    }
+  ).limit(10);
+};
+
+// retrieve list of spots that are highlighted in a specific subject
+exports.search_spots_highlighted_for_subject = function (req, res) {
+  Spot.find(
+    {
+      highlightedIn: req.params.subject,
+    },
+    function (err, spot) {
+      if (err) res.send(err);
+      console.log(spot.length, "highlighted for", req.params.subject);
+      res.json(spot);
+    }
+  ).limit(10);
+};
+
+// retrieve list of spots that are featured by a specific source
+exports.search_spots_by_source = function (req, res) {
+  Spot.find(
+    {
+      featuredBy: req.params.source,
+    },
+    function (err, spot) {
+      if (err) res.send(err);
+      console.log(spot.length, "featured by", req.params.source);
+      res.json(spot);
+    }
+  ).limit(10);
 };
 
 // add spot

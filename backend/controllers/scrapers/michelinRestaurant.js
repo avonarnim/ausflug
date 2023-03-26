@@ -219,6 +219,8 @@ const uploadRestaurantsToDb = (restaurants) => {
       },
       status: "Approved",
       sponsored: false,
+      highlightedIn: [],
+      feateredBy: ["MichelinRestaurants"],
       duration: 0,
       image: restaurant.img,
       externalLink: restaurant.link,

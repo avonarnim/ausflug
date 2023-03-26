@@ -13,6 +13,7 @@ import {
   EditTrip,
   Home,
   Login,
+  NewTrip,
   Privacy,
   Profile,
   Register,
@@ -39,6 +40,10 @@ function App() {
           <Route
             path="/privacy"
             element={<React.Suspense children={<Privacy />} />}
+          />
+          <Route
+            path="/trips/:origin/:originVal/:destination/:destinationVal/:startDate?/:endDate?"
+            element={<React.Suspense children={<NewTrip />} />}
           />
           <Route
             path="/trips/:tripId"

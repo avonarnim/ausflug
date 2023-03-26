@@ -159,6 +159,8 @@ const uploadItemsToDb = (items) => {
       },
       status: "Approved",
       sponsored: false,
+      highlightedIn: [],
+      feateredBy: ["AtlasObscura"],
       duration: 0,
       image: item.img,
       externalLink: item.link,

@@ -23,10 +23,9 @@ import {
 import { useMutation } from "../core/api";
 import { NearMe, Delete, Add } from "@mui/icons-material";
 import { SpotInfoProps } from "./SpotInfo";
+import { Dayjs } from "dayjs";
 
-// const center = { lat: 48.8584, lng: 2.2945 };
-
-export function RouteMap(): JSX.Element {
+export function RouteMap(props: RouteMapProps): JSX.Element {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_MAPS_KEY!,
@@ -40,6 +39,7 @@ export function RouteMap(): JSX.Element {
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
   const [chosenDetours, setChosenDetours] = useState<SpotInfoProps[]>([]);
+  const [tempChosenDetour, setTempChosenDetour] = useState<SpotInfoProps>();
   const [wayPointElements, setWayPointElements] = useState<JSX.Element[]>([]);
   const [routeCreated, setRouteCreated] = useState(false);
   const [startAutocomplete, setStartAutocomplete] =
@@ -56,9 +56,74 @@ export function RouteMap(): JSX.Element {
   const destinationRef = useRef<HTMLInputElement>();
   const nameRef = useRef<HTMLInputElement>();
 
-  const getSpots = useMutation("GetSpots");
+  const getSpotsInBox = useMutation("GetSpotsInBox");
   const createTrip = useMutation("CreateTrip");
 
+  // called on-start up of the page
+  const onLoad = React.useCallback(async function callback(
+    map: google.maps.Map
+  ) {
+    const options = {
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -179,
+          east: 179,
+        },
+        strictBounds: true,
+      },
+    };
+    map.setOptions(options);
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+
+    setMap(map);
+
+    const placesDetailsService = new google.maps.places.PlacesService(map);
+    placesDetailsService.getDetails(
+      { placeId: props.origin, fields: ["geometry"] },
+      (place, status) => {
+        if (place) {
+          setOriginPlace(place);
+        } else {
+          console.log(status);
+        }
+      }
+    );
+    placesDetailsService.getDetails(
+      { placeId: props.destination, fields: ["geometry"] },
+      (place, status) => {
+        if (place) {
+          setDestinationPlace(place);
+        } else {
+          console.log(status);
+        }
+      }
+    );
+
+    calculateRoute({ placeId: props.origin }, { placeId: props.destination });
+  },
+  []);
+
+  // Called once the map is loaded
+  useEffect(() => {
+    if (
+      map &&
+      originPlace &&
+      destinationPlace &&
+      originPlace.geometry &&
+      destinationPlace.geometry &&
+      originPlace.geometry.location &&
+      destinationPlace.geometry.location
+    ) {
+      loadSpots();
+    }
+  }, [originPlace, destinationPlace]);
+
+  // upon success of finding the user's location, set the center of the map to that location
   function success(position: GeolocationPosition) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
@@ -66,49 +131,51 @@ export function RouteMap(): JSX.Element {
     setCenter({ lat: latitude, lng: longitude });
     map?.panTo(center);
     map?.setZoom(4);
-    console.log(center, "center");
   }
 
+  // if the user's location cannot be found, set the center of the map to the continental US
   function error() {
     console.log("Unable to retrieve your location");
   }
 
-  async function calculateRoute() {
-    console.log(
-      "calculateRoute",
-      originRef.current,
-      destinationRef.current,
-      originRef.current?.value,
-      destinationRef.current?.value
-    );
-    if (originRef.current && destinationRef.current) {
-      // eslint-disable-next-line no-undef
-      const directionsService = new google.maps.DirectionsService();
-      const wayPoints = chosenDetours.map((spot) => {
-        return {
-          location: {
-            lat: spot.location.lat,
-            lng: spot.location.lng,
-          },
-          stopover: true,
-        };
-      });
-      const results = await directionsService.route({
-        origin: originRef.current.value,
-        destination: destinationRef.current.value,
-        waypoints: wayPoints,
-        optimizeWaypoints: true,
-        // eslint-disable-next-line no-undef
-        travelMode: google.maps.TravelMode.DRIVING,
-      });
-      setDirectionsResponse(results);
-      setDistance(results.routes[0].legs[0].distance?.text || "");
-      setDuration(results.routes[0].legs[0].duration?.text || "");
-      setRouteCreated(true);
-      return;
-    }
+  // called when the user clicks on "Calculate Route"
+  async function calculateRoute(
+    originValue:
+      | string
+      | google.maps.LatLng
+      | google.maps.Place
+      | google.maps.LatLngLiteral,
+    destinationValue:
+      | string
+      | google.maps.LatLng
+      | google.maps.Place
+      | google.maps.LatLngLiteral
+  ) {
+    const directionsService = new google.maps.DirectionsService();
+    const wayPoints = chosenDetours.map((spot) => {
+      return {
+        location: {
+          lat: spot.location.lat,
+          lng: spot.location.lng,
+        },
+        stopover: true,
+      };
+    });
+    const results = await directionsService.route({
+      origin: originValue,
+      destination: destinationValue,
+      waypoints: wayPoints,
+      optimizeWaypoints: true,
+      travelMode: google.maps.TravelMode.DRIVING,
+    });
+    setDirectionsResponse(results);
+    setDistance(results.routes[0].legs[0].distance?.text || "");
+    setDuration(results.routes[0].legs[0].duration?.text || "");
+    setRouteCreated(true);
+    return;
   }
 
+  // clears the route from the map
   function clearRoute() {
     setDirectionsResponse(undefined);
     setDistance("");
@@ -120,17 +187,24 @@ export function RouteMap(): JSX.Element {
     }
   }
 
+  // helper function for updating the chosen detours
+  // required because of the way the original rendering of waypoint options works
+  useEffect(() => {
+    if (tempChosenDetour) {
+      setChosenDetours([...chosenDetours, tempChosenDetour]);
+    }
+  }, [tempChosenDetour]);
+
   function addSpotToRoute(spot: SpotInfoProps) {
-    console.log("addSpotToRoute");
-    setChosenDetours([...chosenDetours, spot]);
+    setTempChosenDetour(spot);
   }
 
   function removeSpotFromRoute(index: number) {
-    console.log("removeSpotFromRoute", index);
     const newDetours = chosenDetours.filter((detour, i) => i !== index);
     setChosenDetours(newDetours);
   }
 
+  // finds ~10 random spots within the bounding box of the route
   function generateRandomRoute() {
     console.log("generateRandomRoute");
 
@@ -170,47 +244,17 @@ export function RouteMap(): JSX.Element {
     }
   }
 
-  // useEffect(() => {
-  //   console.log("useEffect");
-  //   if (!navigator.geolocation) {
-  //     console.log("Geolocation is not supported by your browser");
-  //   } else {
-  //     console.log("Locating…");
-  //     navigator.geolocation.getCurrentPosition(success, error);
-  //   }
-  //   if (map) {
-  //     // console.log("fitting bounds");
-  //     // const bounds = new window.google.maps.LatLngBounds(center);
-  //     // map.fitBounds(bounds);
-  //   }
-  // }, []);
+  // called once originPlace and destinationPlace lat/lng data is available
+  // pulls spots from within reasonable range and renders
+  async function loadSpots() {
+    const spotResults = await getSpotsInBox.commit({
+      longitude1: originPlace!.geometry!.location!.lng(),
+      latitude1: originPlace!.geometry!.location!.lat(),
+      longitude2: destinationPlace!.geometry!.location!.lng(),
+      latitude2: destinationPlace!.geometry!.location!.lat(),
+    });
 
-  const onLoad = React.useCallback(async function callback(
-    map: google.maps.Map
-  ) {
-    const options = {
-      restriction: {
-        latLngBounds: {
-          north: 85,
-          south: -85,
-          west: -179,
-          east: 179,
-        },
-        strictBounds: true,
-      },
-    };
-    map.setOptions(options);
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, error);
-    }
-
-    setMap(map);
-
-    const spotResults = await getSpots.commit({});
     setSavedSpots(spotResults);
-    console.log("spot results", spotResults);
-    console.log("map", map);
 
     const wayPointsWithRefs = spotResults.map((spotResult: SpotInfoProps) => {
       const waypointRef = createRef<HTMLDivElement>();
@@ -219,7 +263,7 @@ export function RouteMap(): JSX.Element {
         <ListItem
           key={
             spotResult.title +
-            spotResult.id +
+            spotResult._id +
             spotResult.location.lat +
             spotResult.location.lng
           }
@@ -231,8 +275,8 @@ export function RouteMap(): JSX.Element {
         >
           <ListItemButton
             onClick={() => {
-              map.setCenter(spotResult.location);
-              map.setZoom(10);
+              map!.setCenter(spotResult.location);
+              map!.setZoom(10);
             }}
           >
             <ListItemText
@@ -277,7 +321,7 @@ export function RouteMap(): JSX.Element {
 
         marker.addListener("click", () => {
           infoWindow.open({ anchor: marker, map });
-          scrollToMarkerElement(spot.waypointRef);
+          // scrollToMarkerElement(spot.waypointRef);
         });
 
         return marker;
@@ -285,8 +329,7 @@ export function RouteMap(): JSX.Element {
 
       new MarkerClusterer({ map, markers });
     }
-  },
-  []);
+  }
 
   function scrollToMarkerElement(markerRef: React.RefObject<HTMLDivElement>) {
     if (markerRef.current) {
@@ -301,7 +344,7 @@ export function RouteMap(): JSX.Element {
   return isLoaded ? (
     <>
       <GoogleMap
-        mapContainerStyle={{ width: "100%", height: "800px" }}
+        mapContainerStyle={{ width: "100%", height: "500px" }}
         center={center}
         zoom={4}
         onLoad={onLoad}
@@ -331,7 +374,7 @@ export function RouteMap(): JSX.Element {
               >
                 <Input
                   type="text"
-                  placeholder="Origin"
+                  defaultValue={props.originVal}
                   inputRef={originRef}
                   fullWidth
                 />
@@ -356,7 +399,7 @@ export function RouteMap(): JSX.Element {
               >
                 <Input
                   type="text"
-                  placeholder="Destination"
+                  defaultValue={props.destinationVal}
                   inputRef={destinationRef}
                   fullWidth
                 />
@@ -411,8 +454,10 @@ export function RouteMap(): JSX.Element {
                       }}
                     >
                       {chosenDetours.map((detour, index) => {
+                        console.log("mapping", index, detour.title);
                         return (
                           <ListItem
+                            key={detour._id}
                             secondaryAction={
                               <IconButton
                                 edge="end"
@@ -447,7 +492,19 @@ export function RouteMap(): JSX.Element {
               <Grid item xs={3} sx={{ p: 4 }}>
                 <Button
                   type="submit"
-                  onClick={calculateRoute}
+                  onClick={() => {
+                    if (
+                      originRef.current?.value &&
+                      destinationRef.current?.value
+                    ) {
+                      calculateRoute(
+                        originRef.current?.value,
+                        destinationRef.current?.value
+                      );
+                    } else {
+                      alert("Please enter an origin and destination");
+                    }
+                  }}
                   variant="contained"
                 >
                   Calculate Route
@@ -523,3 +580,12 @@ export function RouteMap(): JSX.Element {
     <></>
   );
 }
+
+export type RouteMapProps = {
+  origin: string;
+  originVal: string;
+  destination: string;
+  destinationVal: string;
+  startDate?: Dayjs;
+  endDate?: Dayjs;
+};

@@ -118,6 +118,8 @@ const uploadItemsToDb = (items) => {
       },
       status: "Approved",
       sponsored: false,
+      highlightedIn: [],
+      feateredBy: ["TicketMaster"],
       duration: 0,
       image: item.img,
       externalLink: item.link,

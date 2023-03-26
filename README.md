@@ -49,6 +49,11 @@ The home page lets users sign up for a new account. Password authentication is
 done using bcrypt, which has a compareSync method. Password hashing is done by
 bcrypt's hashSync method, which automatically generates a salt before hashing.
 
+Note that the important typings that are copied from the backend are found in the following files:
+`frontend/road-tripper/src/components/SpotInfo.tsx`
+`pages/EditTrip.tsx`
+`pages/Profile.tsx`
+
 ## Scripts:
 
 `npm start`
