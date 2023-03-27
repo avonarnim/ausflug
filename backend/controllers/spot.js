@@ -105,9 +105,10 @@ exports.search_spots_by_source = function (req, res) {
 
 // add spot
 exports.insert_spot = function (req, res) {
+  delete req.body._id;
   console.log(req.body);
   var new_spot = new Spot(req.body);
-  console.log(`spot: ${new_spot}`);
+
   new_spot.save(function (err, spot) {
     if (err) res.send(err);
     res.json(spot);
@@ -120,11 +121,14 @@ exports.update_spot = async function (req, res) {
     const update = {
       status: req.body.status,
     };
-
-    Spot.findOneAndUpdate(req.params.spotId, update, function (err, resp) {
-      if (err) res.send(err);
-      res.send("Successfully updated status to " + req.body.status);
-    });
+    Spot.findOneAndUpdate(
+      { _id: req.params.spotId },
+      update,
+      function (err, resp) {
+        if (err) res.send(err);
+        res.send("Successfully updated status to " + req.body.status);
+      }
+    );
   } catch (err) {
     res.send(err);
   }

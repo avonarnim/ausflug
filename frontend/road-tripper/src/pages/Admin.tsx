@@ -1,32 +1,41 @@
 import {
   Container,
+  IconButton,
   List,
   ListItem,
   ListItemText,
   Typography,
 } from "@mui/material";
+import { useState, useEffect } from "react";
+import { SpotInfoProps } from "../components/SpotInfo";
+import { useMutation } from "../core/api";
+import { NearMe, Delete, Add } from "@mui/icons-material";
 
-export function QueuedSpots(): JSX.Element {
-  const queuedSpots = [
-    {
-      title: "The Spot",
-      description: "This is a spot",
-      location: {
-        latitude: 0,
-        longitude: 0,
-      },
-    },
-  ];
+export function QueuedSpots(props: QueueSpotsProps): JSX.Element {
+  const approveSpot = useMutation("UpdateSpot");
+
+  const approveSpotCallback = async (spot: SpotInfoProps) => {
+    await approveSpot.commit({ ...spot, status: "Approved" });
+  };
 
   return (
     <Container>
       <List>
-        {queuedSpots.map((spot) => {
+        {props.spots.map((spot) => {
           return (
-            <ListItem>
+            <ListItem
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  onClick={() => approveSpotCallback(spot)}
+                >
+                  <Add />
+                </IconButton>
+              }
+            >
               <ListItemText primary={spot.title} secondary={spot.description} />
               <Typography>
-                {spot.location.latitude} {spot.location.longitude}
+                {spot.location.lat} {spot.location.lng}
               </Typography>
             </ListItem>
           );
@@ -36,12 +45,34 @@ export function QueuedSpots(): JSX.Element {
   );
 }
 
+type QueueSpotsProps = {
+  spots: SpotInfoProps[];
+};
+
 export default function Admin(): JSX.Element {
+  const [spots, setSpots] = useState<SpotInfoProps[]>([]);
+
+  const getSpots = useMutation("GetSpots");
+
+  useEffect(() => {
+    prepSpotResults();
+  }, []);
+
+  const prepSpotResults = async () => {
+    const spotResults = await getSpots.commit({});
+    setSpots(spotResults);
+  };
+
   return (
     <div>
       <Typography variant="h1">Admin</Typography>
-      <Typography>This page will display queued spots</Typography>
-      <QueuedSpots />
+      <Typography>Queued spots</Typography>
+      <QueuedSpots spots={spots.filter((x) => x.status == "pending")} />
+      <Typography>Highlighted Categories</Typography>
+      <Typography>
+        TODO: be able to change highlighted categories + items within categories
+      </Typography>
+      <Typography>TODO: prevent non-admins from accessing page</Typography>
     </div>
   );
 }

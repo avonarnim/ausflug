@@ -163,7 +163,7 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
           case "UpdateSpot": {
             const spotId = (input as SpotInfoProps)._id;
             res = await fetch(`${apiBaseUrl}/api/spots/${spotId}`, {
-              method: "UPDATE",
+              method: "POST",
               headers,
               body: JSON.stringify({ ...input }),
             });

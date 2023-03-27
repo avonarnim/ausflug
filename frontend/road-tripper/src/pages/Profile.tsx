@@ -1,8 +1,10 @@
 import { Button, Card, CardMedia, Grid, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useAuth } from "../core/AuthContext";
 import logo250 from "../assets/logo250.png";
+import { useMutation } from "../core/api";
 
 const Img = styled("img")({
   margin: "auto",
@@ -16,11 +18,35 @@ export default function Profile(): JSX.Element {
   const props = {
     name: currentUser?.displayName,
     email: currentUser?.email,
-    instagram: "",
-    facebook: "",
-    twitter: "",
-    youtube: "",
+    instagram: "https://www.instagram.com/",
+    facebook: "https://www.facebook.com/",
+    twitter: "https://twitter.com/",
+    youtube: "https://www.youtube.com/",
     avatar: logo250,
+  };
+  const [userId, setUserId] = useState("");
+  const [user, setUser] = useState<ProfileProps | null>(null);
+
+  const params = useParams();
+
+  const getProfile = useMutation("GetProfile");
+  const updateProfile = useMutation("UpdateProfile");
+
+  useEffect(() => {
+    console.log("params", params);
+    if (!params.userId) {
+      console.log("no user id");
+    } else {
+      console.log("getting spot");
+      setUserId(params.userId);
+      getProfileCallback(params.userId);
+    }
+  }, []);
+
+  const getProfileCallback = async (userId: string) => {
+    const getUserResponse = await getProfile.commit({ profileId: userId });
+    setUser(getUserResponse);
+    console.log("profile set", getUserResponse);
   };
 
   const instagramLink =
@@ -124,11 +150,11 @@ export default function Profile(): JSX.Element {
 export type ProfileProps = {
   id: string;
   name: string;
+  username: string;
   bio: string;
+  image: string;
   following: string[];
-  followers: string[];
-  savedTrips: string[];
-  upcomingTrips: string[];
-  homeLongitude: string;
-  homeLatitude: string;
+  savedTripIDs: string[];
+  upcomingTripsID: string[];
+  savedSpots: string[];
 };
