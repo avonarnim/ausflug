@@ -115,6 +115,8 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? SpotInfoProps[]
   : T extends "CreateTrip"
   ? TripProps
+  : T extends "UpdateProfile"
+  ? ProfileProps
   : any;
 
 export type Mutation<T extends Type> = State<T> & {
@@ -272,6 +274,15 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             res = await fetch(`${apiBaseUrl}/api/users`, {
               method: "GET",
               headers,
+            });
+            break;
+          }
+          case "UpdateProfile": {
+            const profileId = (input as ProfileProps)._id;
+            res = await fetch(`${apiBaseUrl}/api/users/${profileId}`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...input }),
             });
             break;
           }

@@ -87,9 +87,15 @@ router.route("/api/users").post((req, res) => {
 router.route("/api/users").get((req, res) => {
   user.list_users(req, res);
 });
+// TODO: create get profile by username --> prevent duplicates in frontend
 router.use("/api/users/:userId", VerifyToken);
 router.route("/api/users/:userId").get((req, res) => {
   user.get_profile(req, res);
+});
+// TODO: deprecate follow/unfollow.. maybe also save_trip_to_user
+router.use("/api/users/:userId", VerifyToken);
+router.route("/api/users/:userId").post((req, res) => {
+  user.update_user(req, res);
 });
 router.route("/api/users/:userId").delete((req, res) => {
   user.delete_profile(req, res);

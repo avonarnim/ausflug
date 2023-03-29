@@ -22,11 +22,20 @@ import {
 import { SpotInfoProps } from "../components/SpotInfo";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 
+type Libraries = (
+  | "drawing"
+  | "geometry"
+  | "localContext"
+  | "places"
+  | "visualization"
+)[];
+const libraries: Libraries = ["places"];
+
 export default function Home(): JSX.Element {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_MAPS_KEY!,
-    libraries: ["places"],
+    libraries: libraries,
   });
 
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
@@ -177,6 +186,8 @@ export default function Home(): JSX.Element {
         })),
       });
 
+      // TODO: remove auto-geolocation
+      // this is considered untrustworthy by users
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position: GeolocationPosition) => {

@@ -107,8 +107,8 @@ export function AssetBlockCardHorizontalSwipe(
 ): JSX.Element {
   const assets = props.assetCards;
 
-  console.log("assets", assets);
-  console.log(assets.map((_, i) => i));
+  // console.log("assets", assets);
+  // console.log(assets.map((_, i) => i));
 
   return (
     <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>

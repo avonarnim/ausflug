@@ -25,11 +25,20 @@ import { NearMe, Delete, Add } from "@mui/icons-material";
 import { SpotInfoProps } from "./SpotInfo";
 import { Dayjs } from "dayjs";
 
+type Libraries = (
+  | "drawing"
+  | "geometry"
+  | "localContext"
+  | "places"
+  | "visualization"
+)[];
+const libraries: Libraries = ["places"];
+
 export function RouteMap(props: RouteMapProps): JSX.Element {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_MAPS_KEY!,
-    libraries: ["places"],
+    libraries: libraries,
   });
 
   const [map, setMap] = useState<google.maps.Map>();

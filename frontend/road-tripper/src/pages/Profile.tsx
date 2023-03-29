@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../core/AuthContext";
 import logo250 from "../assets/logo250.png";
 import { useMutation } from "../core/api";
+import ProfileFormDialog from "../dialogs/EditProfileDialog";
 
 const Img = styled("img")({
   margin: "auto",
@@ -120,15 +121,7 @@ export default function Profile(): JSX.Element {
                 />
               </Card>
             </Grid>
-            <Grid item>
-              <Button
-                sx={{ minWidth: "100%" }}
-                variant="outlined"
-                // onClick={useOpenRightDrawer({ variant: "edit-profile" })}
-              >
-                Edit profile
-              </Button>
-            </Grid>
+            <Grid item>{user ? <ProfileFormDialog {...user} /> : null}</Grid>
           </Grid>
         </Grid>
         <Grid item xs sx={{ minWidth: 450 }}>
@@ -148,13 +141,19 @@ export default function Profile(): JSX.Element {
 }
 
 export type ProfileProps = {
-  id: string;
+  _id: string;
   name: string;
   username: string;
+  email: string;
   bio: string;
   image: string;
   following: string[];
+  followers: string[];
   savedTripIDs: string[];
   upcomingTripsID: string[];
   savedSpots: string[];
+  instagram: string;
+  facebook: string;
+  twitter: string;
+  youtube: string;
 };

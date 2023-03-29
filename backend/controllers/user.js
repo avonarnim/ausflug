@@ -6,29 +6,32 @@ const User = require("../models/userModel");
 
 // retrieve single user's profile with matching id
 exports.get_profile = async function (req, res) {
-  // User.findOne({ username: req.params.username }, function (err, user) {
-  //   if (err) {
-  //     res.send(err);
-  //   } else {
-  //     res.json(user);
-  //   }
-  // });
+  User.findOne({ username: req.params.username }, function (err, user) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.json(user);
+    }
+  });
 
-  try {
-    const userRecord = await auth.getUser(req.params.userId);
-    res.status(200).json(userRecord.toJSON());
-  } catch (error) {
-    console.log("Error fetching user data:", error);
-  }
+  // try {
+  //   const userRecord = await auth.getUser(req.params.userId);
+  //   res.status(200).json(userRecord.toJSON());
+  // } catch (error) {
+  //   console.log("Error fetching user data:", error);
+  // }
 };
 
 exports.create_profile = function (req, res) {
+  console.log("creating profile", req.body);
   var new_user = new User(req.body);
 
   new_user.save(function (err, user) {
     if (err) {
+      console.log(err);
       res.send(err);
     } else {
+      console.log("created user");
       res.json("User profile created");
     }
   });
@@ -112,6 +115,25 @@ exports.add_user_to_following = async function (req, res) {
           res.send(err);
         } else {
           res.send("Successfully added following");
+        }
+      }
+    );
+  } catch (err) {
+    res.send(err);
+  }
+};
+
+exports.update_user = async function (req, res) {
+  try {
+    const update = req.body;
+    User.findOneAndUpdate(
+      { username: req.params.userId },
+      update,
+      function (err, resp) {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send("Successfully updated user");
         }
       }
     );
