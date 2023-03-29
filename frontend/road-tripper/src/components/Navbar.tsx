@@ -14,7 +14,7 @@ import {
 import { useAuth } from "../core/AuthContext";
 import { Logout as LogoutIcon } from "../icons/Logout";
 import { Logout } from "./Logout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "../assets/logo-removebg.png";
 import logo250 from "../assets/logo250-removebg.png";
 
@@ -75,7 +75,7 @@ export function NavBar(props: AppBarProps): JSX.Element {
             <Link
               color="inherit"
               underline="none"
-              to="/profile"
+              to={`/profile/${currentUser.uid}`}
               component={NavLink}
               sx={{ pl: 2, pr: 2 }}
             >

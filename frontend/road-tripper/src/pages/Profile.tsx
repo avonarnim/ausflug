@@ -38,7 +38,7 @@ export default function Profile(): JSX.Element {
     if (!params.userId) {
       console.log("no user id");
     } else {
-      console.log("getting spot");
+      console.log("getting profile");
       setUserId(params.userId);
       getProfileCallback(params.userId);
     }
