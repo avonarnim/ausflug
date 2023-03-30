@@ -72,15 +72,18 @@ export function NavBar(props: AppBarProps): JSX.Element {
             >
               Spots
             </Link>
-            <Link
-              color="inherit"
-              underline="none"
-              to={`/profile/${currentUser.uid}`}
-              component={NavLink}
-              sx={{ pl: 2, pr: 2 }}
-            >
-              Profile
-            </Link>
+            {currentUser && (
+              <Link
+                color="inherit"
+                underline="none"
+                to={`/profile/${currentUser.uid}`}
+                component={NavLink}
+                sx={{ pl: 2, pr: 2 }}
+              >
+                Profile
+              </Link>
+            )}
+
             {!currentUser && (
               <Link
                 color="inherit"
@@ -102,7 +105,7 @@ export function NavBar(props: AppBarProps): JSX.Element {
                 </button>
 
                 <NavLink
-                  to="/profile"
+                  to={`/profile/${currentUser.uid}`}
                   className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-full text-sm p-2.5"
                 >
                   <img
