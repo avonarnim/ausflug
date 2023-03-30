@@ -291,7 +291,7 @@ export default function EditTrip(): JSX.Element {
 }
 
 export type TripProps = {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   creatorId: string;

@@ -46,6 +46,13 @@ exports.view_trip = function (req, res) {
   });
 };
 
+exports.view_user_trips = function (req, res) {
+  Trip.find({ creatorId: req.params.username }, function (err, trips) {
+    if (err) res.send(err);
+    res.json(trips);
+  });
+};
+
 // update trip's data (confirmed stops, completed, etc)
 // may need to change how i do confirmed stops...
 exports.update_trip = function (req, res) {

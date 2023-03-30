@@ -28,7 +28,8 @@ type Type =
   | "SaveTrip"
   | "DeleteTrip"
   | "UpdateTrip"
-  | "GetTrip";
+  | "GetTrip"
+  | "GetUserTrips";
 
 type State<T extends Type> = {
   loading: boolean;
@@ -77,7 +78,7 @@ type Input<T extends Type> = T extends "CreateSpot"
   : T extends "UnfollowProfile"
   ? { profileId: string; followingId: string }
   : T extends "CreateTrip"
-  ? Omit<TripProps, "id">
+  ? Omit<TripProps, "_id">
   : T extends "SaveTrip"
   ? TripProps
   : T extends "DeleteTrip"
@@ -86,6 +87,8 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? TripProps
   : T extends "GetTrip"
   ? { tripId: string }
+  : T extends "GetUserTrips"
+  ? { userId: string }
   : null;
 
 export interface SiteData {
@@ -117,6 +120,8 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? TripProps
   : T extends "UpdateProfile"
   ? ProfileProps
+  : T extends "GetUserTrips"
+  ? TripProps[]
   : any;
 
 export type Mutation<T extends Type> = State<T> & {
@@ -367,6 +372,14 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
           case "GetTrip": {
             const tripId = (input as { tripId: string }).tripId;
             res = await fetch(`${apiBaseUrl}/api/trips/${tripId}`, {
+              method: "GET",
+              headers,
+            });
+            break;
+          }
+          case "GetUserTrips": {
+            const userId = (input as { userId: string }).userId;
+            res = await fetch(`${apiBaseUrl}/api/trips/${userId}`, {
               method: "GET",
               headers,
             });

@@ -76,7 +76,7 @@ The backend API server is hosted in GCP. It is built using Docker. The following
 <!-- This will run the image in a container -->
 3  PORT=8080 && docker run --rm backend
 4  gcloud run deploy --env-vars-file=env.yaml
-<!-- Options: deploying from source w default name, region 36 -->
+<!-- Options: deploying from source w default name, region 37 -->
 ```
 
 ## Deploying the Frontend

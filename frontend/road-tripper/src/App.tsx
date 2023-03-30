@@ -42,6 +42,10 @@ function App() {
             element={<React.Suspense children={<Privacy />} />}
           />
           <Route
+            path="/trips"
+            element={<React.Suspense children={<Home />} />}
+          />
+          <Route
             path="/trips/:origin/:originVal/:destination/:destinationVal/:startDate?/:endDate?"
             element={<React.Suspense children={<NewTrip />} />}
           />

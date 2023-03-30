@@ -24,6 +24,8 @@ import { useMutation } from "../core/api";
 import { NearMe, Delete, Add } from "@mui/icons-material";
 import { SpotInfoProps } from "./SpotInfo";
 import { Dayjs } from "dayjs";
+import { useAuth } from "../core/AuthContext";
+import { Link } from "react-router-dom";
 
 type Libraries = (
   | "drawing"
@@ -67,6 +69,8 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 
   const getSpotsInBox = useMutation("GetSpotsInBox");
   const createTrip = useMutation("CreateTrip");
+
+  const { currentUser } = useAuth();
 
   // called on-start up of the page
   const onLoad = React.useCallback(async function callback(
@@ -178,8 +182,16 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       travelMode: google.maps.TravelMode.DRIVING,
     });
     setDirectionsResponse(results);
-    setDistance(results.routes[0].legs[0].distance?.text || "");
-    setDuration(results.routes[0].legs[0].duration?.text || "");
+    const cumulativeDistance = results.routes[0].legs.reduce(
+      (acc, cur) => acc + Number(cur.distance?.text.split(" ")[0]) || 0,
+      0
+    );
+    const cumulativeDuration = results.routes[0].legs.reduce(
+      (acc, cur) => acc + Number(cur.duration?.text.split(" ")[0]) || 0,
+      0
+    );
+    setDistance(`${cumulativeDistance} miles`);
+    setDuration(`${cumulativeDuration} mins`);
     setRouteCreated(true);
     return;
   }
@@ -546,36 +558,44 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
               </IconButton>
             </Grid> */}
             <Grid item xs={6} sx={{ pl: 4, pr: 4 }}>
-              <Input type="text" placeholder="Name" inputRef={nameRef} />
-              <Button
-                onClick={() => {
-                  createTrip.commit({
-                    name: nameRef.current?.value || "Unnamed Trip",
-                    description: "",
-                    creatorId: "1",
-                    origin: originRef.current?.value || "",
-                    destination: destinationRef.current?.value || "",
-                    waypoints: chosenDetours.map((spot) => {
-                      return {
-                        location: {
-                          lat: spot.location.lat,
-                          lng: spot.location.lng,
-                        },
-                        stopover: true,
-                      };
-                    }),
-                    startDate: Date.now(),
-                    endDate: Date.now(),
-                    isPublic: false,
-                    isComplete: false,
-                    isArchived: false,
-                    createdAt: Date.now(),
-                    updatedAt: Date.now(),
-                  });
-                }}
-              >
-                Save
-              </Button>
+              {currentUser ? (
+                <>
+                  <Input type="text" placeholder="Name" inputRef={nameRef} />
+                  <Button
+                    onClick={() => {
+                      createTrip.commit({
+                        name: nameRef.current?.value || "Unnamed Trip",
+                        description: "",
+                        creatorId: currentUser.uid,
+                        origin: originRef.current?.value || "",
+                        destination: destinationRef.current?.value || "",
+                        waypoints: chosenDetours.map((spot) => {
+                          return {
+                            location: {
+                              lat: spot.location.lat,
+                              lng: spot.location.lng,
+                            },
+                            stopover: true,
+                          };
+                        }),
+                        startDate: Date.now(),
+                        endDate: Date.now(),
+                        isPublic: false,
+                        isComplete: false,
+                        isArchived: false,
+                        createdAt: Date.now(),
+                        updatedAt: Date.now(),
+                      });
+                    }}
+                  >
+                    Save
+                  </Button>
+                </>
+              ) : (
+                <Link to={`/login`} style={{ textDecoration: "none" }}>
+                  <Button>Log in to save your trip</Button>
+                </Link>
+              )}
 
               <IconButton aria-label="delete route" onClick={clearRoute}>
                 <Delete />

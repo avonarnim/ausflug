@@ -1,4 +1,15 @@
-import { Button, Card, CardMedia, Grid, Link, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardMedia,
+  Grid,
+  IconButton,
+  Link,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -6,6 +17,8 @@ import { useAuth } from "../core/AuthContext";
 import logo250 from "../assets/logo250.png";
 import { useMutation } from "../core/api";
 import ProfileFormDialog from "../dialogs/EditProfileDialog";
+import { TripProps } from "./EditTrip";
+import { Edit } from "@mui/icons-material";
 
 const Img = styled("img")({
   margin: "auto",
@@ -27,16 +40,23 @@ export default function Profile(): JSX.Element {
   };
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState<ProfileProps | null>(null);
+  const [trips, setTrips] = useState<TripProps[] | null>(null);
 
   const params = useParams();
 
   const getProfile = useMutation("GetProfile");
   const updateProfile = useMutation("UpdateProfile");
+  const getUserTrips = useMutation("GetUserTrips");
 
   useEffect(() => {
     console.log("params", params);
     if (!params.userId) {
-      console.log("no user id");
+      if (currentUser) {
+        console.log("getting own profile");
+        setUserId(currentUser.uid);
+        getProfileCallback(currentUser.uid);
+        getTripsCallback(currentUser.uid);
+      }
     } else {
       console.log("getting profile");
       setUserId(params.userId);
@@ -48,6 +68,14 @@ export default function Profile(): JSX.Element {
     const getUserResponse = await getProfile.commit({ profileId: userId });
     setUser(getUserResponse);
     console.log("profile set", getUserResponse);
+  };
+
+  const getTripsCallback = async (userId: string) => {
+    const getUserTripsResponse = await getUserTrips.commit({
+      userId: currentUser?.uid || "",
+    });
+    setTrips(getUserTripsResponse);
+    console.log("trips set", getUserTripsResponse);
   };
 
   const instagramLink =
@@ -135,6 +163,29 @@ export default function Profile(): JSX.Element {
             {twitterLink}
           </Grid>
         </Grid>
+        {currentUser && !params.userId && trips ? (
+          <Grid item xs={12}>
+            <Typography variant="h5">Saved Trips</Typography>
+            <List>
+              {trips.map((trip) => (
+                <ListItem
+                  key={trip.name + trip._id}
+                  secondaryAction={
+                    <IconButton edge="end" aria-label="edit">
+                      <Link href={`/trip/${trip._id}`}>
+                        <Edit />
+                      </Link>
+                    </IconButton>
+                  }
+                >
+                  <ListItemText primary={trip.name} />
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+        ) : (
+          <></>
+        )}
       </Grid>
     </Grid>
   );
