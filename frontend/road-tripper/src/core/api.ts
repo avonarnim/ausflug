@@ -379,7 +379,7 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
           }
           case "GetUserTrips": {
             const userId = (input as { userId: string }).userId;
-            res = await fetch(`${apiBaseUrl}/api/trips/${userId}`, {
+            res = await fetch(`${apiBaseUrl}/api/trips/user/${userId}`, {
               method: "GET",
               headers,
             });

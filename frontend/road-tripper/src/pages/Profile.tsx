@@ -49,18 +49,18 @@ export default function Profile(): JSX.Element {
   const getUserTrips = useMutation("GetUserTrips");
 
   useEffect(() => {
-    console.log("params", params);
-    if (!params.userId) {
-      if (currentUser) {
-        console.log("getting own profile");
-        setUserId(currentUser.uid);
-        getProfileCallback(currentUser.uid);
-        getTripsCallback(currentUser.uid);
-      }
-    } else {
+    console.log("params", params, currentUser?.uid);
+    if ((!params.userId && currentUser) || params.userId === currentUser?.uid) {
+      console.log("getting own profile");
+      setUserId(currentUser.uid);
+      getProfileCallback(currentUser.uid);
+      getTripsCallback(currentUser.uid);
+    } else if (params.userId) {
       console.log("getting profile");
       setUserId(params.userId);
       getProfileCallback(params.userId);
+    } else {
+      console.log("no user");
     }
   }, []);
 
@@ -72,16 +72,16 @@ export default function Profile(): JSX.Element {
 
   const getTripsCallback = async (userId: string) => {
     const getUserTripsResponse = await getUserTrips.commit({
-      userId: currentUser?.uid || "",
+      userId: userId,
     });
     setTrips(getUserTripsResponse);
     console.log("trips set", getUserTripsResponse);
   };
 
   const instagramLink =
-    props.instagram === "" ? null : (
+    user?.instagram === "" ? null : (
       <Grid item>
-        <Link href={props.instagram}>
+        <Link href={user?.instagram}>
           <Img
             sx={{ width: 24, height: 24 }}
             alt="Instagram"
@@ -92,9 +92,9 @@ export default function Profile(): JSX.Element {
     );
 
   const twitterLink =
-    props.twitter === "" ? null : (
+    user?.twitter === "" ? null : (
       <Grid item>
-        <Link href={props.twitter}>
+        <Link href={user?.twitter}>
           <Img
             sx={{ width: 24, height: 24 }}
             alt="Twitter"
@@ -105,9 +105,9 @@ export default function Profile(): JSX.Element {
     );
 
   const youtubeLink =
-    props.youtube === "" ? null : (
+    user?.youtube === "" ? null : (
       <Grid item>
-        <Link href={props.youtube}>
+        <Link href={user?.youtube}>
           <Img
             sx={{ width: 24, height: 24 }}
             alt="YouTube"
@@ -118,9 +118,9 @@ export default function Profile(): JSX.Element {
     );
 
   const facebookLink =
-    props.facebook === "" ? null : (
+    user?.facebook === "" ? null : (
       <Grid item>
-        <Link href={props.facebook}>
+        <Link href={user?.facebook}>
           <Img
             sx={{ width: 24, height: 24 }}
             alt="Facebook"
@@ -154,7 +154,19 @@ export default function Profile(): JSX.Element {
         </Grid>
         <Grid item xs sx={{ minWidth: 450 }}>
           <Typography gutterBottom variant="h4" component="div">
-            {props.name}
+            {user?.name}
+          </Typography>
+          <Typography gutterBottom variant="h5" component="div">
+            @{user?.username}
+          </Typography>
+          <Typography gutterBottom variant="body1" component="div">
+            {user?.bio}
+          </Typography>
+          <Typography variant="body1">
+            {user?.followers.length} Followers
+          </Typography>
+          <Typography variant="body1">
+            {user?.following.length} Following
           </Typography>
           <Grid container direction="row" spacing={2} sx={{ pb: 4 }}>
             {facebookLink}
@@ -163,22 +175,45 @@ export default function Profile(): JSX.Element {
             {twitterLink}
           </Grid>
         </Grid>
-        {currentUser && !params.userId && trips ? (
+        {(currentUser && !params.userId) || currentUser.uid == params.userId ? (
           <Grid item xs={12}>
             <Typography variant="h5">Saved Trips</Typography>
             <List>
-              {trips.map((trip) => (
+              {trips?.map((trip) => (
                 <ListItem
                   key={trip.name + trip._id}
                   secondaryAction={
                     <IconButton edge="end" aria-label="edit">
-                      <Link href={`/trip/${trip._id}`}>
+                      <Link href={`/trips/${trip._id}`}>
                         <Edit />
                       </Link>
                     </IconButton>
                   }
                 >
                   <ListItemText primary={trip.name} />
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+        ) : (
+          <></>
+        )}
+        {(currentUser && !params.userId) || currentUser.uid == params.userId ? (
+          <Grid item xs={12}>
+            <Typography variant="h5">Saved Spots</Typography>
+            <List>
+              {user?.savedSpots.map((spot) => (
+                <ListItem
+                  key={spot}
+                  secondaryAction={
+                    <IconButton edge="end" aria-label="edit">
+                      <Link href={`/spots/${spot}`}>
+                        <Edit />
+                      </Link>
+                    </IconButton>
+                  }
+                >
+                  <ListItemText primary={spot} />
                 </ListItem>
               ))}
             </List>

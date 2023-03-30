@@ -6,7 +6,7 @@ const User = require("../models/userModel");
 
 // retrieve single user's profile with matching id
 exports.get_profile = async function (req, res) {
-  User.findOne({ username: req.params.username }, function (err, user) {
+  User.findOne({ _id: req.params.userId }, function (err, user) {
     if (err) {
       res.send(err);
     } else {

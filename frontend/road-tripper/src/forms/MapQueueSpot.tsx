@@ -1,6 +1,7 @@
 import {
   Button,
   Box,
+  Grid,
   Input,
   List,
   ListItem,
@@ -85,45 +86,49 @@ export function QueueSpotFormDetailsSection(props: {
   const locationRef = useRef<HTMLInputElement>();
 
   return (
-    <Box>
-      <TextField
-        placeholder="Enter the Title"
-        name="title"
-        onChange={props.handleChange}
-        defaultValue={props.values.title}
-        margin="normal"
-        fullWidth
-      />
-      <br />
-      <TextField
-        placeholder="Enter the Description"
-        name="description"
-        onChange={props.handleChange}
-        defaultValue={props.values.description}
-        margin="normal"
-        fullWidth
-      />
-      <br />
-      <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-        <Input
-          type="text"
-          placeholder="Location"
-          inputRef={locationRef}
+    <Grid item container xs={12} direction="row">
+      <Grid item xs={12} md={6}>
+        <TextField
+          placeholder="Enter the Title"
+          name="title"
           onChange={props.handleChange}
+          defaultValue={props.values.title}
+          margin="normal"
+          fullWidth
         />
-      </Autocomplete>
-      <br />
-      <GoogleMap
-        mapContainerStyle={{ width: "400px", height: "400px" }}
-        center={props.center}
-        zoom={4}
-        onLoad={props.onLoad}
-        onUnmount={props.onUnmount}
-      ></GoogleMap>
-      <Button color="primary" variant="contained" onClick={attemptContinue}>
-        Continue
-      </Button>
-    </Box>
+        <br />
+        <TextField
+          placeholder="Enter the Description"
+          name="description"
+          onChange={props.handleChange}
+          defaultValue={props.values.description}
+          margin="normal"
+          fullWidth
+        />
+        <br />
+        <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+          <Input
+            type="text"
+            placeholder="Location"
+            inputRef={locationRef}
+            onChange={props.handleChange}
+          />
+        </Autocomplete>
+        <br />
+        <Button color="primary" variant="contained" onClick={attemptContinue}>
+          Continue
+        </Button>
+      </Grid>
+      <Grid item xs={12} md={6} pl={4}>
+        <GoogleMap
+          mapContainerStyle={{ width: "400px", height: "400px" }}
+          center={props.center}
+          zoom={3}
+          onLoad={props.onLoad}
+          onUnmount={props.onUnmount}
+        ></GoogleMap>
+      </Grid>
+    </Grid>
   );
 }
 
