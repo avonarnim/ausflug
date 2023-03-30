@@ -40,8 +40,8 @@ export function NewAccountRegisterSection(props: {
       setLoading(true);
       const res = await register(email, password);
       props.handleChange({
-        event: { target: { name: "_id", value: res.user.uid } },
-      } as unknown as ChangeEvent<HTMLInputElement>);
+        target: { name: "_id", value: res.user.uid },
+      } as React.ChangeEvent<HTMLInputElement>);
     } catch (e) {
       setError("Failed to register", e);
       setLoading(false);
@@ -252,13 +252,17 @@ export function NewAccountFormConfirm(props: {
         </ListItem>
       </List>
       <br />
-      <Button color="primary" variant="contained" onClick={props.handleBack}>
-        Back
-      </Button>
-      <br />
-      <Button color="primary" variant="contained" onClick={attemptContinue}>
-        Confirm
-      </Button>
+      <Box p={4}>
+        <Button color="primary" variant="contained" onClick={props.handleBack}>
+          Back
+        </Button>
+      </Box>
+
+      <Box p={4}>
+        <Button color="primary" variant="contained" onClick={attemptContinue}>
+          Confirm
+        </Button>
+      </Box>
     </Box>
   );
 }

@@ -12,7 +12,7 @@ const itemsPerPage = 20;
 
 const selectors = {
   cards: ".card__menu",
-  img: ".card__menu-image>a>noscript",
+  img: ".card__menu-image>a",
   name: ".card__menu-content--title>a",
   link: ".card__menu-content--title>a",
   type: ".card__menu-footer--price",
@@ -75,7 +75,8 @@ class MichelinScraper {
       const $title = $card.find(selectors.name);
       const name = $title.text().trim();
       const link = `${baseUrl}${$title.attr("href")}`;
-      const img = $card.find(selectors.img).html().match(regEx.img)[0];
+      // const img = $card.find(selectors.img).html().match(regEx.img)[0];
+      const img = $card.find(selectors.img)[0].attribs["ci-bg-url"];
       const priceType = $card.find(selectors.type).text().trim();
       const price = priceType.indexOf("\n");
       const typeIndex = priceType.lastIndexOf("\n");
@@ -127,10 +128,12 @@ class MichelinScraper {
     var pageRestaurants = [];
     cards.each((idx, ref) => {
       const $card = $(ref);
+      // console.log($card);
       const $title = $card.find(selectors.name);
       const name = $title.text().trim();
       const link = `${baseUrl}${$title.attr("href")}`;
-      const img = $card.find(selectors.img).html().match(regEx.img)[0];
+      // const img = $card.find(selectors.img).html().match(regEx.img)[0];
+      const img = $card.find(selectors.img)[0].attribs["ci-bg-url"];
       const priceType = $card.find(selectors.type).text().trim();
       const price = priceType.indexOf("\n");
       const typeIndex = priceType.lastIndexOf("\n");
@@ -220,7 +223,7 @@ const uploadRestaurantsToDb = (restaurants) => {
       status: "Approved",
       sponsored: false,
       highlightedIn: [],
-      feateredBy: ["MichelinRestaurants"],
+      featuredBy: ["MichelinRestaurants"],
       duration: 0,
       image: restaurant.img,
       externalLink: restaurant.link,
@@ -233,4 +236,13 @@ const uploadRestaurantsToDb = (restaurants) => {
   }
 };
 
-module.exports = { MichelinScraper, getItems, uploadRestaurantsToDb };
+const deleteRestaurantsFromDb = async () => {
+  await Spot.deleteMany({ externalLink: /michelin/i });
+};
+
+module.exports = {
+  MichelinScraper,
+  getItems,
+  uploadRestaurantsToDb,
+  deleteRestaurantsFromDb,
+};

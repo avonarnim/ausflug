@@ -17,11 +17,23 @@ exports.runMichelinScraper = async () => {
     console.log("Connection established w MongoDB");
     const items = await michelin.getItems();
     console.log("should now upload " + items.length + " spots to db");
+
+    // await michelin.uploadRestaurantsToDb(items);
+    // console.log("finished uploading");
     mongoose.disconnect();
   });
+};
 
-  // await michelin.uploadRestaurantsToDb(items);
-  // console.log("finished uploading");
+exports.deleteMichelinSpots = async () => {
+  const uri = process.env.ATLAS_URI;
+  mongoose.connect(uri);
+  const connection = mongoose.connection;
+  connection.once("open", async () => {
+    console.log("Connection established w MongoDB");
+    await michelin.deleteRestaurantsFromDb();
+    console.log("finished deleting");
+    mongoose.disconnect();
+  });
 };
 
 // Gets atlas obscura items across all locations
