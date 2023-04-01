@@ -1,13 +1,23 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import { ProfileProps } from "../pages/Profile";
 import { useMutation } from "../core/api";
+import { useState } from "react";
+import { useAuth } from "../core/AuthContext";
+import profileIcon from "../assets/profileIcon.png";
 
 export default function ProfileFormDialog(props: ProfileProps) {
   const [open, setOpen] = React.useState(false);
@@ -15,6 +25,8 @@ export default function ProfileFormDialog(props: ProfileProps) {
   const [successfulEdit, setSuccessfulEdit] = React.useState(false);
 
   const updateProfile = useMutation("UpdateProfile");
+  const uploadFile = useMutation("UploadFile");
+  const { currentUser } = useAuth();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -34,6 +46,60 @@ export default function ProfileFormDialog(props: ProfileProps) {
       ...editAccountState,
       [event.target.name]: event.target.value,
     });
+  };
+
+  const [profileFile, setProfileFile] = useState<{
+    selectedFile: File | null;
+    loaded: Number;
+    message: string;
+    defaultMessage: string;
+    uploading: boolean;
+  }>({
+    selectedFile: null,
+    loaded: 0,
+    message: "Choose a profile photo...",
+    defaultMessage: "Choose a profile photo...",
+    uploading: false,
+  });
+
+  const handleFileChange = (files: FileList) => {
+    setProfileFile({
+      ...profileFile,
+      selectedFile: files[0],
+      loaded: 0,
+      message: files[0] ? files[0].name : profileFile.defaultMessage,
+    });
+  };
+
+  const handleUpload = async () => {
+    if (profileFile.uploading) return;
+    if (!profileFile.selectedFile) {
+      setProfileFile({ ...profileFile, message: "Select a file first" });
+      return;
+    }
+    setProfileFile({ ...profileFile, uploading: true });
+    // define upload
+    const res = await uploadFile.commit({
+      file: profileFile.selectedFile,
+      title: currentUser.uid,
+      onUploadProgress: (ProgressEvent) => {
+        setProfileFile({
+          ...profileFile,
+          loaded: Math.round(
+            (ProgressEvent.loaded / ProgressEvent.total) * 100
+          ),
+        });
+      },
+    });
+
+    setProfileFile({
+      ...profileFile,
+      message: "Uploaded successfully",
+      uploading: false,
+    });
+    handleChange({
+      target: { name: "image", value: res.uploadUrl },
+    } as React.ChangeEvent<HTMLInputElement>);
   };
 
   return (
@@ -58,7 +124,59 @@ export default function ProfileFormDialog(props: ProfileProps) {
           <>
             <DialogTitle>Edit profile</DialogTitle>
             <DialogContent>
-              <DialogContentText>New username</DialogContentText>
+              <form
+                className="box"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleUpload();
+                }}
+              >
+                <input
+                  type="file"
+                  name="file-5[]"
+                  id="file-5"
+                  className="inputfile inputfile-4"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    handleFileChange(e.target.files!);
+                  }}
+                />
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardMedia
+                    sx={{ height: 140 }}
+                    image={
+                      profileFile.selectedFile
+                        ? URL.createObjectURL(profileFile.selectedFile)
+                        : profileIcon
+                    }
+                    title="Profile picture"
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="body2">
+                      {profileFile.uploading
+                        ? profileFile.loaded + "%"
+                        : profileFile.message}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <label htmlFor="file-5">
+                      <Button size="small" component="span" variant="outlined">
+                        Select Image
+                      </Button>
+                    </label>
+                    <Button
+                      size="small"
+                      // className="submit"
+                      variant="contained"
+                      onClick={handleUpload}
+                      sx={{ ml: 2 }}
+                    >
+                      Upload
+                    </Button>
+                  </CardActions>
+                </Card>
+              </form>
               <TextField
                 autoFocus
                 margin="dense"
@@ -67,9 +185,9 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 type="text"
                 fullWidth
                 variant="standard"
+                placeholder="username`"
                 onChange={handleChange}
               />
-              <DialogContentText>New name</DialogContentText>
               <TextField
                 autoFocus
                 margin="dense"
@@ -78,9 +196,9 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 type="text"
                 fullWidth
                 variant="standard"
+                placeholder="name"
                 onChange={handleChange}
               />
-              <DialogContentText>New bio</DialogContentText>
               <TextField
                 autoFocus
                 margin="dense"
@@ -89,9 +207,9 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 type="text"
                 fullWidth
                 variant="standard"
+                placeholder="bio"
                 onChange={handleChange}
               />
-              <DialogContentText>New Instagram</DialogContentText>
               <TextField
                 autoFocus
                 margin="dense"
@@ -100,9 +218,9 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 type="text"
                 fullWidth
                 variant="standard"
+                placeholder="instagram"
                 onChange={handleChange}
               />
-              <DialogContentText>New Twitter</DialogContentText>
               <TextField
                 autoFocus
                 margin="dense"
@@ -111,9 +229,9 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 type="text"
                 fullWidth
                 variant="standard"
+                placeholder="twitter"
                 onChange={handleChange}
               />
-              <DialogContentText>New Facebook</DialogContentText>
               <TextField
                 autoFocus
                 margin="dense"
@@ -122,9 +240,9 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 type="text"
                 fullWidth
                 variant="standard"
+                placeholder="facebook"
                 onChange={handleChange}
               />
-              <DialogContentText>New Youtube</DialogContentText>
               <TextField
                 autoFocus
                 margin="dense"
@@ -133,6 +251,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 type="text"
                 fullWidth
                 variant="standard"
+                placeholder="youtube"
                 onChange={handleChange}
               />
             </DialogContent>

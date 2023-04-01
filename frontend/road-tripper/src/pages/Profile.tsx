@@ -18,7 +18,7 @@ import logo250 from "../assets/logo250.png";
 import { useMutation } from "../core/api";
 import ProfileFormDialog from "../dialogs/EditProfileDialog";
 import { TripProps } from "./EditTrip";
-import { Edit } from "@mui/icons-material";
+import { Edit, AccountCircle } from "@mui/icons-material";
 
 const Img = styled("img")({
   margin: "auto",
@@ -136,18 +136,22 @@ export default function Profile(): JSX.Element {
         <Grid item>
           <Grid container direction="column" spacing={2}>
             <Grid item>
-              <Card sx={{ maxWidth: 345, minWidth: 240 }}>
-                <CardMedia
-                  component="img"
-                  height="100%"
-                  image={props.avatar}
-                  alt="Profile Photo"
-                  sx={{
-                    height: 300,
-                    objectFit: "contain",
-                  }}
-                />
-              </Card>
+              {user ? (
+                <Card sx={{ maxWidth: 345, minWidth: 240 }}>
+                  <CardMedia
+                    component="img"
+                    height="100%"
+                    image={user?.image}
+                    alt="Profile Photo"
+                    sx={{
+                      height: 300,
+                      objectFit: "contain",
+                    }}
+                  />
+                </Card>
+              ) : (
+                <AccountCircle />
+              )}
             </Grid>
             <Grid item>{user ? <ProfileFormDialog {...user} /> : null}</Grid>
           </Grid>

@@ -127,7 +127,7 @@ exports.update_user = async function (req, res) {
   try {
     const update = req.body;
     User.findOneAndUpdate(
-      { username: req.params.userId },
+      { _id: req.params.userId },
       update,
       function (err, resp) {
         if (err) {
