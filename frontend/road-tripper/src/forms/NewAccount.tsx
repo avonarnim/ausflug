@@ -12,7 +12,7 @@ import React, { useEffect, useState, useRef, ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import { useMutation } from "../core/api";
 import { ProfileProps } from "../pages/Profile";
-
+import axios from "axios";
 import { useAuth } from "../core/AuthContext";
 
 export function NewAccountRegisterSection(props: {
@@ -108,15 +108,122 @@ export function NewAccountFormDetailsSection(props: {
   handleBack: () => void;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }): JSX.Element {
+  const uploadFile = useMutation("UploadFile");
+  const { currentUser } = useAuth();
+
   const attemptContinue = () => {
     if (props.values.username.length > 0 && props.values.name.length > 0) {
       props.handleNext();
     }
   };
 
+  const [profileFile, setProfileFile] = useState<{
+    selectedFile: File | null;
+    loaded: Number;
+    message: string;
+    defaultMessage: string;
+    uploading: boolean;
+  }>({
+    selectedFile: null,
+    loaded: 0,
+    message: "Choose a file...",
+    defaultMessage: "Choose a file...",
+    uploading: false,
+  });
+
+  const handleFileChange = (files: FileList) => {
+    setProfileFile({
+      ...profileFile,
+      selectedFile: files[0],
+      loaded: 0,
+      message: files[0] ? files[0].name : profileFile.defaultMessage,
+    });
+  };
+
+  const handleUpload = async () => {
+    if (profileFile.uploading) return;
+    if (!profileFile.selectedFile) {
+      setProfileFile({ ...profileFile, message: "Select a file first" });
+      return;
+    }
+    setProfileFile({ ...profileFile, uploading: true });
+    // define upload
+    const res = await uploadFile.commit({
+      file: profileFile.selectedFile,
+      title: currentUser.uid,
+      onUploadProgress: (ProgressEvent) => {
+        setProfileFile({
+          ...profileFile,
+          loaded: Math.round(
+            (ProgressEvent.loaded / ProgressEvent.total) * 100
+          ),
+        });
+      },
+    });
+
+    setProfileFile({
+      ...profileFile,
+      selectedFile: null,
+      message: "Uploaded successfully",
+      uploading: false,
+    });
+
+    console.log("res", res);
+    props.handleChange({
+      target: { name: "image", value: res.uploadUrl },
+    } as React.ChangeEvent<HTMLInputElement>);
+
+    // .catch((err) => {
+    //   setProfileFile({
+    //     ...profileFile,
+    //     uploading: false,
+    //     message: "Failed to upload",
+    //   });
+    // });
+  };
+
   return (
     <Box p={4}>
       <Typography variant="h5">Tell us about yourself</Typography>
+      <Typography variant="body1">Profile Picture</Typography>
+      <form
+        className="box"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleUpload();
+        }}
+      >
+        <input
+          type="file"
+          name="file-5[]"
+          id="file-5"
+          className="inputfile inputfile-4"
+          accept="image/*"
+          onChange={(e) => {
+            handleFileChange(e.target.files!);
+          }}
+        />
+        <label htmlFor="file-5">
+          <figure>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="17"
+              viewBox="0 0 20 17"
+            >
+              <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+            </svg>
+          </figure>
+          <span>
+            {profileFile.uploading
+              ? profileFile.loaded + "%"
+              : profileFile.message}
+          </span>
+        </label>
+        <button className="submit" onClick={handleUpload}>
+          Upload
+        </button>
+      </form>
       <TextField
         placeholder="Select a username"
         name="username"
@@ -309,6 +416,7 @@ export function NewAccountForm(): JSX.Element {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handling change");
     try {
       setNewAccountState({
         ...newAccountState,

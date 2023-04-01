@@ -151,6 +151,7 @@ export function QueueSpotFormConfirm(props: {
           lat: props.values.mapLocation.geometry.location.lat(),
           lng: props.values.mapLocation.geometry.location.lng(),
         },
+        place_id: props.values.mapLocation.place_id,
         mapLocation: {
           formatted_address: props.values.mapLocation.formatted_address,
           formatted_phone_number:

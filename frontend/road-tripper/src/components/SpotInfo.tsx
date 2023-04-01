@@ -20,6 +20,7 @@ export function SpotInfo(props: SpotInfoProps): JSX.Element {
 
 export type SpotInfoProps = {
   _id: string;
+  place_id: string;
   title: string;
   image: string;
   description: string;

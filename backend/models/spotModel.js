@@ -11,6 +11,7 @@ const SpotSchema = new Schema({
   quality: Number,
   numberOfRatings: Number,
   avgTimeSpent: Number,
+  place_id: String,
   location: {
     lat: Number,
     lng: Number,

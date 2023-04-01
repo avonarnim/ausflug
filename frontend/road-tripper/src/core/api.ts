@@ -3,6 +3,7 @@ import { auth } from "./firebase";
 import { SpotInfoProps } from "../components/SpotInfo";
 import { ProfileProps } from "../pages/Profile";
 import { TripProps } from "../pages/EditTrip";
+import axios, { AxiosProgressEvent, AxiosHeaders, AxiosResponse } from "axios";
 
 // #region TypeScript Definitions
 
@@ -29,7 +30,8 @@ type Type =
   | "DeleteTrip"
   | "UpdateTrip"
   | "GetTrip"
-  | "GetUserTrips";
+  | "GetUserTrips"
+  | "UploadFile";
 
 type State<T extends Type> = {
   loading: boolean;
@@ -89,6 +91,12 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? { tripId: string }
   : T extends "GetUserTrips"
   ? { userId: string }
+  : T extends "UploadFile"
+  ? {
+      file: File;
+      title: string;
+      onUploadProgress: (progressEvent: any) => void;
+    }
   : null;
 
 export interface SiteData {
@@ -122,6 +130,8 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? ProfileProps
   : T extends "GetUserTrips"
   ? TripProps[]
+  : T extends "UploadFile"
+  ? { uploadUrl: String }
   : any;
 
 export type Mutation<T extends Type> = State<T> & {
@@ -382,6 +392,36 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             res = await fetch(`${apiBaseUrl}/api/trips/user/${userId}`, {
               method: "GET",
               headers,
+            });
+            break;
+          }
+          case "UploadFile": {
+            const castedInput = input as {
+              file: File;
+              title: string;
+              onUploadProgress: (progressEvent: AxiosProgressEvent) => void;
+            };
+            const formData = new FormData();
+            formData.append("file", castedInput.file);
+            formData.append("destFileName", castedInput.title);
+
+            const config = {
+              headers: {
+                Authorization: `Bearer ${idToken}`,
+              },
+              onUploadProgress: castedInput.onUploadProgress,
+            };
+            const axiosRes = await axios.post(
+              `${apiBaseUrl}/api/util/image`,
+              formData,
+              config
+            );
+            res = new Response(JSON.stringify(axiosRes.data), {
+              status: axiosRes.status,
+              statusText: axiosRes.statusText,
+              headers: {
+                "content-type": "application/json",
+              },
             });
             break;
           }

@@ -5,10 +5,20 @@ import { SpotInfoProps } from "../components/SpotInfo";
 import { Box, Container, Typography } from "@mui/material";
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
 
+type Libraries = (
+  | "drawing"
+  | "geometry"
+  | "localContext"
+  | "places"
+  | "visualization"
+)[];
+const libraries: Libraries = ["places"];
+
 export default function Spot(): JSX.Element {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_MAPS_KEY!,
+    libraries: libraries,
   });
 
   const params = useParams();
@@ -33,6 +43,18 @@ export default function Spot(): JSX.Element {
     const getSpotResponse = await getSpot.commit({ spotId: spotId });
     setSpot(getSpotResponse);
     console.log("spot set", getSpotResponse);
+    const marker = new google.maps.Marker({
+      position: getSpotResponse.location,
+      map: map,
+    });
+
+    map?.setOptions({
+      zoom: 8,
+      center: {
+        lat: getSpotResponse.location.lat,
+        lng: getSpotResponse.location.lng,
+      },
+    });
   };
 
   // called on-start up of the page
@@ -40,14 +62,6 @@ export default function Spot(): JSX.Element {
     map: google.maps.Map
   ) {
     setMap(map);
-
-    const marker = new google.maps.Marker({
-      position: {
-        lat: spot ? spot.location.lat : 0,
-        lng: spot ? spot.location.lng : 0,
-      },
-      map: map,
-    });
   },
   []);
 

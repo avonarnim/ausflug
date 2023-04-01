@@ -89,7 +89,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     };
     map.setOptions(options);
 
-    if (navigator.geolocation) {
+    if (navigator.geolocation && !props.origin && !props.destination) {
       navigator.geolocation.getCurrentPosition(success, error);
     }
 
@@ -100,6 +100,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       { placeId: props.origin, fields: ["geometry"] },
       (place, status) => {
         if (place) {
+          place.place_id = props.origin;
           setOriginPlace(place);
         } else {
           console.log(status);
@@ -110,6 +111,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       { placeId: props.destination, fields: ["geometry"] },
       (place, status) => {
         if (place) {
+          place.place_id = props.destination;
           setDestinationPlace(place);
         } else {
           console.log(status);
@@ -183,15 +185,21 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     });
     setDirectionsResponse(results);
     const cumulativeDistance = results.routes[0].legs.reduce(
-      (acc, cur) => acc + Number(cur.distance?.text.split(" ")[0]) || 0,
+      (acc, cur) => acc + (cur.distance?.value ?? 0),
       0
     );
     const cumulativeDuration = results.routes[0].legs.reduce(
-      (acc, cur) => acc + Number(cur.duration?.text.split(" ")[0]) || 0,
+      (acc, cur) => acc + (cur.duration?.value ?? 0),
       0
     );
-    setDistance(`${cumulativeDistance} miles`);
-    setDuration(`${cumulativeDuration} mins`);
+    setDistance(
+      `${Math.floor((10 * cumulativeDistance) / 1609.34) / 10} miles`
+    );
+    setDuration(
+      `${Math.floor(cumulativeDuration / 3600)} hours, ${Math.floor(
+        (cumulativeDuration - 3600 * Math.floor(cumulativeDuration / 3600)) / 60
+      )} mins`
+    );
     setRouteCreated(true);
     return;
   }
@@ -567,10 +575,14 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                         name: nameRef.current?.value || "Unnamed Trip",
                         description: "",
                         creatorId: currentUser.uid,
-                        origin: originRef.current?.value || "",
-                        destination: destinationRef.current?.value || "",
+                        originPlaceId: originPlace?.place_id || "",
+                        originVal: originRef.current?.value || "",
+                        destinationPlaceId: destinationPlace?.place_id || "",
+                        destinationVal: destinationRef.current?.value || "",
                         waypoints: chosenDetours.map((spot) => {
                           return {
+                            _id: spot._id,
+                            place_id: spot.place_id,
                             location: {
                               lat: spot.location.lat,
                               lng: spot.location.lng,

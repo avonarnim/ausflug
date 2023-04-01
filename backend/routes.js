@@ -3,6 +3,7 @@ const router = require("express").Router();
 const spot = require("./controllers/spot");
 const trip = require("./controllers/trip");
 const user = require("./controllers/user");
+const util = require("./controllers/util");
 const { VerifyToken } = require("./middleware/VerifyToken");
 
 // Health Test
@@ -110,6 +111,10 @@ router.route("/api/users/follow/:userId/:followingId").put((req, res) => {
 });
 router.route("/api/users/unfollow/:userId/:followingId").put((req, res) => {
   user.remove_user_from_following(req, res);
+});
+
+router.route("/api/util/image").post((req, res) => {
+  util.upload_image(req, res);
 });
 
 // // scraper Routes
