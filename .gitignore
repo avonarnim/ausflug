@@ -19,6 +19,7 @@
 .env.test.local
 .env.production.local
 */.env
+backend/config/road-tripper-376206-45e00a81ae04.json
 
 npm-debug.log*
 yarn-debug.log*

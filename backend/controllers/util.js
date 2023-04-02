@@ -1,14 +1,10 @@
 "use strict";
 const formidable = require("formidable");
 const fs = require("fs");
+const { storage } = require("../config/storage");
 
 // The ID of your GCS bucket
 const bucketName = "assets.road-tripper.vercel.app";
-
-const { Storage } = require("@google-cloud/storage");
-const storage = new Storage({
-  keyFilename: "./env/road-tripper-376206-45e00a81ae04.json",
-});
 
 async function uploadFile(contents, destFileName) {
   await storage.bucket(bucketName).file(destFileName).save(contents);
