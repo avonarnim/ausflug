@@ -13,6 +13,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import * as React from "react";
 import { Link } from "react-router-dom";
+import "../styles/AssetCard.css";
 
 const useStyles = makeStyles({
   multiLineEllipsisTitle: {
@@ -84,6 +85,22 @@ export function AssetCard(props: AssetCardProps): JSX.Element {
           </Grid>
         </Grid>
       </CardActionArea>
+    </Card>
+  );
+}
+
+export function LoadingAssetCard(): JSX.Element {
+  return (
+    <Card variant="outlined" sx={{ m: 0 }}>
+      <div className="postSk">
+        <div className="postSkImg"></div>
+        <div className="postSkInfo">
+          <div className="postSkDetail">
+            <div className="postSkText"></div>
+            <div className="postSkText sm"></div>
+          </div>
+        </div>
+      </div>
     </Card>
   );
 }

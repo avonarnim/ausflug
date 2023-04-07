@@ -14,6 +14,7 @@ import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
 import "react-horizontal-scrolling-menu/dist/styles.css";
 import { Link } from "react-router-dom";
 import { Item } from "./Item";
+import "../../styles/AssetCard.css";
 
 export function AssetBlockCard(props: AssetBlockCardProps): JSX.Element {
   return (
@@ -29,10 +30,26 @@ export function AssetBlockCard(props: AssetBlockCardProps): JSX.Element {
             {props.title}
           </Typography>
           <Typography variant="body2" color="text.secondary" align="left">
-            {props.attribute} {props.value}
+            {props.value}
           </Typography>
         </CardContent>
       </CardActionArea>
+    </Card>
+  );
+}
+
+export function SkeletonAssetBlockCard(): JSX.Element {
+  return (
+    <Card sx={{}}>
+      <div className="postSk">
+        <div className="postSkImg"></div>
+        <div className="postSkInfo">
+          <div className="postSkDetail">
+            <div className="postSkText"></div>
+            <div className="postSkText sm"></div>
+          </div>
+        </div>
+      </div>
     </Card>
   );
 }
@@ -124,6 +141,21 @@ export function AssetBlockCardHorizontalSwipe(
               attribute={assets[i].attribute}
               value={assets[i].value}
             />
+          </Item>
+        </Grid>
+      ))}
+    </ScrollMenu>
+  );
+}
+
+export function SkeletonAssetBlockCardHorizontalSwipe(): JSX.Element {
+  console.log("rendering skeleton");
+  return (
+    <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
+      {[1, 2, 3, 4, 5].map((_, i) => (
+        <Grid item p={1} key={`gridElementWrapper-asset-grid-${i}`}>
+          <Item key={`asset-grid-${i}`}>
+            <SkeletonAssetBlockCard />
           </Item>
         </Grid>
       ))}

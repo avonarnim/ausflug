@@ -18,6 +18,7 @@ import { Link } from "react-router-dom";
 import {
   AssetBlockCardHorizontalSwipe,
   AssetBlockCardHorizontalSwipeProps,
+  SkeletonAssetBlockCardHorizontalSwipe,
 } from "../components/assetSwipers/Block";
 import { SpotInfoProps } from "../components/SpotInfo";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
@@ -413,87 +414,147 @@ export default function Home(): JSX.Element {
         <Grid item xs={12} mt={2}>
           <Divider style={{ marginTop: 10, marginBottom: 10 }} />
           <Typography variant="h4">Around You</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={yourCenterSpots.assetCards}
-          />
+          {yourCenterSpots.assetCards.length != 0 ? (
+            <>
+              <AssetBlockCardHorizontalSwipe
+                assetCards={yourCenterSpots.assetCards}
+              />
+            </>
+          ) : (
+            <>
+              <SkeletonAssetBlockCardHorizontalSwipe />
+            </>
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
           <Typography variant="h4">New York</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={nyCenterSpots.assetCards}
-          />
+          {nyCenterSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={nyCenterSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
           <Typography variant="h4">Michelin Restaurants</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={michelinSourceSpots.assetCards}
-          />
+          {michelinSourceSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={michelinSourceSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
           <Typography variant="h4">Los Angeles</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={laCenterSpots.assetCards}
-          />
+          {laCenterSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={laCenterSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
           <Typography variant="h4">Hiking</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={hikingHighlightedSpots.assetCards}
-          />
+          {hikingHighlightedSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={hikingHighlightedSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
-          <Typography variant="h6">Beaches</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={beachesHighlightedSpots.assetCards}
-          />
+          <Typography variant="h4">Beaches</Typography>
+          {beachesHighlightedSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={beachesHighlightedSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
           <Typography variant="h4">Atlas Obscura Locations</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={atlasObscuraSourceSpots.assetCards}
-          />
+          {atlasObscuraSourceSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={atlasObscuraSourceSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
           <Typography variant="h4">San Francisco</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={sfCenterSpots.assetCards}
-          />
+          {sfCenterSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={sfCenterSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
           <Typography variant="h4">Washington DC</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={dcCenterSpots.assetCards}
-          />
+          {dcCenterSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={dcCenterSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
           <Typography variant="h4">Parks</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={parksHighlightedSpots.assetCards}
-          />
+          {parksHighlightedSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={parksHighlightedSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
           <Typography variant="h4">Venues</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={ticketMasterSourceSpots.assetCards}
-          />
+          {ticketMasterSourceSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={ticketMasterSourceSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
           <Typography variant="h4">Chicago</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={chiCenterSpots.assetCards}
-          />
+          {chiCenterSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={chiCenterSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
           <Typography variant="h4">History</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={historyHighlightedSpots.assetCards}
-          />
+          {historyHighlightedSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={historyHighlightedSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
         <Grid item xs={12} mt={2}>
           <Typography variant="h4">Seattle</Typography>
-          <AssetBlockCardHorizontalSwipe
-            assetCards={seaCenterSpots.assetCards}
-          />
+          {seaCenterSpots.assetCards.length != 0 ? (
+            <AssetBlockCardHorizontalSwipe
+              assetCards={seaCenterSpots.assetCards}
+            />
+          ) : (
+            <SkeletonAssetBlockCardHorizontalSwipe />
+          )}
         </Grid>
       </Grid>
     </Container>
