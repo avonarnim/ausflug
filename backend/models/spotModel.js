@@ -37,6 +37,7 @@ const SpotSchema = new Schema({
   duration: Number,
   status: String,
   externalLink: String,
+  externalIds: [{ source: String, id: String }],
   image: String,
   openTimes: [Number],
 });
