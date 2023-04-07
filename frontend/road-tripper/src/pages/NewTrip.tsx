@@ -11,9 +11,11 @@ export default function NewTrip(): JSX.Element {
   const originVal = params.originVal || "";
   const destination = params.destination || "";
   const destinationVal = params.destinationVal || "";
-  const startDate = dayjs(params.startDate);
-  const endDate = dayjs(params.endDate);
+  const startDate = params.startDate || dayjs().format();
+  const endDate = params.endDate || dayjs().format();
 
+  console.log("START DATE", startDate);
+  console.log("END DATE", endDate);
   return (
     <div>
       <RouteMap

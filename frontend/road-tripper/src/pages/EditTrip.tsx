@@ -623,8 +623,8 @@ export type TripProps = {
     location: { lat: number; lng: number };
     stopover: boolean;
   }[];
-  startDate: number;
-  endDate: number;
+  startDate: string;
+  endDate: string;
   isPublic: boolean;
   isComplete: boolean;
   isArchived: boolean;

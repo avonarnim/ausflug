@@ -50,6 +50,7 @@ export type SpotInfoProps = {
     price_level: number;
   };
   sponsored: boolean;
+  externalIds: { source: string; id: string }[];
   highlightedIn: string[];
   featuredBy: string[];
   duration: number;

@@ -66,7 +66,6 @@ exports.runTicketMasterScraper = async () => {
     const items = await ticketMaster.getItems();
     console.log("should now upload " + items.length + " spots to db");
     await ticketMaster.uploadItemsToDb(items);
-    mongoose.disconnect();
   });
 };
 

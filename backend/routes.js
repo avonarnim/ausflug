@@ -3,6 +3,7 @@ const router = require("express").Router();
 const spot = require("./controllers/spot");
 const trip = require("./controllers/trip");
 const user = require("./controllers/user");
+const event = require("./controllers/event");
 const util = require("./controllers/util");
 const { VerifyToken } = require("./middleware/VerifyToken");
 
@@ -83,6 +84,14 @@ router.route("/api/spots").delete((req, res) => {
 router.route("/api/spots/single/:spotId").get((req, res) => {
   spot.view_spot(req, res);
 });
+
+router
+  .route(
+    "/api/events/boxTime/:latitude1/:longitude1/:latitude2/:longitude2/:startDate/:endDate"
+  )
+  .get((req, res) => {
+    event.search_events_box_time(req, res);
+  });
 
 // user Routes
 router.use("/api/users", VerifyToken);

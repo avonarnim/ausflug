@@ -26,6 +26,7 @@ import { SpotInfoProps } from "./SpotInfo";
 import { Dayjs } from "dayjs";
 import { useAuth } from "../core/AuthContext";
 import { Link } from "react-router-dom";
+import { EventProps } from "../pages/Event";
 
 type Libraries = (
   | "drawing"
@@ -52,12 +53,14 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
   const [chosenDetours, setChosenDetours] = useState<SpotInfoProps[]>([]);
   const [tempChosenDetour, setTempChosenDetour] = useState<SpotInfoProps>();
   const [wayPointElements, setWayPointElements] = useState<JSX.Element[]>([]);
+  const [eventElements, setEventElements] = useState<JSX.Element[]>([]);
   const [routeCreated, setRouteCreated] = useState(false);
   const [startAutocomplete, setStartAutocomplete] =
     useState<google.maps.places.Autocomplete>();
   const [destinationAutocomplete, setDestinationAutocomplete] =
     useState<google.maps.places.Autocomplete>();
   const [savedSpots, setSavedSpots] = useState<SpotInfoProps[]>([]);
+  const [savedEvents, setSavedEvents] = useState<EventProps[]>([]);
   const [originPlace, setOriginPlace] =
     useState<google.maps.places.PlaceResult>();
   const [destinationPlace, setDestinationPlace] =
@@ -68,6 +71,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
   const nameRef = useRef<HTMLInputElement>();
 
   const getSpotsInBox = useMutation("GetSpotsInBox");
+  const getEventsInBoxTime = useMutation("GetEventsInBoxTime");
   const createTrip = useMutation("CreateTrip");
 
   const { currentUser } = useAuth();
@@ -285,6 +289,56 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 
     setSavedSpots(spotResults);
 
+    const eventResults = await getEventsInBoxTime.commit({
+      longitude1: originPlace!.geometry!.location!.lng(),
+      latitude1: originPlace!.geometry!.location!.lat(),
+      longitude2: destinationPlace!.geometry!.location!.lng(),
+      latitude2: destinationPlace!.geometry!.location!.lat(),
+      startTime: props.startDate ?? new Date().toISOString(),
+      endTime: props.endDate ?? new Date().toISOString(),
+    });
+
+    setSavedEvents(eventResults);
+
+    const eventElementsWithRefs = eventResults.map(
+      (eventResult: EventProps) => {
+        const eventRef = createRef<HTMLDivElement>();
+
+        const element = (
+          <ListItem
+            key={eventResult.title + eventResult._id}
+            // secondaryAction={
+            //   <IconButton edge="end" onClick={() => addEventToRoute(eventResult)}>
+            //     <Add />
+            //   </IconButton>
+            // }
+          >
+            <ListItemButton
+              onClick={() => {
+                map!.setCenter(eventResult.location);
+                map!.setZoom(10);
+              }}
+            >
+              <ListItemText
+                ref={eventRef}
+                primary={eventResult.title}
+                secondary={eventResult.description}
+              ></ListItemText>
+            </ListItemButton>
+          </ListItem>
+        );
+        return {
+          event: { eventResult, eventRef },
+          element,
+        };
+      }
+    );
+
+    const eventElements = eventElementsWithRefs.map((event) => event.element);
+    const eventsWithRefs = eventElementsWithRefs.map((event) => event.event);
+
+    setEventElements(eventElements);
+
     const wayPointsWithRefs = spotResults.map((spotResult: SpotInfoProps) => {
       const waypointRef = createRef<HTMLDivElement>();
 
@@ -437,7 +491,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
             <br />
             <br />
             <br />
-            <Grid item container direction="column" xs={6} sx={{ p: 4 }}>
+            <Grid item container direction="column" xs={6} md={4} sx={{ p: 4 }}>
               <Grid item>
                 <Typography>Browse Stops</Typography>
               </Grid>
@@ -453,7 +507,30 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                 </Paper>
               </Grid>
             </Grid>
-            <Grid item container direction="column" xs={6} sx={{ p: 4 }}>
+            <Grid item container direction="column" xs={6} md={4} sx={{ p: 4 }}>
+              <Grid item>
+                <Typography>Browse Events</Typography>
+              </Grid>
+              <Grid item>
+                <Paper style={{ height: 300, overflow: "auto", maxWidth: 360 }}>
+                  <List dense sx={{ width: "100%" }}>
+                    {eventElements.length === 0 ? (
+                      <ListItem>Loading...</ListItem>
+                    ) : (
+                      eventElements
+                    )}
+                  </List>
+                </Paper>
+              </Grid>
+            </Grid>
+            <Grid
+              item
+              container
+              direction="column"
+              xs={12}
+              md={4}
+              sx={{ p: 4 }}
+            >
               <Grid item>
                 <Typography>Selected Detours</Typography>
               </Grid>
@@ -590,8 +667,8 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                             stopover: true,
                           };
                         }),
-                        startDate: Date.now(),
-                        endDate: Date.now(),
+                        startDate: props.startDate || Date.now().toString(),
+                        endDate: props.startDate || Date.now().toString(),
                         isPublic: false,
                         isComplete: false,
                         isArchived: false,
@@ -627,6 +704,6 @@ export type RouteMapProps = {
   originVal: string;
   destination: string;
   destinationVal: string;
-  startDate?: Dayjs;
-  endDate?: Dayjs;
+  startDate?: string;
+  endDate?: string;
 };

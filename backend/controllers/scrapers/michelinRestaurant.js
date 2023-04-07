@@ -226,6 +226,7 @@ const uploadRestaurantsToDb = (restaurants) => {
       featuredBy: ["MichelinRestaurants"],
       duration: 0,
       image: restaurant.img,
+      externalIds: [],
       externalLink: restaurant.link,
       openTimes: [],
     });

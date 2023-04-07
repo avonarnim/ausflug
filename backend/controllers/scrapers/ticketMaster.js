@@ -29,7 +29,7 @@ class TicketMasterClient {
       `https://app.ticketmaster.com/discovery/v2/venues.json?page=${this.currentPage}&apikey=${process.env.TICKETMASTER_API_KEY}`
     ).then((res) => res.text());
 
-    console.log(res);
+    // console.log(res);
 
     const jsonRes = JSON.parse(res);
 
@@ -53,6 +53,7 @@ class TicketMasterClient {
         img: venue.images ? venue.images[0].url : "",
         lat: venue.location.latitude,
         lng: venue.location.longitude,
+        externalId: venue.id,
       });
     });
 
@@ -119,16 +120,22 @@ const uploadItemsToDb = (items) => {
       status: "Approved",
       sponsored: false,
       highlightedIn: [],
-      feateredBy: ["TicketMaster"],
+      featuredBy: ["TicketMaster"],
       duration: 0,
       image: item.img,
+      externalIds: [{ source: "TicketMaster", id: item.externalId }],
       externalLink: item.link,
       openTimes: [],
     });
   });
 
-  console.log(`spots: ${spotDocs.length} ${spotDocs[0]}`);
-  Spot.insertMany(spotDocs, function (error, docs) {});
+  console.log(`spots...: ${spotDocs.length} ${spotDocs[0]}`);
+  Spot.insertMany(spotDocs, function (error, docs) {
+    if (error) {
+      console.log("err", error);
+    }
+    console.log("docs", docs?.length);
+  });
   return;
 };
 
