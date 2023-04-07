@@ -4,6 +4,7 @@ import { SpotInfoProps } from "../components/SpotInfo";
 import { ProfileProps } from "../pages/Profile";
 import { TripProps } from "../pages/EditTrip";
 import axios, { AxiosProgressEvent, AxiosHeaders, AxiosResponse } from "axios";
+import { EventProps } from "../pages/Event";
 
 // #region TypeScript Definitions
 
@@ -18,6 +19,7 @@ type Type =
   | "GetHighlightedSpots"
   | "GetSpotsByHighlightedGroup"
   | "GetSpotsBySource"
+  | "GetEventsInBoxTime"
   | "CreateProfile"
   | "GetProfile"
   | "GetProfiles"
@@ -65,6 +67,15 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? { subject: string }
   : T extends "GetSpotsBySource"
   ? { source: string }
+  : T extends "GetEventsInBoxTime"
+  ? {
+      longitude1: number;
+      latitude1: number;
+      longitude2: number;
+      latitude2: number;
+      startTime: string;
+      endTime: string;
+    }
   : T extends "CreateProfile"
   ? ProfileProps
   : T extends "GetProfile"
@@ -124,6 +135,8 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? SpotInfoProps[]
   : T extends "GetSpotsByFeaturedSource"
   ? SpotInfoProps[]
+  : T extends "GetEventsInBoxTime"
+  ? EventProps[]
   : T extends "CreateTrip"
   ? TripProps
   : T extends "UpdateProfile"
@@ -262,6 +275,24 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             const inputCast = input as { source: string };
             res = await fetch(
               `${apiBaseUrl}/api/spots/source/${inputCast.source}`,
+              {
+                method: "GET",
+                headers,
+              }
+            );
+            break;
+          }
+          case "GetEventsInBoxTime": {
+            const inputCast = input as {
+              longitude1: number;
+              latitude1: number;
+              longitude2: number;
+              latitude2: number;
+              startTime: string;
+              endTime: string;
+            };
+            res = await fetch(
+              `${apiBaseUrl}/api/events/boxTime/${inputCast.latitude1}/${inputCast.longitude1}/${inputCast.latitude2}/${inputCast.longitude2}/${inputCast.startTime}/${inputCast.endTime}`,
               {
                 method: "GET",
                 headers,
