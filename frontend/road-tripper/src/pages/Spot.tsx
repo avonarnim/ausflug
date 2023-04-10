@@ -2,7 +2,13 @@ import { useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { useMutation } from "../core/api";
 import { SpotInfoProps } from "../components/SpotInfo";
-import { Box, Container, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Grid,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
 
 type Libraries = (
@@ -37,7 +43,7 @@ export default function Spot(): JSX.Element {
       setSpotId(params.spotId);
       getSpotCallback(params.spotId);
     }
-  }, []);
+  }, [map]);
 
   const getSpotCallback = async (spotId: string) => {
     const getSpotResponse = await getSpot.commit({ spotId: spotId });
@@ -66,19 +72,40 @@ export default function Spot(): JSX.Element {
   []);
 
   return spot ? (
-    <Container sx={{ marginTop: 10 }}>
+    <Container sx={{ marginTop: 4 }}>
       <Box>
-        <img src={spot.image} alt={spot.title} />
-        <Typography>{spot.title}</Typography>
-        <Typography>{spot.description}</Typography>
-        <Typography>Category: {spot.category}</Typography>
-        <Typography>Featured by: {spot.featuredBy}</Typography>
-        <Typography>Highlighted in {spot.highlightedIn}</Typography>
-        <Typography>Specialty: {spot.specialty}</Typography>
-        <Typography>Quality: {spot.quality}</Typography>
-        <Typography>Ratings: {spot.numberOfRatings}</Typography>
-        <Typography>Average time spent here: {spot.avgTimeSpent}</Typography>
-        <Typography>Cost: {spot.cost}</Typography>
+        <Grid item container sx={{ marginBottom: 4 }}>
+          <Grid item xs={12} sm={6}>
+            <img
+              src={spot.image}
+              alt={spot.title}
+              style={{ borderRadius: "25px", width: "200px", height: "auto" }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography>{spot.title}</Typography>
+            <Typography>{spot.description}</Typography>
+            <Typography>Category: {spot.category}</Typography>
+            {spot.featuredBy.length > 0 ? (
+              <Typography>Featured by: {spot.featuredBy}</Typography>
+            ) : (
+              <></>
+            )}
+            {spot.highlightedIn.length > 0 ? (
+              <Typography>Highlighted in {spot.highlightedIn}</Typography>
+            ) : (
+              <></>
+            )}
+            <Typography>Specialty: {spot.specialty}</Typography>
+            <Typography>Quality: {spot.quality}</Typography>
+            <Typography>Ratings: {spot.numberOfRatings}</Typography>
+            <Typography>
+              Average time spent here: {spot.avgTimeSpent}
+            </Typography>
+            <Typography>Cost: {swapToDollarSigns(spot.cost)}</Typography>
+          </Grid>
+        </Grid>
+
         {isLoaded ? (
           <GoogleMap
             mapContainerStyle={{ width: "100%", height: "500px" }}
@@ -99,8 +126,16 @@ export default function Spot(): JSX.Element {
   ) : (
     <Container>
       <Box>
-        <Typography>loading</Typography>
+        <CircularProgress />
       </Box>
     </Container>
   );
+}
+
+function swapToDollarSigns(cost: number): string {
+  let dollarSigns = "";
+  for (let i = 0; i < cost; i++) {
+    dollarSigns += "$";
+  }
+  return dollarSigns;
 }

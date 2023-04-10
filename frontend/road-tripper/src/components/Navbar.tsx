@@ -1,16 +1,20 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Link as NavLink } from "react-router-dom";
+import { Link as NavLink, useNavigate } from "react-router-dom";
 import { ThemeButton } from "./ThemeButton";
 import { useMediaQuery } from "react-responsive";
 import {
   AppBar,
   AppBarProps,
+  Box,
+  IconButton,
+  Link,
+  Menu,
+  MenuItem,
   Toolbar,
   Typography,
-  Box,
-  Link,
 } from "@mui/material";
+import { AccountCircle } from "@mui/icons-material";
 import { useAuth } from "../core/AuthContext";
 import { Logout as LogoutIcon } from "../icons/Logout";
 import { Logout } from "./Logout";
@@ -24,10 +28,30 @@ export function NavBar(props: AppBarProps): JSX.Element {
   // base on if user is logged in or not, display different things
   const { currentUser } = useAuth();
   const [modal, setModal] = useState(false);
+  const navigate = useNavigate();
 
   const isTabletOrMobile = useMediaQuery({
     query: "(max-width: 599px)",
   });
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleAccountClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleAccountClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
+    setModal(true);
+  };
+
+  const handleProfile = () => {
+    setAnchorEl(null);
+    navigate(`/profile/${currentUser?.uid}`);
+  };
 
   return (
     <>
@@ -72,7 +96,7 @@ export function NavBar(props: AppBarProps): JSX.Element {
             >
               Spots
             </Link>
-            {currentUser && (
+            {/* {currentUser && (
               <Link
                 color="inherit"
                 underline="none"
@@ -82,7 +106,7 @@ export function NavBar(props: AppBarProps): JSX.Element {
               >
                 Profile
               </Link>
-            )}
+            )} */}
 
             {!currentUser && (
               <Link
@@ -95,7 +119,7 @@ export function NavBar(props: AppBarProps): JSX.Element {
                 Login
               </Link>
             )}
-            {currentUser && (
+            {/* {currentUser && (
               <>
                 <button
                   className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5"
@@ -115,9 +139,42 @@ export function NavBar(props: AppBarProps): JSX.Element {
                   />
                 </NavLink>
               </>
+            )} */}
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            width="100%"
+            pl="auto"
+            sx={{ right: 0 }}
+          >
+            <ThemeButton />
+            {currentUser && (
+              <>
+                <IconButton
+                  id="account-menu-button"
+                  aria-controls={open ? "account-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                  onClick={handleAccountClick}
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="account-menu"
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleAccountClose}
+                  MenuListProps={{
+                    "aria-labelledby": "account-menu-button",
+                  }}
+                >
+                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                  <MenuItem onClick={handleLogout}>Log out</MenuItem>
+                </Menu>
+              </>
             )}
           </Box>
-          <ThemeButton />
         </Toolbar>
       </AppBar>
       {modal && <Logout modal={modal} setModal={setModal} />}
