@@ -9,6 +9,8 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailErrorMsg, setEmailErrorMsg] = useState("");
+  const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
 
   const { currentUser, login, setError } = useAuth();
 
@@ -23,10 +25,41 @@ export default function Login() {
 
     try {
       setError("");
+      setEmailErrorMsg("");
+      setPasswordErrorMsg("");
       setLoading(true);
       await login(email, password);
       navigate("/");
-    } catch (e) {
+    } catch (error: unknown) {
+      const errorCast = error as Error;
+      console.log(errorCast);
+      if (errorCast.message === "Firebase: Error (auth/invalid-email).") {
+        setEmailErrorMsg("Invalid email");
+      } else if (
+        errorCast.message === "Firebase: Error (auth/user-not-found)."
+      ) {
+        setEmailErrorMsg("No user found with that email");
+      } else if (
+        errorCast.message === "Firebase: Error(auth/email-already-exists)."
+      ) {
+        setEmailErrorMsg("Email already exists");
+      } else if (
+        errorCast.message === "Firebase: Error (auth/wrong-password)."
+      ) {
+        setPasswordErrorMsg("Incorrect password");
+      } else if (
+        errorCast.message === "Firebase: Error (auth/too-many-requests)."
+      ) {
+        setPasswordErrorMsg(errorCast.message);
+      } else if (
+        errorCast.message === "Firebase: Error (auth/invalid-password)."
+      ) {
+        setPasswordErrorMsg(
+          "Invalid password. Password must be at least 6 characters"
+        );
+      } else {
+        setError(errorCast.message);
+      }
       setError("Failed to login");
     }
 
@@ -46,6 +79,8 @@ export default function Login() {
         margin="normal"
         fullWidth
         required
+        error={emailErrorMsg !== ""}
+        helperText={emailErrorMsg}
       />
       <TextField
         id="password"
@@ -57,6 +92,8 @@ export default function Login() {
         type="password"
         fullWidth
         required
+        error={passwordErrorMsg !== ""}
+        helperText={passwordErrorMsg}
       />
       <Button
         variant="contained"

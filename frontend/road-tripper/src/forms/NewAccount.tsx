@@ -30,6 +30,8 @@ export function NewAccountRegisterSection(props: {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailErrorMsg, setEmailErrorMsg] = useState("");
+  const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
 
   const { currentUser, register, setError } = useAuth();
 
@@ -37,20 +39,49 @@ export function NewAccountRegisterSection(props: {
     e.preventDefault();
 
     if (password !== confirmPassword) {
+      setPasswordErrorMsg("Passwords do not match");
       return setError("Passwords do not match");
     }
 
     try {
       setError("");
+      setEmailErrorMsg("");
+      setPasswordErrorMsg("");
       setLoading(true);
       const res = await register(email, password);
       props.handleChange({
         target: { name: "_id", value: res.user.uid },
       } as React.ChangeEvent<HTMLInputElement>);
-    } catch (e) {
-      setError("Failed to register", e);
+    } catch (error: unknown) {
+      const errorCast = error as Error;
+      console.log(errorCast);
+      if (errorCast.message === "Firebase: Error (auth/invalid-email).") {
+        setEmailErrorMsg("Invalid email");
+      } else if (
+        errorCast.message === "Firebase: Error(auth/email-already-exists)."
+      ) {
+        setEmailErrorMsg("Email already exists");
+      } else if (
+        errorCast.message === "Firebase: Error (auth/wrong-password)."
+      ) {
+        setPasswordErrorMsg("Incorrect password");
+      } else if (
+        errorCast.message === "Firebase: Error (auth/too-many-requests)."
+      ) {
+        setPasswordErrorMsg(errorCast.message);
+      } else if (
+        errorCast.message === "Firebase: Error (auth/invalid-password)."
+      ) {
+        setPasswordErrorMsg(
+          "Invalid password. Password must be at least 6 characters"
+        );
+      } else {
+        setError(errorCast.message);
+      }
+      setError("Failed to register", error);
       setLoading(false);
     }
+
     props.handleNext();
   };
 
@@ -70,6 +101,8 @@ export function NewAccountRegisterSection(props: {
           margin="normal"
           fullWidth
           required
+          error={emailErrorMsg !== ""}
+          helperText={emailErrorMsg}
         />
         <TextField
           id="password"
@@ -81,6 +114,8 @@ export function NewAccountRegisterSection(props: {
           margin="normal"
           fullWidth
           required
+          error={passwordErrorMsg !== ""}
+          helperText={passwordErrorMsg}
         />
         <TextField
           id="confirm-password"
@@ -92,6 +127,8 @@ export function NewAccountRegisterSection(props: {
           margin="normal"
           fullWidth
           required
+          error={confirmPassword !== password}
+          helperText={"Passwords do not match"}
         />
         <Button
           variant="contained"

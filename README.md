@@ -28,6 +28,9 @@ creates an Express-backed API which relies on the `routes.js` file to route
 requests to their controllers. The controllers rely on the models to answer post/
 put/get/update/delete requests.
 
+Keys should be placed both in `env.yaml` (for GCP to recognize process.env.\_\_\_)
+as well as `.env` for local development.
+
 ## Scripts:
 
 `nodemon server`

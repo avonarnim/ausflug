@@ -34,6 +34,8 @@ export function QueueSpotFormDetailsSection(props: {
     useState<google.maps.places.Autocomplete | null>(null);
   const onLoad = (autoC: google.maps.places.Autocomplete) =>
     setAutoComplete(autoC);
+  const [titleErrorMsg, setTitleErrorMsg] = useState("");
+  const [descriptionErrorMsg, setDescriptionErrorMsg] = useState("");
 
   const [marker, setMarker] = useState<google.maps.Marker | null>(null);
   const onPlaceChanged = () => {
@@ -78,6 +80,13 @@ export function QueueSpotFormDetailsSection(props: {
 
   const attemptContinue = () => {
     console.log("attempting to continue...", props.values);
+    props.values.title.length === 0
+      ? setTitleErrorMsg("Please enter a title")
+      : setTitleErrorMsg("");
+    props.values.description.length === 0
+      ? setDescriptionErrorMsg("Please enter a description")
+      : setDescriptionErrorMsg("");
+
     if (props.values.title.length > 0 && props.values.description.length > 0) {
       console.log("continuing...");
       props.handleNext();
@@ -95,6 +104,8 @@ export function QueueSpotFormDetailsSection(props: {
           defaultValue={props.values.title}
           margin="normal"
           fullWidth
+          error={titleErrorMsg.length > 0}
+          helperText={titleErrorMsg}
         />
         <br />
         <TextField
@@ -104,6 +115,8 @@ export function QueueSpotFormDetailsSection(props: {
           defaultValue={props.values.description}
           margin="normal"
           fullWidth
+          error={descriptionErrorMsg.length > 0}
+          helperText={descriptionErrorMsg}
         />
         <br />
         <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
