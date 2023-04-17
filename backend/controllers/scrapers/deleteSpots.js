@@ -9,7 +9,8 @@ connection.once("open", () => {
   console.log("Connection established w MongoDB");
 
   Spot.deleteMany(
-    { externalLink: /ticketmaster/ },
+    // { externalLink: /ticketmaster/ },
+    { highlightedIn: "NationalParks" },
     function (err, deletionResult) {
       if (err) console.log(err);
       console.log("All spots successfully deleted", deletionResult);

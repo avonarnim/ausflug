@@ -185,6 +185,7 @@ export function QueueSpotFormConfirm(props: {
         cost: 0,
         specialty: 0,
         quality: 0,
+        popularity: 0,
         numberOfRatings: 0,
         avgTimeSpent: 0,
         sponsored: false,
@@ -193,6 +194,9 @@ export function QueueSpotFormConfirm(props: {
         duration: 0,
         status: "pending",
         openTimes: [new Date().getTime()],
+        externalIds: [],
+        activities: [],
+        features: [],
       } as SpotInfoProps;
       const createSpotResponse = await createSpot.commit(spotInfo);
       console.log(createSpotResponse);

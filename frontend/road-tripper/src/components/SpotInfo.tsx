@@ -28,6 +28,7 @@ export type SpotInfoProps = {
   cost: number;
   specialty: number;
   quality: number;
+  popularity: number;
   numberOfRatings: number;
   avgTimeSpent: number;
   location: {
@@ -56,4 +57,6 @@ export type SpotInfoProps = {
   duration: number;
   status: string;
   openTimes: number[];
+  activities: string[];
+  features: string[];
 };

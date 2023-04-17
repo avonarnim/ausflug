@@ -31,3 +31,13 @@ For coldstart, all spots are given an approved status, but in the future, it mig
 
 `node -e 'require("./scraperWrapper.js").runTicketMasterScraper()'`
 from the `scrapers` directory
+
+## OpenStreetMap
+
+Couple of good resources:
+TagInfo helps you find different tags, which can be used to query the OSM DB
+
+- `https://taginfo.openstreetmap.org/tags/highway=trailhead#overview`
+  Overpass is one such querying tool
+- Query editor: `https://overpass-turbo.eu/`
+- Manual: `https://dev.overpass-api.de/overpass-doc/en/criteria/per_tag.html`

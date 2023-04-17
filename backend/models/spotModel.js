@@ -9,6 +9,7 @@ const SpotSchema = new Schema({
   cost: Number,
   specialty: Number,
   quality: Number,
+  popularity: Number,
   numberOfRatings: Number,
   avgTimeSpent: Number,
   place_id: String,
@@ -40,6 +41,8 @@ const SpotSchema = new Schema({
   externalIds: [{ source: String, id: String }],
   image: String,
   openTimes: [Number],
+  activities: [String],
+  features: [String],
 });
 
 module.exports = mongoose.model("Spot", SpotSchema);
