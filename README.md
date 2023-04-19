@@ -69,7 +69,7 @@ You may also see any lint errors in the console.
 
 ## Deploying the Backend
 
-The backend API server is hosted in GCP. It is built using Docker. The following commands are used:
+The backend API server is hosted in GCP. It is built using Docker. The following commands are used (running from the `backend` folder):
 
 ```
 <!-- This creates an image named backend -->

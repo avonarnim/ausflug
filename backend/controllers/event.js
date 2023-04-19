@@ -86,7 +86,7 @@ exports.search_events_venue = async function (req, res) {
   const jsonRes = JSON.parse(ticketMasterRes);
 
   if (!jsonRes._embedded) {
-    console.log("no events", venue.title);
+    console.log("no events");
     res.send("no events");
   }
 
@@ -97,14 +97,14 @@ exports.search_events_venue = async function (req, res) {
       description: event.description ?? "",
       externalLink: event.url,
       image: event.images[0].url ?? "",
-      spot_id: venue._id,
-      place_id: venue.place_id,
-      location: venue.location,
+      // spot_id: venue._id,
+      // place_id: venue.place_id,
+      // location: venue.location,
       externalIds: [{ source: "ticketmaster", id: event.id }],
       sponsored: false,
       status: event.dates.status.code,
       startDate: event.dates.start.localDate,
-      endDate: event.dates.end?.localDate ?? event.dates.start,
+      endDate: event.dates.end?.localDate ?? "",
     });
   });
 

@@ -29,7 +29,6 @@ router.use("/api/trips/:username/:tripId", VerifyToken);
 router.route("/api/trips/:username/:tripId").put((req, res) => {
   user.save_trip_to_user(req, res);
 });
-router.use("/api/trips/");
 router.use("/api/trips/user/:username", VerifyToken);
 router.route("/api/trips/user/:username").get((req, res) => {
   trip.view_user_trips(req, res);

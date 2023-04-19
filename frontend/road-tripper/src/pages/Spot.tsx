@@ -58,7 +58,8 @@ export default function Spot(): JSX.Element {
 
   useEffect(() => {
     if (spot) {
-      if (spot.category === "venue" && spot.externalIds.length > 0) {
+      // if (spot.category === "venue" && spot.externalIds.length > 0) {
+      if (spot.externalIds.length > 0) {
         console.log("getting events");
         const ticketMasterId = spot.externalIds.find(
           (externalId) => externalId.source === "TicketMaster"
@@ -90,6 +91,7 @@ export default function Spot(): JSX.Element {
     const getEventsResponse = await getEvents.commit({
       venueId: ticketMasterIdString,
     });
+    console.log(getEventsResponse);
     setEvents(getEventsResponse);
   };
 
