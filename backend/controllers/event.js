@@ -79,11 +79,11 @@ exports.search_events_venue = async function (req, res) {
 
   // get events from ticketmaster
   // add events to events array
-  const res = await fetch(
+  const ticketMasterRes = await fetch(
     `https://app.ticketmaster.com/discovery/v2/events.json?size=50&venueId=${externalId}&apikey=${process.env.TICKETMASTER_API_KEY}`
-  ).then((res) => res.text());
+  ).then((ticketMasterRes) => ticketMasterRes.text());
 
-  const jsonRes = JSON.parse(res);
+  const jsonRes = JSON.parse(ticketMasterRes);
 
   if (!jsonRes._embedded) {
     console.log("no events", venue.title);
