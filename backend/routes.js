@@ -29,6 +29,7 @@ router.use("/api/trips/:username/:tripId", VerifyToken);
 router.route("/api/trips/:username/:tripId").put((req, res) => {
   user.save_trip_to_user(req, res);
 });
+router.use("/api/trips/");
 router.use("/api/trips/user/:username", VerifyToken);
 router.route("/api/trips/user/:username").get((req, res) => {
   trip.view_user_trips(req, res);
@@ -73,8 +74,8 @@ router.route("/api/spots/source/:source").get((req, res) => {
 router.route("/api/spots").post((req, res) => {
   spot.insert_spot(req, res);
 });
-router.use("/api/spots/:spotId", VerifyToken);
-router.route("/api/spots/:spotId").post((req, res) => {
+router.use("/api/spots/update/:spotId", VerifyToken);
+router.route("/api/spots/update/:spotId").post((req, res) => {
   spot.update_spot(req, res);
 });
 router.use("/api/spots/:spotId", VerifyToken);
@@ -84,6 +85,10 @@ router.route("/api/spots").delete((req, res) => {
 router.route("/api/spots/single/:spotId").get((req, res) => {
   spot.view_spot(req, res);
 });
+router.use("/api/spots/review", VerifyToken);
+router.route("/api/spots/review").post((req, res) => {
+  spot.add_review(req, res);
+});
 
 router
   .route(
@@ -92,6 +97,9 @@ router
   .get((req, res) => {
     event.search_events_box_time(req, res);
   });
+router.route("/api/events/venue/:externalId").get((req, res) => {
+  event.search_events_venue(req, res);
+});
 
 // user Routes
 router.use("/api/users", VerifyToken);
@@ -120,6 +128,10 @@ router.route("/api/users/follow/:userId/:followingId").put((req, res) => {
 });
 router.route("/api/users/unfollow/:userId/:followingId").put((req, res) => {
   user.remove_user_from_following(req, res);
+});
+router.use("/api/users/saveSpot/:username/:spotId", VerifyToken);
+router.route("/api/users/saveSpot/:username/:spotId").put((req, res) => {
+  user.save_spot_to_user(req, res);
 });
 
 router.route("/api/util/image").post((req, res) => {

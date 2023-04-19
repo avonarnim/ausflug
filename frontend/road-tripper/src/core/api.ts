@@ -19,7 +19,10 @@ type Type =
   | "GetHighlightedSpots"
   | "GetSpotsByHighlightedGroup"
   | "GetSpotsBySource"
+  | "SaveSpotToUser"
+  | "CreateReview"
   | "GetEventsInBoxTime"
+  | "GetEventsByVenue"
   | "CreateProfile"
   | "GetProfile"
   | "GetProfiles"
@@ -67,6 +70,16 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? { subject: string }
   : T extends "GetSpotsBySource"
   ? { source: string }
+  : T extends "SaveSpotToUser"
+  ? { spotId: string; userId: string }
+  : T extends "CreateReview"
+  ? {
+      spotId: string;
+      specialty: number;
+      quality: number;
+      image: string;
+      review: string;
+    }
   : T extends "GetEventsInBoxTime"
   ? {
       longitude1: number;
@@ -76,6 +89,8 @@ type Input<T extends Type> = T extends "CreateSpot"
       startTime: string;
       endTime: string;
     }
+  : T extends "GetEventsByVenue"
+  ? { venueId: string }
   : T extends "CreateProfile"
   ? ProfileProps
   : T extends "GetProfile"
@@ -137,6 +152,8 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? SpotInfoProps[]
   : T extends "GetEventsInBoxTime"
   ? EventProps[]
+  : T extends "GetEventsByVenue"
+  ? EventProps[]
   : T extends "CreateTrip"
   ? TripProps
   : T extends "UpdateProfile"
@@ -192,7 +209,7 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             break;
           case "UpdateSpot": {
             const spotId = (input as SpotInfoProps)._id;
-            res = await fetch(`${apiBaseUrl}/api/spots/${spotId}`, {
+            res = await fetch(`${apiBaseUrl}/api/spots/update/${spotId}`, {
               method: "POST",
               headers,
               body: JSON.stringify({ ...input }),
@@ -282,6 +299,25 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             );
             break;
           }
+          case "SaveSpotToUser": {
+            const inputCast = input as { spotId: string; userId: string };
+            res = await fetch(
+              `${apiBaseUrl}/api/users/saveSpot/${inputCast.userId}/${inputCast.spotId}`,
+              {
+                method: "PUT",
+                headers,
+              }
+            );
+            break;
+          }
+          case "CreateReview": {
+            res = await fetch(`${apiBaseUrl}/api/spots/review`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...input }),
+            });
+            break;
+          }
           case "GetEventsInBoxTime": {
             const inputCast = input as {
               longitude1: number;
@@ -293,6 +329,17 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             };
             res = await fetch(
               `${apiBaseUrl}/api/events/boxTime/${inputCast.latitude1}/${inputCast.longitude1}/${inputCast.latitude2}/${inputCast.longitude2}/${inputCast.startTime}/${inputCast.endTime}`,
+              {
+                method: "GET",
+                headers,
+              }
+            );
+            break;
+          }
+          case "GetEventsByVenue": {
+            const inputCast = input as { venueId: string };
+            res = await fetch(
+              `${apiBaseUrl}/api/events/venue/${inputCast.venueId}`,
               {
                 method: "GET",
                 headers,

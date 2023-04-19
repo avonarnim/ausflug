@@ -99,7 +99,29 @@ exports.save_trip_to_user = async function (req, res) {
   }
 };
 
-// add tripId to user list of trips
+exports.save_spot_to_user = async function (req, res) {
+  try {
+    const user = await User.find({ username: req.params.username });
+
+    user.savedSpots.push(req.params.spotId);
+    const update = { savedSpots: user.savedSpots };
+
+    User.findOneAndUpdate(
+      { username: req.params.username },
+      update,
+      function (err, resp) {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send("Successfully added trip");
+        }
+      }
+    );
+  } catch (err) {
+    res.send(err);
+  }
+};
+
 exports.add_user_to_following = async function (req, res) {
   try {
     const user = await User.findById({ username: req.params.userId });

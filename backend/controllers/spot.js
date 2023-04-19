@@ -170,6 +170,32 @@ exports.rate_spot = async function (req, res) {
   }
 };
 
+exports.add_review = async function (req, res) {
+  try {
+    const spot = await Spot.findById(req.body.spotId);
+
+    const new_numberOfRatings = spot.numberOfRatings + 1;
+    const specialty =
+      (spot.specialty * spot.numberOfRatings + req.body.specialty) /
+      new_numberOfRatings;
+    const quality =
+      (spot.quality * spot.numberOfRatings + req.body.quality) /
+      new_numberOfRatings;
+    const update = {
+      quality: quality,
+      specialty: specialty,
+      numberOfRatings: new_numberOfRatings,
+    };
+
+    Spot.findOneAndUpdate(req.body.spotId, update, function (err, resp) {
+      if (err) res.send(err);
+      res.send("Successfully updated rating");
+    });
+  } catch (err) {
+    res.send(err);
+  }
+};
+
 // remove spot from database
 exports.delete_spot = function (req, res) {
   Spot.deleteOne(

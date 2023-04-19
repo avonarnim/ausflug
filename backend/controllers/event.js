@@ -73,3 +73,40 @@ exports.search_events_box_time = function (req, res) {
     }
   );
 };
+
+exports.search_events_venue = async function (req, res) {
+  let externalId = req.params.externalId;
+
+  // get events from ticketmaster
+  // add events to events array
+  const res = await fetch(
+    `https://app.ticketmaster.com/discovery/v2/events.json?size=50&venueId=${externalId}&apikey=${process.env.TICKETMASTER_API_KEY}`
+  ).then((res) => res.text());
+
+  const jsonRes = JSON.parse(res);
+
+  if (!jsonRes._embedded) {
+    console.log("no events", venue.title);
+    res.send("no events");
+  }
+
+  let events = [];
+  jsonRes._embedded.events.map((event) => {
+    events.push({
+      title: event.name,
+      description: event.description ?? "",
+      externalLink: event.url,
+      image: event.images[0].url ?? "",
+      spot_id: venue._id,
+      place_id: venue.place_id,
+      location: venue.location,
+      externalIds: [{ source: "ticketmaster", id: event.id }],
+      sponsored: false,
+      status: event.dates.status.code,
+      startDate: event.dates.start.localDate,
+      endDate: event.dates.end?.localDate ?? event.dates.start,
+    });
+  });
+
+  res.json(events);
+};

@@ -8,8 +8,14 @@ import {
   Grid,
   Typography,
   CircularProgress,
+  IconButton,
+  Button,
 } from "@mui/material";
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
+import { EventProps } from "./Event";
+import { AddCircleOutline } from "@mui/icons-material";
+import { useAuth } from "../core/AuthContext";
+import SpotReviewFormDialog from "../dialogs/SpotReviewDialog";
 
 type Libraries = (
   | "drawing"
@@ -28,11 +34,16 @@ export default function Spot(): JSX.Element {
   });
 
   const params = useParams();
+  const { currentUser } = useAuth();
+
   const [spotId, setSpotId] = useState("");
   const [map, setMap] = useState<google.maps.Map>();
   const [spot, setSpot] = useState<SpotInfoProps>();
+  const [events, setEvents] = useState<EventProps[]>();
 
   const getSpot = useMutation("GetSpot");
+  const getEvents = useMutation("GetEventsByVenue");
+  const saveSpot = useMutation("SaveSpotToUser");
 
   useEffect(() => {
     console.log("params", params);
@@ -44,6 +55,18 @@ export default function Spot(): JSX.Element {
       getSpotCallback(params.spotId);
     }
   }, [map]);
+
+  useEffect(() => {
+    if (spot) {
+      if (spot.category === "venue" && spot.externalIds.length > 0) {
+        console.log("getting events");
+        const ticketMasterId = spot.externalIds.find(
+          (externalId) => externalId.source === "TicketMaster"
+        );
+        if (ticketMasterId?.id) getEventsCallback(ticketMasterId.id);
+      }
+    }
+  }, [spot]);
 
   const getSpotCallback = async (spotId: string) => {
     const getSpotResponse = await getSpot.commit({ spotId: spotId });
@@ -61,6 +84,13 @@ export default function Spot(): JSX.Element {
         lng: getSpotResponse.location.lng,
       },
     });
+  };
+
+  const getEventsCallback = async (ticketMasterIdString: string) => {
+    const getEventsResponse = await getEvents.commit({
+      venueId: ticketMasterIdString,
+    });
+    setEvents(getEventsResponse);
   };
 
   // called on-start up of the page
@@ -103,6 +133,21 @@ export default function Spot(): JSX.Element {
               Average time spent here: {spot.avgTimeSpent}
             </Typography>
             <Typography>Cost: {swapToDollarSigns(spot.cost)}</Typography>
+            {currentUser && spotId ? (
+              <>
+                <IconButton
+                  edge="end"
+                  onClick={() =>
+                    saveSpot.commit({ userId: currentUser.uid, spotId: spotId })
+                  }
+                >
+                  <AddCircleOutline />
+                </IconButton>
+                <SpotReviewFormDialog spotId={spotId} />
+              </>
+            ) : (
+              <></>
+            )}
           </Grid>
         </Grid>
 
@@ -117,10 +162,31 @@ export default function Spot(): JSX.Element {
         ) : (
           <></>
         )}
-        {/* TODO:
-        if it's a venue featuredBy TicketMaster, find all upcoming events (do query)
-        add "review" button 
-        add "save to My Spots" button */}
+
+        {events ? (
+          <Grid item container>
+            {events.map((event) => (
+              <Grid item xs={12} sm={6} md={4}>
+                <img
+                  src={event.image}
+                  alt={event.title}
+                  style={{
+                    borderRadius: "25px",
+                    width: "200px",
+                    height: "auto",
+                  }}
+                />
+                <Typography>{event.title}</Typography>
+                <Typography>{event.description}</Typography>
+                <Typography>{event.status}</Typography>
+                <Typography>{event.startDate}</Typography>
+                <Typography>{event.endDate}</Typography>
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <></>
+        )}
       </Box>
     </Container>
   ) : (
