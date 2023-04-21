@@ -73,6 +73,9 @@ router.route("/api/spots/source/:source").get((req, res) => {
 router.route("/api/spots").post((req, res) => {
   spot.insert_spot(req, res);
 });
+router.route("/api/spots/saved/:userId").post((req, res) => {
+  spot.search_saved_spots_list(req, res);
+});
 router.use("/api/spots/update/:spotId", VerifyToken);
 router.route("/api/spots/update/:spotId").post((req, res) => {
   spot.update_spot(req, res);

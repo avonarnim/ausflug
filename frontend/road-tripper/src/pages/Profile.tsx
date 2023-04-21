@@ -12,13 +12,14 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../core/AuthContext";
 import logo250 from "../assets/logo250.png";
 import { useMutation } from "../core/api";
 import ProfileFormDialog from "../dialogs/EditProfileDialog";
 import { TripProps } from "./EditTrip";
 import { Edit, AccountCircle } from "@mui/icons-material";
+import { SpotInfoProps } from "../components/SpotInfo";
 
 const Img = styled("img")({
   margin: "auto",
@@ -41,12 +42,14 @@ export default function Profile(): JSX.Element {
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState<ProfileProps | null>(null);
   const [trips, setTrips] = useState<TripProps[] | null>(null);
+  const [spots, setSpots] = useState<SpotInfoProps[] | null>(null);
 
   const params = useParams();
 
   const getProfile = useMutation("GetProfile");
   const updateProfile = useMutation("UpdateProfile");
   const getUserTrips = useMutation("GetUserTrips");
+  const getSpots = useMutation("GetSpots");
 
   useEffect(() => {
     console.log("params", params, currentUser?.uid);
@@ -55,6 +58,7 @@ export default function Profile(): JSX.Element {
       setUserId(currentUser.uid);
       getProfileCallback(currentUser.uid);
       getTripsCallback(currentUser.uid);
+      getSpotsCallback(currentUser.uid);
     } else if (params.userId) {
       console.log("getting profile");
       setUserId(params.userId);
@@ -76,6 +80,14 @@ export default function Profile(): JSX.Element {
     });
     setTrips(getUserTripsResponse);
     console.log("trips set", getUserTripsResponse);
+  };
+
+  const getSpotsCallback = async (userId: string) => {
+    const getSpotsResponse = await getSpots.commit({
+      userId: userId,
+    });
+    setSpots(getSpotsResponse);
+    console.log("spots set", getSpotsResponse);
   };
 
   const instagramLink =
@@ -194,7 +206,10 @@ export default function Profile(): JSX.Element {
                     </IconButton>
                   }
                 >
-                  <ListItemText primary={trip.name} />
+                  <ListItemText
+                    primary={trip.name + ": " + trip.description}
+                    secondary={trip.originVal + " to " + trip.destinationVal}
+                  />
                 </ListItem>
               ))}
             </List>
@@ -206,21 +221,28 @@ export default function Profile(): JSX.Element {
           <Grid item xs={12}>
             <Typography variant="h5">Saved Spots</Typography>
             <List>
-              {user?.savedSpots.map((spot) => (
+              {spots?.map((spot) => (
                 <ListItem
-                  key={spot}
+                  key={spot._id}
                   secondaryAction={
                     <IconButton edge="end" aria-label="edit">
-                      <Link href={`/spots/${spot}`}>
+                      <Link href={`/spots/${spot._id}`}>
                         <Edit />
                       </Link>
                     </IconButton>
                   }
                 >
-                  <ListItemText primary={spot} />
+                  <ListItemText
+                    primary={spot.title}
+                    secondary={spot.description}
+                  />
                 </ListItem>
               ))}
             </List>
+            {/* TODO: go to NewTrip page with a random set of the saved spots pre-loaded and either the current location or first spot's location set as the beginning/end */}
+            <RouterLink to={`/`} style={{ textDecoration: "none" }}>
+              <Button variant="contained">Plot me a trip</Button>
+            </RouterLink>
           </Grid>
         ) : (
           <></>

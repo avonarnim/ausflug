@@ -2,6 +2,7 @@
 
 var mongoose = require("mongoose");
 const Spot = require("../models/spotModel");
+const User = require("../models/userModel");
 
 // retrieve list of spots with matching criteria
 // applies to any spots
@@ -10,6 +11,26 @@ exports.search_spots = function (req, res) {
     if (err) res.send(err);
     res.json(spot);
   });
+};
+
+exports.search_saved_spots_list = function (req, res) {
+  User.find(
+    {
+      _id: req.params.userId,
+    },
+    function (err, user) {
+      if (err) res.send(err);
+      Spot.find(
+        {
+          _id: { $in: user.savedSpots },
+        },
+        function (err, spots) {
+          if (err) res.send(err);
+          res.json(spots);
+        }
+      );
+    }
+  );
 };
 
 exports.search_spots_in_area = function (req, res) {
