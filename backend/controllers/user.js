@@ -101,13 +101,36 @@ exports.save_trip_to_user = async function (req, res) {
 
 exports.save_spot_to_user = async function (req, res) {
   try {
-    const user = await User.find({ username: req.params.username });
+    const user = await User.findOne({ _id: req.params.userId });
 
     user.savedSpots.push(req.params.spotId);
     const update = { savedSpots: user.savedSpots };
 
     User.findOneAndUpdate(
-      { username: req.params.username },
+      { _id: req.params.userId },
+      update,
+      function (err, resp) {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send("Successfully added trip");
+        }
+      }
+    );
+  } catch (err) {
+    res.send(err);
+  }
+};
+
+exports.unsave_spot_to_user = async function (req, res) {
+  try {
+    const user = await User.findOne({ _id: req.params.userId });
+
+    user.savedSpots.remove(req.params.spotId);
+    const update = { savedSpots: user.savedSpots };
+
+    User.findOneAndUpdate(
+      { _id: req.params.userId },
       update,
       function (err, resp) {
         if (err) {

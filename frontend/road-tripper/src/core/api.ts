@@ -21,6 +21,7 @@ type Type =
   | "GetSpotsByHighlightedGroup"
   | "GetSpotsBySource"
   | "SaveSpotToUser"
+  | "UnsaveSpotFromUser"
   | "CreateReview"
   | "GetEventsInBoxTime"
   | "GetEventsByVenue"
@@ -74,6 +75,8 @@ type Input<T extends Type> = T extends "CreateSpot"
   : T extends "GetSpotsBySource"
   ? { source: string }
   : T extends "SaveSpotToUser"
+  ? { spotId: string; userId: string }
+  : T extends "UnsaveSpotFromUser"
   ? { spotId: string; userId: string }
   : T extends "CreateReview"
   ? {
@@ -319,6 +322,17 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             const inputCast = input as { spotId: string; userId: string };
             res = await fetch(
               `${apiBaseUrl}/api/users/saveSpot/${inputCast.userId}/${inputCast.spotId}`,
+              {
+                method: "PUT",
+                headers,
+              }
+            );
+            break;
+          }
+          case "UnsaveSpotFromUser": {
+            const inputCast = input as { spotId: string; userId: string };
+            res = await fetch(
+              `${apiBaseUrl}/api/users/unsaveSpot/${inputCast.userId}/${inputCast.spotId}`,
               {
                 method: "PUT",
                 headers,

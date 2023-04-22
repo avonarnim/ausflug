@@ -18,7 +18,7 @@ import logo250 from "../assets/logo250.png";
 import { useMutation } from "../core/api";
 import ProfileFormDialog from "../dialogs/EditProfileDialog";
 import { TripProps } from "./EditTrip";
-import { Edit, AccountCircle } from "@mui/icons-material";
+import { Edit, AccountCircle, Delete } from "@mui/icons-material";
 import { SpotInfoProps } from "../components/SpotInfo";
 
 const Img = styled("img")({
@@ -49,7 +49,8 @@ export default function Profile(): JSX.Element {
   const getProfile = useMutation("GetProfile");
   const updateProfile = useMutation("UpdateProfile");
   const getUserTrips = useMutation("GetUserTrips");
-  const getSpots = useMutation("GetSpots");
+  const getSpotsList = useMutation("GetSpotsList");
+  const unsaveSpot = useMutation("UnsaveSpotFromUser");
 
   useEffect(() => {
     console.log("params", params, currentUser?.uid);
@@ -83,11 +84,19 @@ export default function Profile(): JSX.Element {
   };
 
   const getSpotsCallback = async (userId: string) => {
-    const getSpotsResponse = await getSpots.commit({
+    const getSpotsResponse = await getSpotsList.commit({
       userId: userId,
     });
     setSpots(getSpotsResponse);
     console.log("spots set", getSpotsResponse);
+  };
+
+  const removeSpot = async (spotId: string, userId: string) => {
+    setSpots(spots!.filter((tempSpot) => tempSpot._id !== spotId));
+    await unsaveSpot.commit({
+      spotId: spotId,
+      userId: userId,
+    });
   };
 
   const instagramLink =
@@ -143,26 +152,24 @@ export default function Profile(): JSX.Element {
     );
 
   return (
-    <Grid item container xs direction="row" sx={{ pb: 4, mt: 2 }}>
+    <Grid item container xs direction="row" sx={{ p: 4 }}>
       <Grid container spacing={2}>
         <Grid item>
           <Grid container direction="column" spacing={2}>
             <Grid item>
-              {user ? (
-                <Card sx={{ maxWidth: 345, minWidth: 240 }}>
-                  <CardMedia
-                    component="img"
-                    height="100%"
-                    image={user?.image}
-                    alt="Profile Photo"
-                    sx={{
-                      height: 300,
-                      objectFit: "contain",
-                    }}
-                  />
-                </Card>
+              {user && user.image ? (
+                <img
+                  src={user.image}
+                  alt={user.name + " profile photo"}
+                  style={{
+                    borderRadius: "50%",
+                    width: "200px",
+                    height: "200px",
+                    objectFit: "cover",
+                  }}
+                />
               ) : (
-                <AccountCircle />
+                <AccountCircle sx={{ fontSize: 200 }} />
               )}
             </Grid>
             <Grid item>{user ? <ProfileFormDialog {...user} /> : null}</Grid>
@@ -172,7 +179,7 @@ export default function Profile(): JSX.Element {
           <Typography gutterBottom variant="h4" component="div">
             {user?.name}
           </Typography>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h6" component="div">
             @{user?.username}
           </Typography>
           <Typography gutterBottom variant="body1" component="div">
@@ -192,7 +199,7 @@ export default function Profile(): JSX.Element {
           </Grid>
         </Grid>
         {(currentUser && !params.userId) || currentUser.uid == params.userId ? (
-          <Grid item xs={12}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h5">Saved Trips</Typography>
             <List>
               {trips?.map((trip) => (
@@ -207,7 +214,10 @@ export default function Profile(): JSX.Element {
                   }
                 >
                   <ListItemText
-                    primary={trip.name + ": " + trip.description}
+                    primary={
+                      trip.name +
+                      (trip.description ? ": " + trip.description : "")
+                    }
                     secondary={trip.originVal + " to " + trip.destinationVal}
                   />
                 </ListItem>
@@ -218,17 +228,19 @@ export default function Profile(): JSX.Element {
           <></>
         )}
         {(currentUser && !params.userId) || currentUser.uid == params.userId ? (
-          <Grid item xs={12}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h5">Saved Spots</Typography>
             <List>
               {spots?.map((spot) => (
                 <ListItem
                   key={spot._id}
                   secondaryAction={
-                    <IconButton edge="end" aria-label="edit">
-                      <Link href={`/spots/${spot._id}`}>
-                        <Edit />
-                      </Link>
+                    <IconButton
+                      edge="end"
+                      aria-label="edit"
+                      onClick={() => removeSpot(spot._id, currentUser.uid)}
+                    >
+                      <Delete />
                     </IconButton>
                   }
                 >

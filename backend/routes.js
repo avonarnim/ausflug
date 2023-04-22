@@ -73,7 +73,8 @@ router.route("/api/spots/source/:source").get((req, res) => {
 router.route("/api/spots").post((req, res) => {
   spot.insert_spot(req, res);
 });
-router.route("/api/spots/saved/:userId").post((req, res) => {
+router.use("/api/spots/saved/:userId", VerifyToken);
+router.route("/api/spots/saved/:userId").get((req, res) => {
   spot.search_saved_spots_list(req, res);
 });
 router.use("/api/spots/update/:spotId", VerifyToken);
@@ -131,9 +132,13 @@ router.route("/api/users/follow/:userId/:followingId").put((req, res) => {
 router.route("/api/users/unfollow/:userId/:followingId").put((req, res) => {
   user.remove_user_from_following(req, res);
 });
-router.use("/api/users/saveSpot/:username/:spotId", VerifyToken);
-router.route("/api/users/saveSpot/:username/:spotId").put((req, res) => {
+router.use("/api/users/saveSpot/:userId/:spotId", VerifyToken);
+router.route("/api/users/saveSpot/:userId/:spotId").put((req, res) => {
   user.save_spot_to_user(req, res);
+});
+router.use("/api/users/unsaveSpot/:userId/:spotId", VerifyToken);
+router.route("/api/users/unsaveSpot/:userId/:spotId").put((req, res) => {
+  user.unsave_spot_to_user(req, res);
 });
 
 router.route("/api/util/image").post((req, res) => {

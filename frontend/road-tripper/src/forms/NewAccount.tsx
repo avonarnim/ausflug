@@ -128,7 +128,9 @@ export function NewAccountRegisterSection(props: {
           fullWidth
           required
           error={confirmPassword !== password}
-          helperText={"Passwords do not match"}
+          helperText={
+            confirmPassword !== password ? "Passwords do not match" : ""
+          }
         />
         <Button
           variant="contained"

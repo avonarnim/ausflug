@@ -14,7 +14,7 @@ exports.search_spots = function (req, res) {
 };
 
 exports.search_saved_spots_list = function (req, res) {
-  User.find(
+  User.findOne(
     {
       _id: req.params.userId,
     },
@@ -22,11 +22,13 @@ exports.search_saved_spots_list = function (req, res) {
       if (err) res.send(err);
       Spot.find(
         {
-          _id: { $in: user.savedSpots },
+          _id: {
+            $in: user.savedSpots,
+          },
         },
         function (err, spots) {
           if (err) res.send(err);
-          res.json(spots);
+          else res.json(spots);
         }
       );
     }
