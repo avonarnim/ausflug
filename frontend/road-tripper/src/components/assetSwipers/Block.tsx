@@ -149,7 +149,6 @@ export function AssetBlockCardHorizontalSwipe(
 }
 
 export function SkeletonAssetBlockCardHorizontalSwipe(): JSX.Element {
-  console.log("rendering skeleton");
   return (
     <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
       {[1, 2, 3, 4, 5].map((_, i) => (

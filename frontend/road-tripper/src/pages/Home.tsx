@@ -12,6 +12,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Hero } from "../components/Hero";
+import { HeroCarousel } from "../components/HeroCarousel";
 import { useMutation } from "../core/api";
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -309,7 +310,8 @@ export default function Home(): JSX.Element {
 
   return (
     <Container>
-      <Hero />
+      {/* <Hero /> */}
+      <HeroCarousel />
       {isLoaded ? (
         <>
           <Box>
