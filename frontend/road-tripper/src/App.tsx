@@ -21,6 +21,7 @@ import {
   Spot,
   Settings,
   Terms,
+  Trips,
 } from "./pages/index";
 import { AuthProvider } from "./core/AuthContext";
 
@@ -43,7 +44,7 @@ function App() {
           />
           <Route
             path="/trips"
-            element={<React.Suspense children={<Home />} />}
+            element={<React.Suspense children={<Trips />} />}
           />
           <Route
             path="/trips/:origin/:originVal/:destination/:destinationVal/:startDate?/:endDate?"

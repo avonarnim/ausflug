@@ -88,6 +88,92 @@ export default function Home(): JSX.Element {
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
 
+  // const sources = ["AtlasObscura", "MichelinRestaurants", "TicketMaster"];
+  // const centers = [
+  //   "Your Center",
+  //   "New York",
+  //   "Los Angeles",
+  //   "Chicago",
+  //   "San Francisco",
+  //   "Washington DC",
+  //   "Seattle",
+  // ];
+  // const highlightedGroups = ["Hiking", "Beaches", "Parks", "History"];
+
+  // const [spots, setSpots] = useState<
+  //   {
+  //     queryType: string;
+  //     label: string;
+  //     prop1: any;
+  //     prop2: any;
+  //     spots: AssetBlockCardHorizontalSwipeProps;
+  //   }[]
+  // >([
+  //   {
+  //     queryType: "source",
+  //     label: "AtlasObscura",
+  //     prop1: "AtlasObscura",
+  //     prop2: "",
+  //     spots: { assetCards: [] },
+  //   },
+  //   {
+  //     queryType: "source",
+  //     label: "MichelinRestaurants",
+  //     prop1: "MichelinRestaurants",
+  //     prop2: "",
+  //     spots: { assetCards: [] },
+  //   },
+  //   {
+  //     queryType: "source",
+  //     label: "TicketMaster",
+  //     prop1: "TicketMaster",
+  //     prop2: "",
+  //     spots: { assetCards: [] },
+  //   },
+  //   {
+  //     queryType: "center",
+  //     label: "New York",
+  //     prop1: -73.935242,
+  //     prop2: 40.73061,
+  //     spots: { assetCards: [] },
+  //   },
+  //   {
+  //     queryType: "center",
+  //     label: "Los Angeles",
+  //     prop1: -118.243685,
+  //     prop2: 34.052235,
+  //     spots: { assetCards: [] },
+  //   },
+  //   {
+  //     queryType: "center",
+  //     label: "Chicago",
+  //     prop1: -87.6298,
+  //     prop2: 41.8781,
+  //     spots: { assetCards: [] },
+  //   },
+  //   {
+  //     queryType: "center",
+  //     label: "San Francisco",
+  //     prop1: -122.419416,
+  //     prop2: 37.774929,
+  //     spots: { assetCards: [] },
+  //   },
+  //   {
+  //     queryType: "center",
+  //     label: "Washington DC",
+  //     prop1: -77.03653,
+  //     prop2: 38.907192,
+  //     spots: { assetCards: [] },
+  //   },
+  //   {
+  //     queryType: "center",
+  //     label: "Seattle",
+  //     prop1: -122.33207,
+  //     prop2: 47.60621,
+  //     spots: { assetCards: [] },
+  //   },
+  // ]);
+
   useEffect(() => {
     const init = async () => {
       let spots: SpotInfoProps[] = await getSpotsBySource.commit({

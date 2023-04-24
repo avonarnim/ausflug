@@ -17,3 +17,4 @@ export const Login = React.lazy(() => import("./Login"));
 // export const Donate = React.lazy(() => import("./Donate"));
 export const Search = React.lazy(() => import("./Search"));
 export const NewTrip = React.lazy(() => import("./NewTrip"));
+export const Trips = React.lazy(() => import("./Trips"));
