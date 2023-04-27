@@ -19,9 +19,20 @@ import {
   IconButton,
   ListItemButton,
   Paper,
+  ListItemIcon,
 } from "@mui/material";
 import { useMutation } from "../core/api";
-import { NearMe, Delete, Add } from "@mui/icons-material";
+import {
+  NearMe,
+  Delete,
+  Add,
+  Restaurant,
+  Hiking,
+  Museum,
+  Event,
+  Celebration,
+  ArrowRight,
+} from "@mui/icons-material";
 import { SpotInfoProps } from "./SpotInfo";
 import { Dayjs } from "dayjs";
 import { useAuth } from "../core/AuthContext";
@@ -36,6 +47,30 @@ type Libraries = (
   | "visualization"
 )[];
 const libraries: Libraries = ["places"];
+
+function categoryToIcon(category: string) {
+  console.log(category);
+  switch (category) {
+    case "Restaurant":
+    case "Dining":
+      return <Restaurant />;
+    case "Nature":
+    case "Hiking":
+      return <Hiking />;
+    case "History":
+    case "Museum":
+      return <Museum />;
+    case "Concert":
+    case "Event":
+    case "Venue":
+      return <Event />;
+    case "Party":
+    case "Celebration":
+      return <Celebration />;
+    default:
+      return <ArrowRight />;
+  }
+}
 
 export function RouteMap(props: RouteMapProps): JSX.Element {
   const { isLoaded } = useJsApiLoader({
@@ -65,6 +100,12 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     useState<google.maps.places.PlaceResult>();
   const [destinationPlace, setDestinationPlace] =
     useState<google.maps.places.PlaceResult>();
+
+  const hoursDrivingPerDay = 8;
+  const [daysDriving, setDaysDriving] = useState(1);
+  const [chosenDetoursByDay, setChosenDetoursByDay] = useState<
+    SpotInfoProps[][]
+  >([[]]);
 
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
@@ -205,6 +246,29 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       )} mins`
     );
     setRouteCreated(true);
+    setDaysDriving(Math.ceil(cumulativeDuration / 3600 / hoursDrivingPerDay));
+    // // set chosen detours by day to be an array of arrays of length daysDriving
+    // // each array will contain the detours for that day
+    // let detoursByDay: SpotInfoProps[][] = [];
+    // for (let i = 0; i < daysDriving; i++) {
+    //   detoursByDay.push([]);
+    // }
+    // // add each detour to the day it is closest to
+    // chosenDetours.forEach((detour) => {
+    //   let closestDay = 0;
+    //   let closestDistance = Number.MAX_VALUE;
+    //   for (let i = 0; i < daysDriving; i++) {
+    //     const distance = Math.abs(
+    //       detour.location.lng - results.routes[0].legs[i].end_location.lng()
+    //     );
+    //     if (distance < closestDistance) {
+    //       closestDay = i;
+    //       closestDistance = distance;
+    //     }
+    //   }
+    //   detoursByDay[closestDay].push(detour);
+    // });
+    // setChosenDetoursByDay(chosenDetoursByDay);
     return;
   }
 
@@ -264,7 +328,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
         return insideLat && insideLng;
       });
 
-      const idealNumberOfSpots = 10;
+      const idealNumberOfSpots = daysDriving * 4;
       const necessaryProbability = idealNumberOfSpots / inRange.length;
 
       const randomChoice = inRange
@@ -337,11 +401,16 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     const eventElements = eventElementsWithRefs.map((event) => event.element);
     const eventsWithRefs = eventElementsWithRefs.map((event) => event.event);
 
-    setEventElements(eventElements);
+    setEventElements(
+      eventElements.length > 0
+        ? eventElements
+        : [<ListItem>No events are available during this time</ListItem>]
+    );
 
     const wayPointsWithRefs = spotResults.map((spotResult: SpotInfoProps) => {
       const waypointRef = createRef<HTMLDivElement>();
 
+      console.log("spotResult", spotResult.title, spotResult.category);
       const element = (
         <ListItem
           key={
@@ -362,6 +431,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
               map!.setZoom(10);
             }}
           >
+            <ListItemIcon>{categoryToIcon(spotResult.category)}</ListItemIcon>
             <ListItemText
               ref={waypointRef}
               primary={spotResult.title}
@@ -385,12 +455,11 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       const markers = spotsWithRefs.map((spot) => {
         const infoWindow = new google.maps.InfoWindow({
           content: `<div>
-              <h2>${spot.spotResult.title}</h2>
-              <p>${spot.spotResult.description}</p>
-              <p>${spot.spotResult.category}</p>
-              <p>Quality: ${spot.spotResult.quality}</p>
-              <p>Specialty: ${spot.spotResult.specialty}</p>
-              <p>${spot.spotResult.location.lat} ${spot.spotResult.location.lng}</p>
+              <h2 style="color:black;">${spot.spotResult.title}</h2>
+              <p style="color:black;">${spot.spotResult.description}</p>
+              <p style="color:black;">${spot.spotResult.category}</p>
+              <p style="color:black;">Quality: ${spot.spotResult.quality}</p>
+              <p style="color:black;">Specialty: ${spot.spotResult.specialty}</p>
             </div>`,
         });
 
@@ -491,12 +560,20 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
             <br />
             <br />
             <br />
-            <Grid item container direction="column" xs={6} md={4} sx={{ p: 4 }}>
+            <Grid
+              item
+              container
+              direction="column"
+              xs={12}
+              sm={6}
+              md={4}
+              sx={{ p: 4 }}
+            >
               <Grid item>
                 <Typography>Browse Stops</Typography>
               </Grid>
               <Grid item>
-                <Paper style={{ height: 300, overflow: "auto", maxWidth: 360 }}>
+                <Paper style={{ height: 300, overflow: "auto" }}>
                   <List dense sx={{ width: "100%" }}>
                     {wayPointElements.length === 0 ? (
                       <ListItem>Loading...</ListItem>
@@ -507,7 +584,15 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                 </Paper>
               </Grid>
             </Grid>
-            <Grid item container direction="column" xs={6} md={4} sx={{ p: 4 }}>
+            <Grid
+              item
+              container
+              direction="column"
+              xs={12}
+              sm={6}
+              md={4}
+              sx={{ p: 4 }}
+            >
               <Grid item>
                 <Typography>Browse Events</Typography>
               </Grid>
@@ -528,6 +613,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
               container
               direction="column"
               xs={12}
+              sm={6}
               md={4}
               sx={{ p: 4 }}
             >
@@ -580,6 +666,9 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                                 map?.setZoom(10);
                               }}
                             >
+                              <ListItemIcon>
+                                {categoryToIcon(detour.category)}
+                              </ListItemIcon>
                               <ListItemText
                                 primary={detour.title}
                                 secondary={detour.description}

@@ -18,7 +18,7 @@ import "../../styles/AssetCard.css";
 
 export function AssetBlockCard(props: AssetBlockCardProps): JSX.Element {
   return (
-    <Card sx={{ minWidth: 250 }}>
+    <Card sx={{ minWidth: 200 }}>
       <CardActionArea
         component={Link}
         to={`/${props.type}/${props.id}`}

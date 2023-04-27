@@ -68,6 +68,7 @@ exports.search_spots_by_bounding_box = function (req, res) {
           ],
         },
       },
+      status: "Approved",
     },
     function (err, spot) {
       if (err) res.send(err);

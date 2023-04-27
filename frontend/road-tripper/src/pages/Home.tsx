@@ -11,7 +11,6 @@ import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Hero } from "../components/Hero";
 import { HeroCarousel } from "../components/HeroCarousel";
 import { useMutation } from "../core/api";
 import React, { useEffect, useRef, useState } from "react";
@@ -81,6 +80,37 @@ export default function Home(): JSX.Element {
   const [seaCenterSpots, setSeaCenterSpots] =
     useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
 
+  const sourceSpots = [
+    {
+      source: "AtlasObscura",
+      setter: setAtlasObscuraSourceSpots,
+    },
+    {
+      source: "MichelinRestaurants",
+      setter: setMichelinSourceSpots,
+    },
+    {
+      source: "TicketMaster",
+      setter: setTicketMasterSourceSpots,
+    },
+  ];
+
+  const centerCoordinates = [
+    { longitude: -73.935242, latitude: 40.73061, setter: setNyCenterSpots },
+    { longitude: -118.243683, latitude: 34.052235, setter: setLaCenterSpots },
+    { longitude: -87.6298, latitude: 41.8781, setter: setChiCenterSpots },
+    { longitude: -122.419416, latitude: 37.774929, setter: setSfCenterSpots },
+    { longitude: -77.03653, latitude: 38.907192, setter: setDcCenterSpots },
+    { longitude: -122.33207, latitude: 47.60621, setter: setSeaCenterSpots },
+  ];
+
+  const highlightedGroups = [
+    { subject: "Hiking", setter: setHikingHighlightedSpots },
+    { subject: "Beaches", setter: setBeachesHighlightedSpots },
+    { subject: "Parks", setter: setParksHighlightedSpots },
+    { subject: "History", setter: setHistoryHighlightedSpots },
+  ];
+
   const getSpotsByHighlightedGroup = useMutation("GetSpotsByHighlightedGroup");
   const getSpotsBySource = useMutation("GetSpotsBySource");
   const getSpotsByCenter = useMutation("GetSpotsByCenter");
@@ -88,191 +118,94 @@ export default function Home(): JSX.Element {
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
 
-  // const sources = ["AtlasObscura", "MichelinRestaurants", "TicketMaster"];
-  // const centers = [
-  //   "Your Center",
-  //   "New York",
-  //   "Los Angeles",
-  //   "Chicago",
-  //   "San Francisco",
-  //   "Washington DC",
-  //   "Seattle",
-  // ];
-  // const highlightedGroups = ["Hiking", "Beaches", "Parks", "History"];
-
-  // const [spots, setSpots] = useState<
-  //   {
-  //     queryType: string;
-  //     label: string;
-  //     prop1: any;
-  //     prop2: any;
-  //     spots: AssetBlockCardHorizontalSwipeProps;
-  //   }[]
-  // >([
-  //   {
-  //     queryType: "source",
-  //     label: "AtlasObscura",
-  //     prop1: "AtlasObscura",
-  //     prop2: "",
-  //     spots: { assetCards: [] },
-  //   },
-  //   {
-  //     queryType: "source",
-  //     label: "MichelinRestaurants",
-  //     prop1: "MichelinRestaurants",
-  //     prop2: "",
-  //     spots: { assetCards: [] },
-  //   },
-  //   {
-  //     queryType: "source",
-  //     label: "TicketMaster",
-  //     prop1: "TicketMaster",
-  //     prop2: "",
-  //     spots: { assetCards: [] },
-  //   },
-  //   {
-  //     queryType: "center",
-  //     label: "New York",
-  //     prop1: -73.935242,
-  //     prop2: 40.73061,
-  //     spots: { assetCards: [] },
-  //   },
-  //   {
-  //     queryType: "center",
-  //     label: "Los Angeles",
-  //     prop1: -118.243685,
-  //     prop2: 34.052235,
-  //     spots: { assetCards: [] },
-  //   },
-  //   {
-  //     queryType: "center",
-  //     label: "Chicago",
-  //     prop1: -87.6298,
-  //     prop2: 41.8781,
-  //     spots: { assetCards: [] },
-  //   },
-  //   {
-  //     queryType: "center",
-  //     label: "San Francisco",
-  //     prop1: -122.419416,
-  //     prop2: 37.774929,
-  //     spots: { assetCards: [] },
-  //   },
-  //   {
-  //     queryType: "center",
-  //     label: "Washington DC",
-  //     prop1: -77.03653,
-  //     prop2: 38.907192,
-  //     spots: { assetCards: [] },
-  //   },
-  //   {
-  //     queryType: "center",
-  //     label: "Seattle",
-  //     prop1: -122.33207,
-  //     prop2: 47.60621,
-  //     spots: { assetCards: [] },
-  //   },
-  // ]);
+  const featurettes = [
+    {
+      title: "New York",
+      spots: nyCenterSpots,
+    },
+    {
+      title: "Michelin Restaurants",
+      spots: michelinSourceSpots,
+    },
+    {
+      title: "Los Angeles",
+      spots: laCenterSpots,
+    },
+    {
+      title: "Hiking",
+      spots: hikingHighlightedSpots,
+    },
+    {
+      title: "Beaches",
+      spots: beachesHighlightedSpots,
+    },
+    {
+      title: "Atlas Obscura Locations",
+      spots: atlasObscuraSourceSpots,
+    },
+    {
+      title: "San Francisco",
+      spots: sfCenterSpots,
+    },
+    {
+      title: "Washington DC",
+      spots: dcCenterSpots,
+    },
+    {
+      title: "Parks",
+      spots: parksHighlightedSpots,
+    },
+    {
+      title: "Venues",
+      spots: ticketMasterSourceSpots,
+    },
+    {
+      title: "Chicago",
+      spots: chiCenterSpots,
+    },
+    {
+      title: "History",
+      spots: historyHighlightedSpots,
+    },
+    {
+      title: "Seattle",
+      spots: seaCenterSpots,
+    },
+  ];
 
   useEffect(() => {
     const init = async () => {
-      let spots: SpotInfoProps[] = await getSpotsBySource.commit({
-        source: "AtlasObscura",
-      });
-      setAtlasObscuraSourceSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
+      for (const { source, setter } of sourceSpots) {
+        const spots: SpotInfoProps[] = await getSpotsBySource.commit({
+          source: source,
+        });
+        setter({
+          assetCards: spots.map((spot) => ({
+            title: spot.title,
+            type: "spots",
+            id: spot._id,
+            attribute: "description",
+            value: spot.description,
+            image: spot.image,
+          })),
+        });
+      }
 
-      spots = await getSpotsBySource.commit({
-        source: "MichelinRestaurants",
-      });
-      setMichelinSourceSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
-
-      spots = await getSpotsBySource.commit({
-        source: "TicketMaster",
-      });
-      setTicketMasterSourceSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
-
-      spots = await getSpotsByHighlightedGroup.commit({
-        subject: "Hiking",
-      });
-      setHikingHighlightedSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
-
-      spots = await getSpotsByHighlightedGroup.commit({
-        subject: "Beaches",
-      });
-      setBeachesHighlightedSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
-
-      spots = await getSpotsByHighlightedGroup.commit({
-        subject: "Parks",
-      });
-      setParksHighlightedSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
-
-      spots = await getSpotsByHighlightedGroup.commit({
-        subject: "History",
-      });
-      setHistoryHighlightedSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
+      for (const { subject, setter } of highlightedGroups) {
+        const spots = await getSpotsByHighlightedGroup.commit({
+          subject: subject,
+        });
+        setter({
+          assetCards: spots.map((spot) => ({
+            title: spot.title,
+            type: "spots",
+            id: spot._id,
+            attribute: "description",
+            value: spot.description,
+            image: spot.image,
+          })),
+        });
+      }
 
       // TODO: remove auto-geolocation
       // this is considered untrustworthy by users
@@ -283,7 +216,10 @@ export default function Home(): JSX.Element {
             const longitude = position.coords.longitude;
 
             setCenter({ lat: latitude, lng: longitude });
-            spots = await getSpotsByCenter.commit({ longitude, latitude });
+            const spots = await getSpotsByCenter.commit({
+              longitude,
+              latitude,
+            });
             setYourCenterSpots({
               assetCards: spots.map((spot) => ({
                 title: spot.title,
@@ -301,94 +237,19 @@ export default function Home(): JSX.Element {
         );
       }
 
-      spots = await getSpotsByCenter.commit({
-        longitude: -73.935242,
-        latitude: 40.73061,
-      });
-      setNyCenterSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
-
-      spots = await getSpotsByCenter.commit({
-        longitude: -118.243683,
-        latitude: 34.052235,
-      });
-      setLaCenterSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
-
-      spots = await getSpotsByCenter.commit({
-        longitude: -87.6298,
-        latitude: 41.8781,
-      });
-      setChiCenterSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
-
-      spots = await getSpotsByCenter.commit({
-        longitude: -122.419416,
-        latitude: 37.774929,
-      });
-      setSfCenterSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
-
-      spots = await getSpotsByCenter.commit({
-        longitude: -77.03653,
-        latitude: 38.907192,
-      });
-      setDcCenterSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
-      spots = await getSpotsByCenter.commit({
-        longitude: -122.33207,
-        latitude: 47.60621,
-      });
-      setSeaCenterSpots({
-        assetCards: spots.map((spot) => ({
-          title: spot.title,
-          type: "spots",
-          id: spot._id,
-          attribute: "description",
-          value: spot.description,
-          image: spot.image,
-        })),
-      });
+      for (const { longitude, latitude, setter } of centerCoordinates) {
+        const spots = await getSpotsByCenter.commit({ longitude, latitude });
+        setter({
+          assetCards: spots.map((spot) => ({
+            title: spot.title,
+            type: "spots",
+            id: spot._id,
+            attribute: "description",
+            value: spot.description,
+            image: spot.image,
+          })),
+        });
+      }
     };
 
     init();
@@ -514,136 +375,16 @@ export default function Home(): JSX.Element {
             </>
           )}
         </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">New York</Typography>
-          {nyCenterSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={nyCenterSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">Michelin Restaurants</Typography>
-          {michelinSourceSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={michelinSourceSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">Los Angeles</Typography>
-          {laCenterSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={laCenterSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">Hiking</Typography>
-          {hikingHighlightedSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={hikingHighlightedSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">Beaches</Typography>
-          {beachesHighlightedSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={beachesHighlightedSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">Atlas Obscura Locations</Typography>
-          {atlasObscuraSourceSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={atlasObscuraSourceSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">San Francisco</Typography>
-          {sfCenterSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={sfCenterSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">Washington DC</Typography>
-          {dcCenterSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={dcCenterSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">Parks</Typography>
-          {parksHighlightedSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={parksHighlightedSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">Venues</Typography>
-          {ticketMasterSourceSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={ticketMasterSourceSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">Chicago</Typography>
-          {chiCenterSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={chiCenterSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">History</Typography>
-          {historyHighlightedSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={historyHighlightedSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
-        <Grid item xs={12} mt={2}>
-          <Typography variant="h4">Seattle</Typography>
-          {seaCenterSpots.assetCards.length != 0 ? (
-            <AssetBlockCardHorizontalSwipe
-              assetCards={seaCenterSpots.assetCards}
-            />
-          ) : (
-            <SkeletonAssetBlockCardHorizontalSwipe />
-          )}
-        </Grid>
+        {featurettes.map(({ title, spots }, index) => (
+          <Grid key={index} item xs={12} mt={2}>
+            <Typography variant="h4">{title}</Typography>
+            {spots.assetCards.length != 0 ? (
+              <AssetBlockCardHorizontalSwipe assetCards={spots.assetCards} />
+            ) : (
+              <SkeletonAssetBlockCardHorizontalSwipe />
+            )}
+          </Grid>
+        ))}
       </Grid>
     </Container>
   );

@@ -9,7 +9,7 @@ const { VerifyToken } = require("./middleware/VerifyToken");
 
 // Health Test
 router.route("/").get((req, res) => {
-  res.send("Hello World!");
+  res.send("Success");
 });
 
 // trip-user Routes
@@ -81,12 +81,12 @@ router.use("/api/spots/update/:spotId", VerifyToken);
 router.route("/api/spots/update/:spotId").post((req, res) => {
   spot.update_spot(req, res);
 });
+router.route("/api/spots/single/:spotId").get((req, res) => {
+  spot.view_spot(req, res);
+});
 router.use("/api/spots/:spotId", VerifyToken);
 router.route("/api/spots").delete((req, res) => {
   spot.delete_spot(req, res);
-});
-router.route("/api/spots/single/:spotId").get((req, res) => {
-  spot.view_spot(req, res);
 });
 router.use("/api/spots/review", VerifyToken);
 router.route("/api/spots/review").post((req, res) => {

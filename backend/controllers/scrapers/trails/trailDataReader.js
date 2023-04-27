@@ -66,6 +66,7 @@ connection.once("open", async () => {
         const new_spot = new Spot({
           title: trailhead.name,
           description: trailhead.description || "Trailhead",
+          category: "Hiking",
           specialty: 0,
           quality: 0,
           numberOfRatings: 0,

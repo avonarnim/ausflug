@@ -14,7 +14,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { AccountCircle } from "@mui/icons-material";
+import { AccountCircle, Menu as MenuIcon } from "@mui/icons-material";
 import { useAuth } from "../core/AuthContext";
 import { Logout as LogoutIcon } from "../icons/Logout";
 import { Logout } from "./Logout";
@@ -35,12 +35,28 @@ export function NavBar(props: AppBarProps): JSX.Element {
   });
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [loginAnchorEl, setLoginAnchorEl] = React.useState<null | HTMLElement>(
+    null
+  );
   const open = Boolean(anchorEl);
+  const loginOpen = Boolean(loginAnchorEl);
   const handleAccountClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleAccountClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLoginClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setLoginAnchorEl(event.currentTarget);
+  };
+  const handleLoginClose = () => {
+    setLoginAnchorEl(null);
+  };
+
+  const handleLogin = () => {
+    setLoginAnchorEl(null);
+    navigate(`/login`);
   };
 
   const handleLogout = () => {
@@ -97,29 +113,6 @@ export function NavBar(props: AppBarProps): JSX.Element {
               Spots
             </Link>
             {/* {currentUser && (
-              <Link
-                color="inherit"
-                underline="none"
-                to={`/profile/${currentUser.uid}`}
-                component={NavLink}
-                sx={{ pl: 2, pr: 2 }}
-              >
-                Profile
-              </Link>
-            )} */}
-
-            {!currentUser && (
-              <Link
-                color="inherit"
-                underline="none"
-                to="/login"
-                component={NavLink}
-                sx={{ pl: 2, pr: 2 }}
-              >
-                Login
-              </Link>
-            )}
-            {/* {currentUser && (
               <>
                 <button
                   className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5"
@@ -149,7 +142,7 @@ export function NavBar(props: AppBarProps): JSX.Element {
             sx={{ right: 0 }}
           >
             <ThemeButton />
-            {currentUser && (
+            {currentUser ? (
               <>
                 <IconButton
                   id="account-menu-button"
@@ -171,6 +164,29 @@ export function NavBar(props: AppBarProps): JSX.Element {
                 >
                   <MenuItem onClick={handleProfile}>Profile</MenuItem>
                   <MenuItem onClick={handleLogout}>Log out</MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <>
+                <IconButton
+                  id="login-menu-button"
+                  aria-controls={loginOpen ? "login-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={loginOpen ? "true" : undefined}
+                  onClick={handleLoginClick}
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="login-menu"
+                  open={loginOpen}
+                  anchorEl={loginAnchorEl}
+                  onClose={handleLoginClose}
+                  MenuListProps={{
+                    "aria-labelledby": "login-menu-button",
+                  }}
+                >
+                  <MenuItem onClick={handleLogin}>Login</MenuItem>
                 </Menu>
               </>
             )}

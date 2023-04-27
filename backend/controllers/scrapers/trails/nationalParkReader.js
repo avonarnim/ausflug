@@ -118,6 +118,7 @@ async function uploadSpotsToDB(trails) {
         " ft. elevation gain. Difficulty: " +
         trail.difficulty_rating +
         ".",
+      category: "Nature",
       specialty: trail.avg_rating,
       quality: trail.avg_rating,
       popularity: trail.popularity,

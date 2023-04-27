@@ -196,6 +196,7 @@ const uploadRestaurantsToDb = (restaurants) => {
     const new_spot = new Spot({
       title: restaurant.name,
       description: restaurant.type,
+      category: "Dining",
       specialty: 0,
       quality: 0,
       numberOfRatings: 0,
