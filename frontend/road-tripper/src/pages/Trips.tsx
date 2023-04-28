@@ -48,8 +48,10 @@ export default function Trips(): JSX.Element {
   };
 
   return (
-    <Grid item container xs direction="row" sx={{ p: 4 }}>
-      <Typography variant="h5">Saved Trips</Typography>
+    <Grid item container xs={12} direction="row" sx={{ p: 4 }}>
+      <Grid item xs={12}>
+        <Typography variant="h5">Saved Trips</Typography>
+      </Grid>
       {currentUser ? (
         <Grid item xs={12} md={6}>
           <List>

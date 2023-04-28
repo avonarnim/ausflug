@@ -10,6 +10,7 @@ import React, { useRef, useState, createRef, useEffect } from "react";
 import {
   Box,
   Button,
+  Container,
   Grid,
   Input,
   List,
@@ -38,6 +39,10 @@ import { Dayjs } from "dayjs";
 import { useAuth } from "../core/AuthContext";
 import { Link } from "react-router-dom";
 import { EventProps } from "../pages/Event";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TripProps } from "../pages/EditTrip";
 
 type Libraries = (
   | "drawing"
@@ -82,9 +87,13 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
   const [map, setMap] = useState<google.maps.Map>();
   const [directionsResponse, setDirectionsResponse] =
     useState<google.maps.DirectionsResult>();
+
   const [center, setCenter] = useState({ lat: 38.8584, lng: -112.2945 });
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
+  const [startDate, setStartDate] = useState<Dayjs | null>(null);
+  const [endDate, setEndDate] = useState<Dayjs | null>(null);
+
   const [chosenDetours, setChosenDetours] = useState<SpotInfoProps[]>([]);
   const [tempChosenDetour, setTempChosenDetour] = useState<SpotInfoProps>();
   const [wayPointElements, setWayPointElements] = useState<JSX.Element[]>([]);
@@ -114,6 +123,8 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
   const getSpotsInBox = useMutation("GetSpotsInBox");
   const getEventsInBoxTime = useMutation("GetEventsInBoxTime");
   const createTrip = useMutation("CreateTrip");
+  const getSpot = useMutation("GetSpot");
+  // TODO: need ability to update vs trip based on whether this is new vs an edit
 
   const { currentUser } = useAuth();
 
@@ -164,9 +175,41 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       }
     );
 
-    calculateRoute({ placeId: props.origin }, { placeId: props.destination });
+    if (!props.tripId) {
+      calculateRoute({ placeId: props.origin }, { placeId: props.destination });
+    }
   },
   []);
+
+  useEffect(() => {
+    if (
+      map &&
+      props.tripId &&
+      props.tripResult?.originPlaceId &&
+      props.tripResult?.destinationPlaceId &&
+      props.tripResult?.waypoints !== undefined
+    ) {
+      retrieveSpotsAndCalculateRoute(props.tripResult.waypoints);
+    }
+  }, [map, props.tripResult]);
+
+  const retrieveSpotsAndCalculateRoute = async (
+    waypoints: { _id: string; [key: string]: any }[]
+  ) => {
+    // need to set chosen waypoints to the trip's waypoints
+    let aggregatedDetours = [];
+    for (const waypoint of waypoints) {
+      const spot = await getSpot.commit({ spotId: waypoint._id });
+      console.log("res", spot);
+      aggregatedDetours.push(spot);
+    }
+    setChosenDetours(aggregatedDetours);
+
+    calculateRoute(
+      { placeId: props.tripResult?.originPlaceId },
+      { placeId: props.tripResult?.destinationPlaceId }
+    );
+  };
 
   // Called once the map is loaded
   useEffect(() => {
@@ -179,6 +222,12 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       originPlace.geometry.location &&
       destinationPlace.geometry.location
     ) {
+      // TODO: should evaluate if we need to fit bounds or not
+      const bounds = new window.google.maps.LatLngBounds(
+        originPlace?.geometry?.location,
+        destinationPlace?.geometry?.location
+      );
+      map.fitBounds(bounds);
       loadSpots();
     }
   }, [originPlace, destinationPlace]);
@@ -303,8 +352,6 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 
   // finds ~10 random spots within the bounding box of the route
   function generateRandomRoute() {
-    console.log("generateRandomRoute");
-
     if (
       originPlace &&
       originPlace.geometry &&
@@ -370,7 +417,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 
         const element = (
           <ListItem
-            key={eventResult.title + eventResult._id}
+            key={eventResult.title + eventResult._id + "_event"}
             // secondaryAction={
             //   <IconButton edge="end" onClick={() => addEventToRoute(eventResult)}>
             //     <Add />
@@ -410,14 +457,14 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     const wayPointsWithRefs = spotResults.map((spotResult: SpotInfoProps) => {
       const waypointRef = createRef<HTMLDivElement>();
 
-      console.log("spotResult", spotResult.title, spotResult.category);
       const element = (
         <ListItem
           key={
             spotResult.title +
             spotResult._id +
             spotResult.location.lat +
-            spotResult.location.lng
+            spotResult.location.lng +
+            "_BrowseWaypoint"
           }
           secondaryAction={
             <IconButton edge="end" onClick={() => addSpotToRoute(spotResult)}>
@@ -557,6 +604,24 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                 />
               </Autocomplete>
             </Grid>
+            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Container>
+                <Grid item xs={6} sx={{ p: 2 }}>
+                  <DatePicker
+                    label="Start"
+                    value={startDate || props.tripResult?.startDate}
+                    onChange={(newValue) => setStartDate(newValue)}
+                  />
+                </Grid>
+                <Grid item xs={6} sx={{ p: 2 }}>
+                  <DatePicker
+                    label="End"
+                    value={endDate || props.tripResult?.endDate}
+                    onChange={(newValue) => setEndDate(newValue)}
+                  />
+                </Grid>
+              </Container>
+            </LocalizationProvider> */}
             <br />
             <br />
             <br />
@@ -649,7 +714,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                         console.log("mapping", index, detour.title);
                         return (
                           <ListItem
-                            key={detour._id}
+                            key={detour._id + "_chosenDetour"}
                             secondaryAction={
                               <IconButton
                                 edge="end"
@@ -795,4 +860,6 @@ export type RouteMapProps = {
   destinationVal: string;
   startDate?: string;
   endDate?: string;
+  tripId?: string;
+  tripResult?: TripProps;
 };

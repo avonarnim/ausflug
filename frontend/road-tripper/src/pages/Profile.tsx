@@ -20,7 +20,7 @@ import ProfileFormDialog from "../dialogs/EditProfileDialog";
 import { TripProps } from "./EditTrip";
 import { Edit, AccountCircle, Delete } from "@mui/icons-material";
 import { SpotInfoProps } from "../components/SpotInfo";
-import RandomTripDialog from "../dialogs/RandomTripDialog";
+import RandomTripButton from "../components/RandomTripButton";
 
 const Img = styled("img")({
   margin: "auto",
@@ -253,7 +253,7 @@ export default function Profile(): JSX.Element {
               ))}
             </List>
             {/* TODO: go to NewTrip page with a random set of the saved spots pre-loaded and either the current location or first spot's location set as the beginning/end */}
-            {spots && spots.length > 0 && <RandomTripDialog spots={spots} />}
+            {spots && spots.length > 0 && <RandomTripButton spots={spots} />}
           </Grid>
         ) : (
           <></>

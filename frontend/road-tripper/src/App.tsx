@@ -16,6 +16,7 @@ import {
   NewTrip,
   Privacy,
   Profile,
+  RandomTrip,
   Register,
   Search,
   Spot,
@@ -53,6 +54,10 @@ function App() {
           <Route
             path="/trips/:tripId"
             element={<React.Suspense children={<EditTrip />} />}
+          />
+          <Route
+            path="/trips/random/:origin/:originVal"
+            element={<React.Suspense children={<RandomTrip />} />}
           />
           <Route
             path="/spots/:spotId"
