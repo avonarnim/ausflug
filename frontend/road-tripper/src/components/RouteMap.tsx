@@ -1,7 +1,6 @@
 import {
   useJsApiLoader,
   GoogleMap,
-  Marker,
   Autocomplete,
   DirectionsRenderer,
 } from "@react-google-maps/api";
@@ -16,24 +15,14 @@ import {
   List,
   ListItem,
   ListItemText,
-  Typography,
   IconButton,
   ListItemButton,
   Paper,
   ListItemIcon,
+  Typography,
 } from "@mui/material";
 import { useMutation } from "../core/api";
-import {
-  NearMe,
-  Delete,
-  Add,
-  Restaurant,
-  Hiking,
-  Museum,
-  Event,
-  Celebration,
-  ArrowRight,
-} from "@mui/icons-material";
+import { Delete, Add } from "@mui/icons-material";
 import { SpotInfoProps } from "./SpotInfo";
 import { Dayjs } from "dayjs";
 import { useAuth } from "../core/AuthContext";
@@ -43,6 +32,62 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TripProps } from "../pages/EditTrip";
+import { categoryToIcon } from "../core/util";
+import { DetourDayTabPanel } from "./DetourDayTabPanel";
+import dayjs from "dayjs";
+
+function groupDetoursByDay(
+  chosenDetours: SpotInfoProps[],
+  tempDaysDriving: number,
+  results: google.maps.DirectionsResult,
+  hoursDrivingPerDay: number
+): SpotInfoProps[][] {
+  // set chosen detours by day to be an array of arrays of length daysDriving
+  // each array will contain the detours for that day
+  let detoursByDay: SpotInfoProps[][] = [];
+  for (let i = 0; i < tempDaysDriving; i++) {
+    detoursByDay.push(new Array<SpotInfoProps>());
+  }
+
+  let runningDuration = 0;
+  let day = 0;
+
+  for (let i = 0; i < results.routes[0].legs.length - 1; i++) {
+    // find detour with min distance from results.routes[0].legs[i].end_location
+
+    let minDistDetour = chosenDetours[0];
+    let minDist = Number.MAX_VALUE;
+    for (let j = 0; j < chosenDetours.length; j++) {
+      const distance =
+        Math.pow(
+          chosenDetours[j].location.lng -
+            results.routes[0].legs[i].end_location.lng(),
+          2
+        ) +
+        Math.pow(
+          chosenDetours[j].location.lat -
+            results.routes[0].legs[i].end_location.lat(),
+          2
+        );
+      if (distance < minDist) {
+        minDist = distance;
+        minDistDetour = chosenDetours[j];
+      }
+    }
+
+    const correspondingDetour = minDistDetour;
+
+    const legDuration = results.routes[0].legs[i].duration?.value ?? 0;
+    runningDuration = runningDuration + legDuration;
+    if (runningDuration > hoursDrivingPerDay * 3600) {
+      day++;
+      runningDuration = legDuration;
+    }
+    detoursByDay[day].push(correspondingDetour);
+  }
+
+  return detoursByDay;
+}
 
 type Libraries = (
   | "drawing"
@@ -52,30 +97,6 @@ type Libraries = (
   | "visualization"
 )[];
 const libraries: Libraries = ["places"];
-
-function categoryToIcon(category: string) {
-  console.log(category);
-  switch (category) {
-    case "Restaurant":
-    case "Dining":
-      return <Restaurant />;
-    case "Nature":
-    case "Hiking":
-      return <Hiking />;
-    case "History":
-    case "Museum":
-      return <Museum />;
-    case "Concert":
-    case "Event":
-    case "Venue":
-      return <Event />;
-    case "Party":
-    case "Celebration":
-      return <Celebration />;
-    default:
-      return <ArrowRight />;
-  }
-}
 
 export function RouteMap(props: RouteMapProps): JSX.Element {
   const { isLoaded } = useJsApiLoader({
@@ -94,7 +115,9 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
 
-  const [chosenDetours, setChosenDetours] = useState<SpotInfoProps[]>([]);
+  const [chosenDetours, setChosenDetours] = useState<SpotInfoProps[]>(
+    props.waypoints ?? []
+  );
   const [tempChosenDetour, setTempChosenDetour] = useState<SpotInfoProps>();
   const [wayPointElements, setWayPointElements] = useState<JSX.Element[]>([]);
   const [eventElements, setEventElements] = useState<JSX.Element[]>([]);
@@ -111,7 +134,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     useState<google.maps.places.PlaceResult>();
 
   const hoursDrivingPerDay = 8;
-  const [daysDriving, setDaysDriving] = useState(1);
+  const [daysDriving, setDaysDriving] = useState(0);
   const [chosenDetoursByDay, setChosenDetoursByDay] = useState<
     SpotInfoProps[][]
   >([[]]);
@@ -230,7 +253,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       map.fitBounds(bounds);
       loadSpots();
     }
-  }, [originPlace, destinationPlace]);
+  }, [originPlace, destinationPlace, startDate, endDate]);
 
   // upon success of finding the user's location, set the center of the map to that location
   function success(position: GeolocationPosition) {
@@ -295,29 +318,20 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       )} mins`
     );
     setRouteCreated(true);
-    setDaysDriving(Math.ceil(cumulativeDuration / 3600 / hoursDrivingPerDay));
-    // // set chosen detours by day to be an array of arrays of length daysDriving
-    // // each array will contain the detours for that day
-    // let detoursByDay: SpotInfoProps[][] = [];
-    // for (let i = 0; i < daysDriving; i++) {
-    //   detoursByDay.push([]);
-    // }
-    // // add each detour to the day it is closest to
-    // chosenDetours.forEach((detour) => {
-    //   let closestDay = 0;
-    //   let closestDistance = Number.MAX_VALUE;
-    //   for (let i = 0; i < daysDriving; i++) {
-    //     const distance = Math.abs(
-    //       detour.location.lng - results.routes[0].legs[i].end_location.lng()
-    //     );
-    //     if (distance < closestDistance) {
-    //       closestDay = i;
-    //       closestDistance = distance;
-    //     }
-    //   }
-    //   detoursByDay[closestDay].push(detour);
-    // });
-    // setChosenDetoursByDay(chosenDetoursByDay);
+    const tempDaysDriving = Math.ceil(
+      cumulativeDuration / 3600 / hoursDrivingPerDay
+    );
+    setDaysDriving(tempDaysDriving);
+
+    setChosenDetoursByDay(
+      groupDetoursByDay(
+        chosenDetours,
+        tempDaysDriving,
+        results,
+        hoursDrivingPerDay
+      )
+    );
+
     return;
   }
 
@@ -417,7 +431,12 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 
         const element = (
           <ListItem
-            key={eventResult.title + eventResult._id + "_event"}
+            key={
+              eventResult.title +
+              eventResult._id +
+              eventResult.endDate.toString() +
+              "_event"
+            }
             // secondaryAction={
             //   <IconButton edge="end" onClick={() => addEventToRoute(eventResult)}>
             //     <Add />
@@ -604,24 +623,36 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                 />
               </Autocomplete>
             </Grid>
-            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
               <Container>
-                <Grid item xs={6} sx={{ p: 2 }}>
-                  <DatePicker
-                    label="Start"
-                    value={startDate || props.tripResult?.startDate}
-                    onChange={(newValue) => setStartDate(newValue)}
-                  />
-                </Grid>
-                <Grid item xs={6} sx={{ p: 2 }}>
-                  <DatePicker
-                    label="End"
-                    value={endDate || props.tripResult?.endDate}
-                    onChange={(newValue) => setEndDate(newValue)}
-                  />
+                <Grid item container direction="row">
+                  <Grid item xs={6} sx={{ p: 2 }}>
+                    <DatePicker
+                      label="Start"
+                      value={
+                        startDate ||
+                        dayjs(props.startDate) ||
+                        dayjs(props.tripResult?.startDate) ||
+                        dayjs()
+                      }
+                      onChange={(newValue) => setStartDate(newValue)}
+                    />
+                  </Grid>
+                  <Grid item xs={6} sx={{ p: 2 }}>
+                    <DatePicker
+                      label="End"
+                      value={
+                        endDate ||
+                        dayjs(props.endDate) ||
+                        dayjs(props.tripResult?.endDate) ||
+                        dayjs()
+                      }
+                      onChange={(newValue) => setEndDate(newValue)}
+                    />
+                  </Grid>
                 </Grid>
               </Container>
-            </LocalizationProvider> */}
+            </LocalizationProvider>
             <br />
             <br />
             <br />
@@ -796,6 +827,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                 <NearMe />
               </IconButton>
             </Grid> */}
+            {/* TODO: add "update" button */}
             <Grid item xs={6} sx={{ pl: 4, pr: 4 }}>
               {currentUser ? (
                 <>
@@ -821,8 +853,14 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                             stopover: true,
                           };
                         }),
-                        startDate: props.startDate || Date.now().toString(),
-                        endDate: props.startDate || Date.now().toString(),
+                        startDate:
+                          props.startDate ||
+                          startDate?.toString() ||
+                          Date.now().toString(),
+                        endDate:
+                          props.endDate ||
+                          endDate?.toString() ||
+                          Date.now().toString(),
                         isPublic: false,
                         isComplete: false,
                         isArchived: false,
@@ -844,6 +882,14 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                 <Delete />
               </IconButton>
             </Grid>
+            {routeCreated && (
+              <Grid item xs={12} sx={{ pl: 4, pr: 4 }}>
+                <DetourDayTabPanel
+                  daysDriving={daysDriving}
+                  chosenDetoursByDay={chosenDetoursByDay}
+                />
+              </Grid>
+            )}
           </Grid>
         </Box>
       </Box>
@@ -862,4 +908,5 @@ export type RouteMapProps = {
   endDate?: string;
   tripId?: string;
   tripResult?: TripProps;
+  waypoints?: SpotInfoProps[];
 };
