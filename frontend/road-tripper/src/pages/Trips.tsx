@@ -29,6 +29,12 @@ const ListItemWithWiderSecondaryAction = styled(ListItem)(({ theme }) => ({
   },
 }));
 
+const ListItemWith3SecondaryAction = styled(ListItem)(({ theme }) => ({
+  "&.MuiListItem-secondaryAction": {
+    paddingRight: 144,
+  },
+}));
+
 export default function Trips(): JSX.Element {
   const { currentUser, updateUserProfile, setError } = useAuth();
   const [trips, setTrips] = useState<TripProps[]>([]);
@@ -104,7 +110,7 @@ export default function Trips(): JSX.Element {
               {trips
                 ?.filter((trip) => trip.isComplete == false)
                 .map((trip) => (
-                  <ListItemWithWiderSecondaryAction key={trip.name + trip._id}>
+                  <ListItemWith3SecondaryAction key={trip.name + trip._id}>
                     <ListItemText
                       primary={
                         trip.name +
@@ -114,18 +120,24 @@ export default function Trips(): JSX.Element {
                     />
                     <ListItemSecondaryAction>
                       <IconButton
-                        aria-label="comments"
+                        aria-label="complete"
                         onClick={() => markTripAsCompleteIncomplete(trip, true)}
                       >
                         <Check />
                       </IconButton>
-                      <IconButton edge="end" aria-label="edit">
+                      <IconButton
+                        aria-label="delete"
+                        onClick={() => deleteAndRemoveTrip(trip)}
+                      >
+                        <Delete />
+                      </IconButton>
+                      <IconButton aria-label="edit">
                         <Link href={`/trips/${trip._id}`}>
                           <Edit />
                         </Link>
                       </IconButton>
                     </ListItemSecondaryAction>
-                  </ListItemWithWiderSecondaryAction>
+                  </ListItemWith3SecondaryAction>
                 ))}
             </List>
           </Grid>
@@ -147,7 +159,7 @@ export default function Trips(): JSX.Element {
                     />
                     <ListItemSecondaryAction>
                       <IconButton
-                        aria-label="comments"
+                        aria-label="incomplete"
                         onClick={() =>
                           markTripAsCompleteIncomplete(trip, false)
                         }
@@ -155,8 +167,7 @@ export default function Trips(): JSX.Element {
                         <Check />
                       </IconButton>
                       <IconButton
-                        edge="end"
-                        aria-label="edit"
+                        aria-label="delete"
                         onClick={() => deleteAndRemoveTrip(trip)}
                       >
                         <Delete />
