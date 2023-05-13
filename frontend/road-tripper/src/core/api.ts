@@ -454,9 +454,9 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             break;
           }
           case "SaveTrip": {
-            const castedInput = input as { creatorId: string; id: string };
+            const castedInput = input as { creatorId: string; _id: string };
             res = await fetch(
-              `${apiBaseUrl}/api/trips/${castedInput.creatorId}/${castedInput.id}`,
+              `${apiBaseUrl}/api/trips/${castedInput.creatorId}/${castedInput._id}`,
               {
                 method: "PUT",
                 headers,
@@ -476,9 +476,9 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             break;
           }
           case "UpdateTrip": {
-            const castedInput = input as { creatorId: string; id: string };
+            const castedInput = input as { creatorId: string; _id: string };
             res = await fetch(
-              `${apiBaseUrl}/api/trips/${castedInput.id}/${castedInput.creatorId}`,
+              `${apiBaseUrl}/api/trips/${castedInput.creatorId}/${castedInput._id}`,
               {
                 method: "POST",
                 headers,

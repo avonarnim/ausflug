@@ -31,11 +31,13 @@ const ListItemWithWiderSecondaryAction = styled(ListItem)(({ theme }) => ({
 
 export default function Trips(): JSX.Element {
   const { currentUser, updateUserProfile, setError } = useAuth();
-  const [trips, setTrips] = useState<TripProps[] | null>(null);
+  const [trips, setTrips] = useState<TripProps[]>([]);
 
   const params = useParams();
 
   const getUserTrips = useMutation("GetUserTrips");
+  const updateTrip = useMutation("UpdateTrip");
+  const deleteTrip = useMutation("DeleteTrip");
 
   useEffect(() => {
     if (currentUser) {
@@ -51,6 +53,43 @@ export default function Trips(): JSX.Element {
       userId: userId,
     });
     setTrips(getUserTripsResponse);
+  };
+
+  const markTripAsCompleteIncomplete = async (
+    trip: TripProps,
+    complete: boolean
+  ) => {
+    let subbedTrips = [...trips];
+    for (let i = 0; i < subbedTrips.length; i++) {
+      if (subbedTrips[i]._id == trip._id) {
+        subbedTrips[i].isComplete = complete;
+        break;
+      }
+    }
+    setTrips(subbedTrips);
+    await updateTrip.commit({
+      ...trip,
+      isComplete: complete,
+    });
+  };
+
+  const deleteAndRemoveTrip = async (trip: TripProps) => {
+    let subbedTrips = [...trips];
+    let i = 0;
+    for (0; i < subbedTrips.length; i++) {
+      if (subbedTrips[i]._id == trip._id) {
+        break;
+      }
+    }
+    setTrips(
+      subbedTrips
+        .slice(0, i)
+        .concat(subbedTrips.slice(i + 1, subbedTrips.length))
+    );
+    await deleteTrip.commit({
+      tripId: trip._id,
+      creatorId: trip.creatorId,
+    });
   };
 
   return (
@@ -76,16 +115,7 @@ export default function Trips(): JSX.Element {
                     <ListItemSecondaryAction>
                       <IconButton
                         aria-label="comments"
-                        onClick={() => {
-                          let subbedTrips = [...trips];
-                          for (let i = 0; i < subbedTrips.length; i++) {
-                            if (subbedTrips[i]._id == trip._id) {
-                              subbedTrips[i].isComplete = true;
-                              break;
-                            }
-                          }
-                          setTrips(subbedTrips);
-                        }}
+                        onClick={() => markTripAsCompleteIncomplete(trip, true)}
                       >
                         <Check />
                       </IconButton>
@@ -118,38 +148,16 @@ export default function Trips(): JSX.Element {
                     <ListItemSecondaryAction>
                       <IconButton
                         aria-label="comments"
-                        onClick={() => {
-                          let subbedTrips = [...trips];
-                          for (let i = 0; i < subbedTrips.length; i++) {
-                            if (subbedTrips[i]._id == trip._id) {
-                              subbedTrips[i].isComplete = false;
-                              break;
-                            }
-                          }
-                          setTrips(subbedTrips);
-                        }}
+                        onClick={() =>
+                          markTripAsCompleteIncomplete(trip, false)
+                        }
                       >
                         <Check />
                       </IconButton>
                       <IconButton
                         edge="end"
                         aria-label="edit"
-                        onClick={() => {
-                          let subbedTrips = [...trips];
-                          let i = 0;
-                          for (0; i < subbedTrips.length; i++) {
-                            if (subbedTrips[i]._id == trip._id) {
-                              break;
-                            }
-                          }
-                          setTrips(
-                            subbedTrips
-                              .slice(0, i)
-                              .concat(
-                                subbedTrips.slice(i + 1, subbedTrips.length)
-                              )
-                          );
-                        }}
+                        onClick={() => deleteAndRemoveTrip(trip)}
                       >
                         <Delete />
                       </IconButton>
