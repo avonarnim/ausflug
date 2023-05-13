@@ -10,6 +10,8 @@ import { useState, useEffect } from "react";
 import { SpotInfoProps } from "../components/SpotInfo";
 import { useMutation } from "../core/api";
 import { NearMe, Delete, Add } from "@mui/icons-material";
+import { useAuth } from "../core/AuthContext";
+import { auth } from "../core/firebase";
 
 export function QueuedSpots(props: QueueSpotsProps): JSX.Element {
   const approveSpot = useMutation("UpdateSpot");
@@ -50,7 +52,13 @@ type QueueSpotsProps = {
 };
 
 export default function Admin(): JSX.Element {
+  const { currentUser, updateUserProfile, setError } = useAuth();
   const [spots, setSpots] = useState<SpotInfoProps[]>([]);
+  const [adminContent, setAdminContent] = useState<JSX.Element>(
+    <Typography>
+      Please login as Road Tripper team member to view this page
+    </Typography>
+  );
 
   const getSpots = useMutation("GetSpots");
 
@@ -63,16 +71,27 @@ export default function Admin(): JSX.Element {
     setSpots(spotResults);
   };
 
-  return (
-    <div>
-      <Typography variant="h1">Admin</Typography>
-      <Typography>Queued spots</Typography>
-      <QueuedSpots spots={spots.filter((x) => x.status == "pending")} />
-      <Typography>Highlighted Categories</Typography>
-      <Typography>
-        TODO: be able to change highlighted categories + items within categories
-      </Typography>
-      <Typography>TODO: prevent non-admins from accessing page</Typography>
-    </div>
-  );
+  auth.currentUser?.getIdTokenResult().then((idTokenResult) => {
+    console.log(idTokenResult.claims);
+    console.log(idTokenResult.claims.admin);
+    console.log(!!idTokenResult.claims.admin);
+    if (!!idTokenResult.claims.admin) {
+      setAdminContent(
+        <div>
+          <>
+            <Typography variant="h1">Admin</Typography>
+            <Typography>Queued spots</Typography>
+            <QueuedSpots spots={spots.filter((x) => x.status == "pending")} />
+            <Typography>Highlighted Categories</Typography>
+            <Typography>
+              TODO: be able to change highlighted categories + items within
+              categories
+            </Typography>
+          </>
+        </div>
+      );
+    }
+  });
+
+  return <>{adminContent}</>;
 }

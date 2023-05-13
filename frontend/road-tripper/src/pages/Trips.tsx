@@ -4,6 +4,7 @@ import {
   Link,
   List,
   ListItem,
+  ListItemSecondaryAction,
   ListItemText,
   Typography,
 } from "@mui/material";
@@ -13,7 +14,7 @@ import { useParams, Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../core/AuthContext";
 import { useMutation } from "../core/api";
 import { TripProps } from "./EditTrip";
-import { Edit, AccountCircle, Delete } from "@mui/icons-material";
+import { Edit, Check, AccountCircle, Delete } from "@mui/icons-material";
 
 const Img = styled("img")({
   margin: "auto",
@@ -21,6 +22,12 @@ const Img = styled("img")({
   maxWidth: "100%",
   maxHeight: "100%",
 });
+
+const ListItemWithWiderSecondaryAction = styled(ListItem)(({ theme }) => ({
+  "&.MuiListItem-secondaryAction": {
+    paddingRight: 96,
+  },
+}));
 
 export default function Trips(): JSX.Element {
   const { currentUser, updateUserProfile, setError } = useAuth();
@@ -44,39 +51,114 @@ export default function Trips(): JSX.Element {
       userId: userId,
     });
     setTrips(getUserTripsResponse);
-    console.log("trips set", getUserTripsResponse);
   };
 
   return (
     <Grid item container xs={12} direction="row" sx={{ p: 4 }}>
-      <Grid item xs={12}>
-        <Typography variant="h5">Saved Trips</Typography>
-      </Grid>
       {currentUser ? (
-        <Grid item xs={12} md={6}>
-          <List>
-            {trips?.map((trip) => (
-              <ListItem
-                key={trip.name + trip._id}
-                secondaryAction={
-                  <IconButton edge="end" aria-label="edit">
-                    <Link href={`/trips/${trip._id}`}>
-                      <Edit />
-                    </Link>
-                  </IconButton>
-                }
-              >
-                <ListItemText
-                  primary={
-                    trip.name +
-                    (trip.description ? ": " + trip.description : "")
-                  }
-                  secondary={trip.originVal + " to " + trip.destinationVal}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </Grid>
+        <>
+          <Grid item xs={12}>
+            <Typography variant="h5">Saved Trips</Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <List>
+              {trips
+                ?.filter((trip) => trip.isComplete == false)
+                .map((trip) => (
+                  <ListItemWithWiderSecondaryAction key={trip.name + trip._id}>
+                    <ListItemText
+                      primary={
+                        trip.name +
+                        (trip.description ? ": " + trip.description : "")
+                      }
+                      secondary={trip.originVal + " to " + trip.destinationVal}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        aria-label="comments"
+                        onClick={() => {
+                          let subbedTrips = [...trips];
+                          for (let i = 0; i < subbedTrips.length; i++) {
+                            if (subbedTrips[i]._id == trip._id) {
+                              subbedTrips[i].isComplete = true;
+                              break;
+                            }
+                          }
+                          setTrips(subbedTrips);
+                        }}
+                      >
+                        <Check />
+                      </IconButton>
+                      <IconButton edge="end" aria-label="edit">
+                        <Link href={`/trips/${trip._id}`}>
+                          <Edit />
+                        </Link>
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItemWithWiderSecondaryAction>
+                ))}
+            </List>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h5">Completed Trips</Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <List>
+              {trips
+                ?.filter((trip) => trip.isComplete == true)
+                .map((trip) => (
+                  <ListItemWithWiderSecondaryAction key={trip.name + trip._id}>
+                    <ListItemText
+                      primary={
+                        trip.name +
+                        (trip.description ? ": " + trip.description : "")
+                      }
+                      secondary={trip.originVal + " to " + trip.destinationVal}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        aria-label="comments"
+                        onClick={() => {
+                          let subbedTrips = [...trips];
+                          for (let i = 0; i < subbedTrips.length; i++) {
+                            if (subbedTrips[i]._id == trip._id) {
+                              subbedTrips[i].isComplete = false;
+                              break;
+                            }
+                          }
+                          setTrips(subbedTrips);
+                        }}
+                      >
+                        <Check />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        aria-label="edit"
+                        onClick={() => {
+                          let subbedTrips = [...trips];
+                          let i = 0;
+                          for (0; i < subbedTrips.length; i++) {
+                            if (subbedTrips[i]._id == trip._id) {
+                              break;
+                            }
+                          }
+                          setTrips(
+                            subbedTrips
+                              .slice(0, i)
+                              .concat(
+                                subbedTrips.slice(i + 1, subbedTrips.length)
+                              )
+                          );
+                        }}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItemWithWiderSecondaryAction>
+                ))}
+            </List>
+          </Grid>
+        </>
       ) : (
         <>
           <Typography>Sign in to view your trips</Typography>

@@ -5,7 +5,7 @@ const trip = require("./controllers/trip");
 const user = require("./controllers/user");
 const event = require("./controllers/event");
 const util = require("./controllers/util");
-const { VerifyToken } = require("./middleware/VerifyToken");
+const { VerifyToken, VerifyAdminToken } = require("./middleware/VerifyToken");
 
 // Health Test
 router.route("/").get((req, res) => {
@@ -77,14 +77,14 @@ router.use("/api/spots/saved/:userId", VerifyToken);
 router.route("/api/spots/saved/:userId").get((req, res) => {
   spot.search_saved_spots_list(req, res);
 });
-router.use("/api/spots/update/:spotId", VerifyToken);
+router.use("/api/spots/update/:spotId", VerifyAdminToken);
 router.route("/api/spots/update/:spotId").post((req, res) => {
   spot.update_spot(req, res);
 });
 router.route("/api/spots/single/:spotId").get((req, res) => {
   spot.view_spot(req, res);
 });
-router.use("/api/spots/:spotId", VerifyToken);
+router.use("/api/spots/:spotId", VerifyAdminToken);
 router.route("/api/spots").delete((req, res) => {
   spot.delete_spot(req, res);
 });
@@ -109,6 +109,7 @@ router.use("/api/users", VerifyToken);
 router.route("/api/users").post((req, res) => {
   user.create_profile(req, res);
 });
+router.use("/api/users", VerifyAdminToken);
 router.route("/api/users").get((req, res) => {
   user.list_users(req, res);
 });
@@ -122,6 +123,7 @@ router.use("/api/users/:userId", VerifyToken);
 router.route("/api/users/:userId").post((req, res) => {
   user.update_user(req, res);
 });
+router.use("/api/users/:userId", VerifyAdminToken);
 router.route("/api/users/:userId").delete((req, res) => {
   user.delete_profile(req, res);
 });
