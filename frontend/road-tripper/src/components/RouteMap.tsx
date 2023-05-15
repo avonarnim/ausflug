@@ -518,17 +518,9 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     setWayPointElements(elements);
 
     if (map) {
-      const markers = spotsWithRefs.map((spot) => {
-        const infoWindow = new google.maps.InfoWindow({
-          content: `<div>
-              <h2 style="color:black;">${spot.spotResult.title}</h2>
-              <p style="color:black;">${spot.spotResult.description}</p>
-              <p style="color:black;">${spot.spotResult.category}</p>
-              <p style="color:black;">Quality: ${spot.spotResult.quality}</p>
-              <p style="color:black;">Specialty: ${spot.spotResult.specialty}</p>
-            </div>`,
-        });
+      const infoWindow = new google.maps.InfoWindow({ content: "" });
 
+      const markers = spotsWithRefs.map((spot) => {
         const marker = new google.maps.Marker({
           position: {
             lat: spot.spotResult.location.lat,
@@ -537,9 +529,22 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
           map: map,
         });
 
-        marker.addListener("click", () => {
-          infoWindow.open({ anchor: marker, map });
+        google.maps.event.addListener(marker, "click", () => {
+          infoWindow.close();
+          infoWindow.setContent(
+            `<div>` +
+              (spot.spotResult.image
+                ? `<img src=${spot.spotResult.image} style="height:100px;"/>`
+                : "") +
+              `<h2 style="color:black;">${spot.spotResult.title}</h2>
+            <p style="color:black;">${spot.spotResult.description}</p>
+            <p style="color:black;">${spot.spotResult.category}</p>
+            <p style="color:black;">Quality: ${spot.spotResult.quality}</p>
+            <p style="color:black;">Specialty: ${spot.spotResult.specialty}</p>
+          </div>`
+          );
           // scrollToMarkerElement(spot.waypointRef);
+          infoWindow.open(map, marker);
         });
 
         return marker;
