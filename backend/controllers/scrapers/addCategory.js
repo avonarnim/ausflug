@@ -28,8 +28,8 @@ connection.once("open", () => {
         await Spot.updateOne(
           { _id: spot._id },
           //   { category: "Dining" },
-          { category: "Venue" },
-          //   { category: "Nature" },
+          // { category: "Venue" },
+          { category: "Nature" },
           function (err, res) {
             if (err) console.log(err);
           }

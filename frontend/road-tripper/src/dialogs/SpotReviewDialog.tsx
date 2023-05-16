@@ -16,9 +16,11 @@ import {
 import { useMutation } from "../core/api";
 import { useState } from "react";
 import { useAuth } from "../core/AuthContext";
-import profileIcon from "../assets/profileIcon.png";
+import plusSign from "../assets/plusSign.png";
 
 export default function SpotReviewFormDialog(props: { spotId: string }) {
+  const { currentUser } = useAuth();
+
   const [open, setOpen] = React.useState(false);
   const [reviewState, setReviewState] = React.useState({
     spotId: props.spotId,
@@ -26,13 +28,13 @@ export default function SpotReviewFormDialog(props: { spotId: string }) {
     specialty: 0,
     quality: 0,
     image: "",
+    author: currentUser.uid,
   });
   const [successfulEdit, setSuccessfulEdit] = React.useState(false);
 
   //   TODO: update mutation to be for spot review submission
-  //   const submitSpotReview = useMutation("UpdateProfile");
+  const submitSpotReview = useMutation("CreateReview");
   const uploadFile = useMutation("UploadFile");
-  const { currentUser } = useAuth();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -40,19 +42,20 @@ export default function SpotReviewFormDialog(props: { spotId: string }) {
 
   const handleClose = async (submitting: boolean) => {
     if (submitting) {
-      //   const updateRes = await submitSpotReview.commit(reviewState);
-      //   setSuccessfulEdit(updateRes != null);
+      const updateRes = await submitSpotReview.commit(reviewState);
+      setSuccessfulEdit(updateRes != null);
       setSuccessfulEdit(true);
     }
     setOpen(false);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("handling change", event);
+    console.log("handling change", event.target.name, event.target.value);
     setReviewState({
       ...reviewState,
       [event.target.name]: event.target.value,
     });
+    console.log(reviewState);
   };
 
   const [spotImage, setSpotImage] = useState<{
@@ -88,7 +91,7 @@ export default function SpotReviewFormDialog(props: { spotId: string }) {
     // define upload
     const res = await uploadFile.commit({
       file: spotImage.selectedFile,
-      title: currentUser.uid,
+      title: currentUser.uid + "/" + props.spotId,
       onUploadProgress: (ProgressEvent) => {
         setSpotImage({
           ...spotImage,
@@ -153,9 +156,9 @@ export default function SpotReviewFormDialog(props: { spotId: string }) {
                     image={
                       spotImage.selectedFile
                         ? URL.createObjectURL(spotImage.selectedFile)
-                        : profileIcon
+                        : plusSign
                     }
-                    title="Profile picture"
+                    title="Review picture"
                   />
                   <CardContent>
                     <Typography gutterBottom variant="body2">
@@ -191,6 +194,7 @@ export default function SpotReviewFormDialog(props: { spotId: string }) {
                 fullWidth
                 variant="standard"
                 placeholder="review"
+                name="review"
                 onChange={handleChange}
               />
               <TextField
@@ -202,6 +206,7 @@ export default function SpotReviewFormDialog(props: { spotId: string }) {
                 fullWidth
                 variant="standard"
                 placeholder="specialty"
+                name="specialty"
                 onChange={handleChange}
               />
               <TextField
@@ -213,6 +218,7 @@ export default function SpotReviewFormDialog(props: { spotId: string }) {
                 fullWidth
                 variant="standard"
                 placeholder="quality"
+                name="quality"
                 onChange={handleChange}
               />
             </DialogContent>

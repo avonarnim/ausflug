@@ -22,7 +22,7 @@ export type SpotInfoProps = {
   _id: string;
   place_id: string;
   title: string;
-  image: string;
+  images: string[];
   description: string;
   category: string;
   cost: number;
@@ -54,6 +54,13 @@ export type SpotInfoProps = {
   externalIds: { source: string; id: string }[];
   highlightedIn: string[];
   featuredBy: string[];
+  reviews: {
+    content: string;
+    author: string;
+    specialty: number;
+    quality: number;
+    image: string;
+  }[];
   duration: number;
   status: string;
   openTimes: number[];

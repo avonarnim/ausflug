@@ -159,7 +159,7 @@ export function QueueSpotFormConfirm(props: {
         _id: "",
         title: props.values.title,
         description: props.values.description,
-        image: "",
+        images: [""],
         location: {
           lat: props.values.mapLocation.geometry.location.lat(),
           lng: props.values.mapLocation.geometry.location.lng(),
@@ -191,6 +191,7 @@ export function QueueSpotFormConfirm(props: {
         sponsored: false,
         featuredBy: [""],
         highlightedIn: [""],
+        reviews: [],
         duration: 0,
         status: "pending",
         openTimes: [new Date().getTime()],

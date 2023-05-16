@@ -185,7 +185,8 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 type="text"
                 fullWidth
                 variant="standard"
-                placeholder="username`"
+                placeholder="username"
+                name="username"
                 onChange={handleChange}
               />
               <TextField
@@ -197,6 +198,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 fullWidth
                 variant="standard"
                 placeholder="name"
+                name="name"
                 onChange={handleChange}
               />
               <TextField
@@ -208,6 +210,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 fullWidth
                 variant="standard"
                 placeholder="bio"
+                name="bio"
                 onChange={handleChange}
               />
               <TextField
@@ -219,6 +222,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 fullWidth
                 variant="standard"
                 placeholder="instagram"
+                name="instagram"
                 onChange={handleChange}
               />
               <TextField
@@ -230,6 +234,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 fullWidth
                 variant="standard"
                 placeholder="twitter"
+                name="twitter"
                 onChange={handleChange}
               />
               <TextField
@@ -241,6 +246,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 fullWidth
                 variant="standard"
                 placeholder="facebook"
+                name="facebook"
                 onChange={handleChange}
               />
               <TextField
@@ -252,6 +258,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 fullWidth
                 variant="standard"
                 placeholder="youtube"
+                name="youtube"
                 onChange={handleChange}
               />
             </DialogContent>

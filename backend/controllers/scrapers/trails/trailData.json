@@ -6183,21 +6183,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/196947393",
-        "highway": "trailhead",
-        "name": "Loveland Trailhead",
-        "operator": "City of Loveland",
-        "operator:wikidata": "Q843993"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [-84.259729, 39.2660245]
-      },
-      "id": "node/196947393"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/196948341",
         "highway": "trailhead",
         "name": "Miamiville Trailhead",

@@ -185,10 +185,14 @@ exports.rate_spot = async function (req, res) {
       numberOfRatings: new_numberOfRatings,
     };
 
-    Spot.findOneAndUpdate(req.body.spotId, update, function (err, resp) {
-      if (err) res.send(err);
-      res.send("Successfully updated rating");
-    });
+    Spot.findOneAndUpdate(
+      { _id: req.params.spotId },
+      update,
+      function (err, resp) {
+        if (err) res.send(err);
+        res.send("Successfully updated rating");
+      }
+    );
   } catch (err) {
     res.send(err);
   }
@@ -205,16 +209,32 @@ exports.add_review = async function (req, res) {
     const quality =
       (spot.quality * spot.numberOfRatings + req.body.quality) /
       new_numberOfRatings;
+    const images = spot.images.concat(req.body.image);
+    const review = {
+      content: req.body.review,
+      author: req.body.author,
+      specialty: req.body.specialty,
+      quality: req.body.quality,
+      image: req.body.image,
+    };
+    const reviews = spot.reviews ? spot.reviews.concat(review) : [review];
+
     const update = {
       quality: quality,
       specialty: specialty,
       numberOfRatings: new_numberOfRatings,
+      images: images,
+      reviews: reviews,
     };
 
-    Spot.findOneAndUpdate(req.body.spotId, update, function (err, resp) {
-      if (err) res.send(err);
-      res.send("Successfully updated rating");
-    });
+    Spot.findOneAndUpdate(
+      { _id: req.body.spotId },
+      update,
+      function (err, resp) {
+        if (err) res.send(err);
+        res.send("Successfully updated rating");
+      }
+    );
   } catch (err) {
     res.send(err);
   }

@@ -33,61 +33,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TripProps } from "../pages/EditTrip";
 import { categoryToIcon } from "../core/util";
-import { DetourDayTabPanel } from "./DetourDayTabPanel";
+import { DetourDayTabPanel, groupDetoursByDay } from "./DetourDayTabPanel";
 import dayjs from "dayjs";
-
-function groupDetoursByDay(
-  chosenDetours: SpotInfoProps[],
-  tempDaysDriving: number,
-  results: google.maps.DirectionsResult,
-  hoursDrivingPerDay: number
-): SpotInfoProps[][] {
-  // set chosen detours by day to be an array of arrays of length daysDriving
-  // each array will contain the detours for that day
-  let detoursByDay: SpotInfoProps[][] = [];
-  for (let i = 0; i < tempDaysDriving; i++) {
-    detoursByDay.push(new Array<SpotInfoProps>());
-  }
-
-  let runningDuration = 0;
-  let day = 0;
-
-  for (let i = 0; i < results.routes[0].legs.length - 1; i++) {
-    // find detour with min distance from results.routes[0].legs[i].end_location
-
-    let minDistDetour = chosenDetours[0];
-    let minDist = Number.MAX_VALUE;
-    for (let j = 0; j < chosenDetours.length; j++) {
-      const distance =
-        Math.pow(
-          chosenDetours[j].location.lng -
-            results.routes[0].legs[i].end_location.lng(),
-          2
-        ) +
-        Math.pow(
-          chosenDetours[j].location.lat -
-            results.routes[0].legs[i].end_location.lat(),
-          2
-        );
-      if (distance < minDist) {
-        minDist = distance;
-        minDistDetour = chosenDetours[j];
-      }
-    }
-
-    const correspondingDetour = minDistDetour;
-
-    const legDuration = results.routes[0].legs[i].duration?.value ?? 0;
-    runningDuration = runningDuration + legDuration;
-    if (runningDuration > hoursDrivingPerDay * 3600) {
-      day++;
-      runningDuration = legDuration;
-    }
-    detoursByDay[day].push(correspondingDetour);
-  }
-
-  return detoursByDay;
-}
 
 type Libraries = (
   | "drawing"
@@ -533,8 +480,8 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
           infoWindow.close();
           infoWindow.setContent(
             `<div>` +
-              (spot.spotResult.image
-                ? `<img src=${spot.spotResult.image} style="height:100px;"/>`
+              (spot.spotResult.images.length > 0
+                ? `<img src=${spot.spotResult.images[0]} style="height:100px;"/>`
                 : "") +
               `<h2 style="color:black;">${spot.spotResult.title}</h2>
             <p style="color:black;">${spot.spotResult.description}</p>

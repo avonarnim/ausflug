@@ -39,7 +39,16 @@ const SpotSchema = new Schema({
   status: String,
   externalLink: String,
   externalIds: [{ source: String, id: String }],
-  image: String,
+  images: [String],
+  reviews: [
+    {
+      content: String,
+      author: String,
+      specialty: Number,
+      quality: Number,
+      image: String,
+    },
+  ],
   openTimes: [Number],
   activities: [String],
   features: [String],

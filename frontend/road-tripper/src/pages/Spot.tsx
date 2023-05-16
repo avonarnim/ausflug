@@ -109,7 +109,7 @@ export default function Spot(): JSX.Element {
         <Grid item container sx={{ marginBottom: 4 }}>
           <Grid item xs={12} sm={6}>
             <img
-              src={spot.image}
+              src={spot.images[0]}
               alt={spot.title}
               style={{ borderRadius: "25px", width: "200px", height: "auto" }}
             />

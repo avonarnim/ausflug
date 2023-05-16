@@ -42,6 +42,59 @@ function a11yProps(index: number) {
   };
 }
 
+export function groupDetoursByDay(
+  chosenDetours: SpotInfoProps[],
+  tempDaysDriving: number,
+  results: google.maps.DirectionsResult,
+  hoursDrivingPerDay: number
+): SpotInfoProps[][] {
+  // set chosen detours by day to be an array of arrays of length daysDriving
+  // each array will contain the detours for that day
+  let detoursByDay: SpotInfoProps[][] = [];
+  for (let i = 0; i < tempDaysDriving; i++) {
+    detoursByDay.push(new Array<SpotInfoProps>());
+  }
+
+  let runningDuration = 0;
+  let day = 0;
+
+  for (let i = 0; i < results.routes[0].legs.length - 1; i++) {
+    // find detour with min distance from results.routes[0].legs[i].end_location
+
+    let minDistDetour = chosenDetours[0];
+    let minDist = Number.MAX_VALUE;
+    for (let j = 0; j < chosenDetours.length; j++) {
+      const distance =
+        Math.pow(
+          chosenDetours[j].location.lng -
+            results.routes[0].legs[i].end_location.lng(),
+          2
+        ) +
+        Math.pow(
+          chosenDetours[j].location.lat -
+            results.routes[0].legs[i].end_location.lat(),
+          2
+        );
+      if (distance < minDist) {
+        minDist = distance;
+        minDistDetour = chosenDetours[j];
+      }
+    }
+
+    const correspondingDetour = minDistDetour;
+
+    const legDuration = results.routes[0].legs[i].duration?.value ?? 0;
+    runningDuration = runningDuration + legDuration;
+    if (runningDuration > hoursDrivingPerDay * 3600) {
+      day++;
+      runningDuration = legDuration;
+    }
+    detoursByDay[day].push(correspondingDetour);
+  }
+
+  return detoursByDay;
+}
+
 export function DetourDayTabPanel(props: DetourDayTabPanelProps): JSX.Element {
   const [tabValue, setTabValue] = useState(0);
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {

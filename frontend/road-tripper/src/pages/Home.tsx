@@ -186,7 +186,7 @@ export default function Home(): JSX.Element {
             id: spot._id,
             attribute: "description",
             value: spot.description,
-            image: spot.image,
+            image: spot.images[0],
           })),
         });
       }
@@ -202,7 +202,7 @@ export default function Home(): JSX.Element {
             id: spot._id,
             attribute: "description",
             value: spot.description,
-            image: spot.image,
+            image: spot.images[0],
           })),
         });
       }
@@ -227,7 +227,7 @@ export default function Home(): JSX.Element {
                 id: spot._id,
                 attribute: "description",
                 value: spot.description,
-                image: spot.image,
+                image: spot.images[0],
               })),
             });
           },
@@ -246,7 +246,7 @@ export default function Home(): JSX.Element {
             id: spot._id,
             attribute: "description",
             value: spot.description,
-            image: spot.image,
+            image: spot.images[0],
           })),
         });
       }
