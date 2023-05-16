@@ -165,27 +165,48 @@ export default function Spot(): JSX.Element {
           <></>
         )}
 
+        {spot.reviews.length > 0 ? (
+          <>
+            <Typography>Reviews</Typography>{" "}
+            <Grid item container>
+              {spot.reviews.map((review) => (
+                <Grid item xs={12} sm={6} md={4}>
+                  <Typography>{review.content}</Typography>
+                  <Typography>{review.author}</Typography>
+                  <Typography>{review.specialty}</Typography>
+                  <Typography>{review.quality}</Typography>
+                </Grid>
+              ))}
+            </Grid>
+          </>
+        ) : (
+          <></>
+        )}
+
         {events ? (
-          <Grid item container>
-            {events.map((event) => (
-              <Grid item xs={12} sm={6} md={4}>
-                <img
-                  src={event.image}
-                  alt={event.title}
-                  style={{
-                    borderRadius: "25px",
-                    width: "200px",
-                    height: "auto",
-                  }}
-                />
-                <Typography>{event.title}</Typography>
-                <Typography>{event.description}</Typography>
-                <Typography>{event.status}</Typography>
-                <Typography>{event.startDate}</Typography>
-                <Typography>{event.endDate}</Typography>
-              </Grid>
-            ))}
-          </Grid>
+          <>
+            <Typography>Events</Typography>
+            <Grid item container>
+              {events.map((event) => (
+                <Grid item xs={12} sm={6} md={4}>
+                  <img
+                    src={event.image}
+                    alt={event.title}
+                    style={{
+                      borderRadius: "25px",
+                      width: "200px",
+                      height: "auto",
+                    }}
+                  />
+                  <Typography>{event.title}</Typography>
+                  <Typography>{event.description}</Typography>
+                  <Typography>{event.status}</Typography>
+                  <Typography>{event.startDate}</Typography>
+                  <Typography>{event.endDate}</Typography>
+                </Grid>
+              ))}
+            </Grid>
+          </>
         ) : (
           <></>
         )}
