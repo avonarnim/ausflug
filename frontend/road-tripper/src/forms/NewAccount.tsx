@@ -368,6 +368,7 @@ export function NewAccountFormConfirm(props: {
         facebook: props.values.facebook,
         twitter: props.values.twitter,
         youtube: props.values.youtube,
+        createdAt: Date.now(),
       } as ProfileProps;
       const createProfileResponse = await createProfile.commit(profileInfo);
 

@@ -54,6 +54,14 @@ type QueueSpotsProps = {
 export default function Admin(): JSX.Element {
   const { currentUser, updateUserProfile, setError } = useAuth();
   const [spots, setSpots] = useState<SpotInfoProps[]>([]);
+  const [adminMetrics, setAdminMetrics] = useState<AdminMetrics>({
+    completedMiles: 0,
+    numNewUsers: 0,
+    numQueuedSpots: 0,
+    mostPopularOrigins: [],
+    mostPopularDestinations: [],
+    updatedAt: 0,
+  });
   const [adminContent, setAdminContent] = useState<JSX.Element>(
     <Typography>
       Please login as Road Tripper team member to view this page
@@ -61,14 +69,18 @@ export default function Admin(): JSX.Element {
   );
 
   const getSpots = useMutation("GetSpots");
+  const getAdminMetrics = useMutation("GetAdminMetrics");
+  const refreshAdminMetrics = useMutation("RefreshAdminMetrics");
 
   useEffect(() => {
-    prepSpotResults();
+    prepResults();
   }, []);
 
-  const prepSpotResults = async () => {
+  const prepResults = async () => {
     const spotResults = await getSpots.commit({});
+    const adminMetrics = await getAdminMetrics.commit({});
     setSpots(spotResults);
+    setAdminMetrics(adminMetrics);
   };
 
   auth.currentUser?.getIdTokenResult().then((idTokenResult) => {
@@ -81,12 +93,21 @@ export default function Admin(): JSX.Element {
           <>
             <Typography variant="h1">Admin</Typography>
             <Typography>Queued spots</Typography>
+            <Typography>{spots.length}</Typography>
             <QueuedSpots spots={spots.filter((x) => x.status == "pending")} />
             <Typography>Highlighted Categories</Typography>
             <Typography>
               TODO: be able to change highlighted categories + items within
               categories
             </Typography>
+            <Typography>Completed miles</Typography>
+            <Typography>{adminMetrics.completedMiles}</Typography>
+            <Typography>New users</Typography>
+            <Typography>{adminMetrics.numNewUsers}</Typography>
+            <Typography>Most popular origins</Typography>
+            <Typography>{adminMetrics.mostPopularOrigins}</Typography>
+            <Typography>Most popular destinations</Typography>
+            <Typography>{adminMetrics.mostPopularDestinations}</Typography>
           </>
         </div>
       );
@@ -95,3 +116,12 @@ export default function Admin(): JSX.Element {
 
   return <>{adminContent}</>;
 }
+
+export type AdminMetrics = {
+  completedMiles: number;
+  numNewUsers: number;
+  numQueuedSpots: number;
+  mostPopularOrigins: string[];
+  mostPopularDestinations: string[];
+  updatedAt: number;
+};

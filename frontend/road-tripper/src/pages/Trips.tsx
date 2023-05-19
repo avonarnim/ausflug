@@ -76,6 +76,7 @@ export default function Trips(): JSX.Element {
     await updateTrip.commit({
       ...trip,
       isComplete: complete,
+      completedAt: complete ? Date.now() : 0,
     });
   };
 

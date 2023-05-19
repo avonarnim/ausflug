@@ -72,4 +72,7 @@ export type TripProps = {
   isArchived: boolean;
   createdAt: number;
   updatedAt: number;
+  completedAt: number;
+  duration: Number;
+  distance: Number;
 };

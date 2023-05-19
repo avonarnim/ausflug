@@ -5,6 +5,7 @@ import { ProfileProps } from "../pages/Profile";
 import { TripProps } from "../pages/EditTrip";
 import axios, { AxiosProgressEvent, AxiosHeaders, AxiosResponse } from "axios";
 import { EventProps } from "../pages/Event";
+import { AdminMetrics } from "../pages/Admin";
 
 // #region TypeScript Definitions
 
@@ -38,7 +39,9 @@ type Type =
   | "UpdateTrip"
   | "GetTrip"
   | "GetUserTrips"
-  | "UploadFile";
+  | "UploadFile"
+  | "GetAdminMetrics"
+  | "RefreshAdminMetrics";
 
 type State<T extends Type> = {
   loading: boolean;
@@ -129,6 +132,10 @@ type Input<T extends Type> = T extends "CreateSpot"
       title: string;
       onUploadProgress: (progressEvent: any) => void;
     }
+  : T extends "GetAdminMetrics"
+  ? {}
+  : T extends "RefreshAdminMetrics"
+  ? {}
   : null;
 
 export interface SiteData {
@@ -170,6 +177,10 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? TripProps[]
   : T extends "UploadFile"
   ? { uploadUrl: String }
+  : T extends "GetAdminMetrics"
+  ? AdminMetrics
+  : T extends "RefreshAdminMetrics"
+  ? AdminMetrics
   : any;
 
 export type Mutation<T extends Type> = State<T> & {
@@ -530,6 +541,20 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
               headers: {
                 "content-type": "application/json",
               },
+            });
+            break;
+          }
+          case "GetAdminMetrics": {
+            res = await fetch(`${apiBaseUrl}/api/admin/metrics`, {
+              method: "GET",
+              headers,
+            });
+            break;
+          }
+          case "RefreshAdminMetrics": {
+            res = await fetch(`${apiBaseUrl}/api/admin/metrics/refresh`, {
+              method: "GET",
+              headers,
             });
             break;
           }

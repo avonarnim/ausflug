@@ -5,6 +5,7 @@ const trip = require("./controllers/trip");
 const user = require("./controllers/user");
 const event = require("./controllers/event");
 const util = require("./controllers/util");
+const adminMetrics = require("./controllers/adminMetrics");
 const { VerifyToken, VerifyAdminToken } = require("./middleware/VerifyToken");
 
 // Health Test
@@ -145,6 +146,16 @@ router.route("/api/users/unsaveSpot/:userId/:spotId").put((req, res) => {
 
 router.route("/api/util/image").post((req, res) => {
   util.upload_image(req, res);
+});
+
+router.use("/api/admin/metrics", VerifyAdminToken);
+router.route("/api/admin/metrics").get((req, res) => {
+  adminMetrics.get_metrics(req, res);
+});
+
+router.use("/api/admin/metrics/refresh", VerifyAdminToken);
+router.route("/api/admin/metrics/refresh").get((req, res) => {
+  adminMetrics.refresh_metrics(req, res);
 });
 
 // // scraper Routes

@@ -279,4 +279,5 @@ export type ProfileProps = {
   facebook: string;
   twitter: string;
   youtube: string;
+  createdAt: number;
 };

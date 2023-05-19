@@ -20,6 +20,7 @@ var UserSchema = new Schema({
   facebook: String,
   twitter: String,
   youtube: String,
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("User", UserSchema);

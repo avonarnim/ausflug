@@ -33,8 +33,9 @@ var TripSchema = new Schema({
   isArchived: Boolean,
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  actualDriveTime: Number,
-  actualTravelTime: Number,
+  completedAt: { type: Date, default: 0 },
+  duration: Number,
+  distance: Number,
   completed: Boolean,
 });
 

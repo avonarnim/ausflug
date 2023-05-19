@@ -58,7 +58,9 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 
   const [center, setCenter] = useState({ lat: 38.8584, lng: -112.2945 });
   const [distance, setDistance] = useState("");
+  const [cumulativeDistance, setCumulativeDistance] = useState(0);
   const [duration, setDuration] = useState("");
+  const [cumulativeDuration, setCumulativeDuration] = useState(0);
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
 
@@ -248,26 +250,24 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       travelMode: google.maps.TravelMode.DRIVING,
     });
     setDirectionsResponse(results);
-    const cumulativeDistance = results.routes[0].legs.reduce(
+    const rawDistance = results.routes[0].legs.reduce(
       (acc, cur) => acc + (cur.distance?.value ?? 0),
       0
     );
-    const cumulativeDuration = results.routes[0].legs.reduce(
+    const rawDuration = results.routes[0].legs.reduce(
       (acc, cur) => acc + (cur.duration?.value ?? 0),
       0
     );
-    setDistance(
-      `${Math.floor((10 * cumulativeDistance) / 1609.34) / 10} miles`
-    );
+    setCumulativeDistance(rawDistance);
+    setCumulativeDuration(rawDuration);
+    setDistance(`${Math.floor((10 * rawDistance) / 1609.34) / 10} miles`);
     setDuration(
-      `${Math.floor(cumulativeDuration / 3600)} hours, ${Math.floor(
-        (cumulativeDuration - 3600 * Math.floor(cumulativeDuration / 3600)) / 60
+      `${Math.floor(rawDuration / 3600)} hours, ${Math.floor(
+        (rawDuration - 3600 * Math.floor(rawDuration / 3600)) / 60
       )} mins`
     );
     setRouteCreated(true);
-    const tempDaysDriving = Math.ceil(
-      cumulativeDuration / 3600 / hoursDrivingPerDay
-    );
+    const tempDaysDriving = Math.ceil(rawDuration / 3600 / hoursDrivingPerDay);
     setDaysDriving(tempDaysDriving);
 
     setChosenDetoursByDay(
@@ -818,6 +818,9 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                         isArchived: false,
                         createdAt: Date.now(),
                         updatedAt: Date.now(),
+                        completedAt: 0,
+                        duration: cumulativeDuration,
+                        distance: cumulativeDistance,
                       });
                     }}
                   >
