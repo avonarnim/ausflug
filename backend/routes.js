@@ -153,9 +153,9 @@ router.route("/api/admin/metrics").get((req, res) => {
   adminMetrics.get_metrics(req, res);
 });
 
-router.use("/api/admin/metrics/refresh", VerifyAdminToken);
-router.route("/api/admin/metrics/refresh").get((req, res) => {
-  adminMetrics.refresh_metrics(req, res);
+router.use("/api/admin/metrics/window/:days", VerifyAdminToken);
+router.route("/api/admin/metrics/window/:days").get((req, res) => {
+  adminMetrics.get_metrics_past_n_days(req, res);
 });
 
 // // scraper Routes

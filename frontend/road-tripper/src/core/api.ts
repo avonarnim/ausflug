@@ -41,7 +41,7 @@ type Type =
   | "GetUserTrips"
   | "UploadFile"
   | "GetAdminMetrics"
-  | "RefreshAdminMetrics";
+  | "GetPastNDaysMetrics";
 
 type State<T extends Type> = {
   loading: boolean;
@@ -134,8 +134,8 @@ type Input<T extends Type> = T extends "CreateSpot"
     }
   : T extends "GetAdminMetrics"
   ? {}
-  : T extends "RefreshAdminMetrics"
-  ? {}
+  : T extends "GetPastNDaysMetrics"
+  ? { days: number }
   : null;
 
 export interface SiteData {
@@ -179,7 +179,7 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? { uploadUrl: String }
   : T extends "GetAdminMetrics"
   ? AdminMetrics
-  : T extends "RefreshAdminMetrics"
+  : T extends "GetPastNDaysMetrics"
   ? AdminMetrics
   : any;
 
@@ -551,11 +551,15 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             });
             break;
           }
-          case "RefreshAdminMetrics": {
-            res = await fetch(`${apiBaseUrl}/api/admin/metrics/refresh`, {
-              method: "GET",
-              headers,
-            });
+          case "GetPastNDaysMetrics": {
+            const days = (input as { days: number }).days;
+            res = await fetch(
+              `${apiBaseUrl}/api/admin/metrics/window/${days}`,
+              {
+                method: "GET",
+                headers,
+              }
+            );
             break;
           }
           default:

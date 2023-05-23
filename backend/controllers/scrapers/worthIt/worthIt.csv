@@ -1,0 +1,145 @@
+name,city_name, episode, season, price
+Sushi Stop, Los Angeles, sushi, 1, 1
+Hamasaku, Los Angeles, sushi, 1, 2
+Sasabune, Glendale, sushi, 1, 3
+Habit Burger, Las Vegas, burger, 1, 1
+Gordon ramsay Burgr, Las Vegas, burger, 1, 2
+Burger Brasserie, Las Vegas, burger, 1, 3
+Pizzeria Mozza, Los Angeles, pizza, 1, 1
+Spago, Beverly Hills, pizza, 1, 2
+Uncle John's Cafe, Los Angeles, steak, 1, 1
+Nick & Stef's Steakhouse, Los Angeles, steak, 1, 2
+Cut, Beverly Hills, steak, 1, 3
+Pasta Sister, Country Club Park, pasta, 1, 1
+Osteria Mama, Los Angeles, pasta, 1, 2
+Le Petit Paris, Los Angeles, pasta, 1, 3
+Vicious Dogs, North Hollywood, hot dogs, 1, 1
+Wurstküche, Los Angeles, hot dogs, 1, 2
+Tokyo Dog, Seattle, hot dogs, 1, 3
+Emerald City Fish & Chips, Seattle, salmon, 1, 1
+Ivar's Salmon House, Seattle, salmon, 1, 2
+Aqua by El Gacho, Seattle, salmon, 1, 3
+Oo-Kook, Los Angeles, Korean BBQ, 1, 1
+Quarters, Los Angeles, Korean BBQ, 1, 2
+Chosun Galbee, Los Angeles, Korean BBQ, 1, 3
+Porto's Bakery, Glendale, bakery, 1, 1
+Proof Bakery, Los Angeles, bakery, 1, 2
+Bottega Louie, Los Angeles, bakery, 1, 3
+Blinkie's Donut Emporium, Woodland Hills, donuts, 2, 1
+The Church Key, West Hollywood, donuts, 2, 2
+Birdies, Los Angeles, donuts, 2, 3
+Feast Buffet, Las Vegas, buffet, 2, 1
+Wicked Spoon, Las Vegas, buffet, 2, 2
+Rose. Rabbit. Lie., Las Vegas, tacos, 2, 1
+Guisados, Los Angeles, tacos, 2, 2
+Leo's Taco Truck, Los Angeles, tacos, 2, 3
+Foster's Freeze, Los Angeles, ice cream, 2, 1
+Scoops, Highland Park, ice cream, 2, 2
+Serendipity 3, New York, ice cream, 2, 3
+Joe's Pizza, New York, pizza, 2, 1
+Eataly NYC Flatiron, New York, pizza, 2, 2
+Industry Kitchen, New York, pizza, 2, 3
+Eileen's Special Cheesecake, New York, cheesecake, 2, 1
+STK Downtown, New York, cheesecake, 2, 2
+Lady M, New York, cheesecake, 2, 3
+Gramercy Tavern, New York, secret menu, 2, 2
+Petrossian, New York, secret menu, 2, 3
+Good Times at Davey Wayne's, Los Angeles, cocktails, 2, 1
+Pacific Seas @ Clifton, Los Angeles, cocktails, 2, 2
+£10 @ The Montage Hotel, Beverly Hills, cocktails, 2, 3
+Lao Tao, Los Angeles, eggs, 2, 1
+Connie and Ted's, West Hollywood, eggs, 2, 2
+Melisse, Santa Monica, eggs, 2, 3
+Gangnam Galmegi, Seoul, Korean, 2, 1
+So Deul Nyok, Seoul, Korean, 2, 2
+Walkerhill Myongwalgwan, Seoul, Korean, 2, 3
+Chef Marilyn's, Los Angeles, mac & cheese, 3, 1
+Little Jewel of New Orleans, Los Angeles, mac & cheese, 3, 2
+Barton G, West Hollywood, mac & cheese, 3, 3
+Bigmista's Barbecue & Sammich Shop, Long Beach, barbecue ribs, 3, 1
+Barrel & Ashes, Studio City, barbecue ribs, 3, 2
+Maple Block Meat Co., Culver City, barbecue ribs, 3, 3
+Doyle's Oyster Bar, Pyrmont, seafood, 3, 1
+Cirrus, Barangaroo, seafood, 3, 2
+Silks @ Crown Entertainment Complex, Melbourne, seafood, 3, 3
+Tahbilk Winery, Nagambie, wine, 3, 1
+Fowles Wine, Avenel, wine, 3, 2
+All Saints Estate Winery, Wahgunyah, wine, 3, 3
+The Cloelly Hotel, Sydney, steak, 3, 1
+Donovan's, St. Kilda, steak, 3, 2
+Rockpool Bar & Grill, Sydney, fried chicken, 3, 3
+Sylvia's Restaurant, Harlem, fried chicken, 3, 1
+Red Rooster, Harlem, fried chicken, 3, 2
+Momofuku Noodle Bar, New York, fried chicken, 3, 3
+Homestate, Hollywood, brunch, 3, 1
+A-Frame, Culver City, brunch, 3, 2
+The Belvedere, Beverly Hills, brunch, 3, 3
+Rinrin, Kita-Senju Tokyo, ramen, 3, 1
+Tsuta Japanese Soba Noodles, Sugamo Tokyo, ramen, 3, 2
+Genei Tokyo, Roppongi Tokyo, ramen, 3, 3
+R.O.Star, Takadanobaba Tokyo, coffee, 3, 1
+Coffee Elementary School, Daikanyama Tokyo, coffee, 3, 2
+The Münch, Yao Osaka, coffee, 3, 3
+Pablo Coffee, Shinsaibashi Osaka, cake, 3, 1
+Théobroma, Shibuya Tokyo, cake, 3, 2
+Patisserie Satsuki, Akasaka Tokyo, cake, 3, 3
+Pajarito, St. Paul, gameday food, 3, 1
+Revival, Minneapolis, gameday food, 3, 2
+Chowgirls Killer Catering, Minneapolis, gameday food, 3, 3
+Cheeky's, Palm Springs, bacon, 4, 1
+Manuela, Los Angeles, bacon, 4, 2
+Belly, New York, bacon, 4, 3
+Utopia Bagels, Queens, bagels, 4, 1
+Bar Bolonat, West Village New York, bagels, 4, 2
+The Westin, Times Square New York, bagels, 4, 3
+Seasoned Vegan, Harlem New York, vegan, 4, 1
+Avant Garden, East Village New York, vegan, 4, 2
+ABCV, Union Square New York, vegan, 4, 3
+Ahi Assassins, Honolulu, fish, 4, 1
+MW Restaurant, Honolulu, fish, 4, 2
+Chef Mavro, Honolulu, fish, 4, 3
+Pie 'n Burger, Pasadena, pie, 4, 1
+Underbelly, Houston, pie, 4, 2
+Three Brothers Bakery, Houston, pie, 4, 3
+Pho Binh by Night, Houston, pho, 4, 1
+The Pig and the Lady, Honolulu, pho, 4, 2
+District One Kitchen & Bar, Las Vegas, pho, 4, 3
+Rice Bar, Los Angeles, pork, 4, 1
+Lasa, Los Angeles, pork, 4, 2
+Jeepney, East Village New York, pork, 4, 3
+Here's Looking at You, Los Angeles, toast, 4, 2
+Petit Crenn, San Francisco, toast, 4, 3
+Barzotto, San Francisco, spaghetti, 4, 1
+Cento Pasta Bar, Los Angeles, spaghetti, 4, 2
+Republique, Los Angeles, spaghetti, 4, 3
+Top Round Roast Beef, Los Angeles, fries, 4, 1
+Lov, Montreal, fries, 4, 2
+Poutineville, Montreal, fries, 4, 3
+John's Roast Pork, Philadelphia, cheesesteak, 4, 1
+Gin & Pop, Philadelphia, cheesesteak, 4, 2
+Barclay Prime, Philadelphia, cheesesteak, 4, 3
+Corner 28, Flushing Queens, peking duck, 4, 1
+Decoy, New York, peking duck, 4, 2
+Hwa Yuan Szechuan, Flushing Queens, peking duck, 4, 3
+Little Fatty, Los Angeles, family-style meats, 4, 1
+Freedman's, Los Angeles, family-style meats, 4, 2
+APL, Los Angeles, family-style meats, 4, 3
+Fay Da Bakery, New York, curry, 4, 1
+Laut, New York, curry, 4, 2
+Junoon, New York, curry, 4, 3
+Mah-Za-Dahr Bakery, New York, cookie, 4, 1
+Levain Bakery, New York, cookie, 4, 2
+Antolpo, Japan, cookie, 4, 3
+Kura Sushi, Ikebukuro Tokyo, sushi, 4, 1
+Sushi Dokoro Shun, Ueno Tokyo, sushi, 4, 2
+Kyubey, Ginza Tokyo, sushi, 4, 3
+Marutake, Tsukiji Tokyo, eggs, 4, 1
+The Yoshokuya Kichi Kichi, Nakagyo-ku Kyoto, eggs, 4, 2
+Maccha House Kiyomizu-Dera, Higashiyama-ku Kyoto, matcha, 4, 2
+Aqua Farm Chichibu, Chichibu Saitama, eggs, 4, 3
+Bolton's Spicy Cchicken & Fish, Nashville, sandwich, 4, 1
+The Oinkster, Eagle Rock, sandwich, 4, 2
+Wagyumafia Cutlet Sandwich, Nakameguro Tokyo, sandwich, 4, 3
+Sonora Town, Los Angeles, burrito, 6, 1
+Low Key Burritos, Los Angeles, burrito, 6, 2
+Taqueria Yarelis, Fresno, burrito, 6, 3

@@ -16,6 +16,11 @@ import { EventProps } from "./Event";
 import { AddCircleOutline } from "@mui/icons-material";
 import { useAuth } from "../core/AuthContext";
 import SpotReviewFormDialog from "../dialogs/SpotReviewDialog";
+import {
+  AssetImageCardHorizontalSwipe,
+  AssetImageCardHorizontalSwipeProps,
+  SkeletonAssetImageCardHorizontalSwipe,
+} from "../components/assetSwipers/Image";
 
 type Libraries = (
   | "drawing"
@@ -40,6 +45,8 @@ export default function Spot(): JSX.Element {
   const [map, setMap] = useState<google.maps.Map>();
   const [spot, setSpot] = useState<SpotInfoProps>();
   const [events, setEvents] = useState<EventProps[]>();
+  const [assetCards, setAssetCards] =
+    useState<AssetImageCardHorizontalSwipeProps>({ assetCards: [] });
 
   const getSpot = useMutation("GetSpot");
   const getEvents = useMutation("GetEventsByVenue");
@@ -72,6 +79,11 @@ export default function Spot(): JSX.Element {
   const getSpotCallback = async (spotId: string) => {
     const getSpotResponse = await getSpot.commit({ spotId: spotId });
     setSpot(getSpotResponse);
+    setAssetCards({
+      assetCards: getSpotResponse.images.map((image) => ({
+        image: image,
+      })),
+    });
     console.log("spot set", getSpotResponse);
     const marker = new google.maps.Marker({
       position: getSpotResponse.location,
@@ -108,11 +120,12 @@ export default function Spot(): JSX.Element {
       <Box>
         <Grid item container sx={{ marginBottom: 4 }}>
           <Grid item xs={12} sm={6}>
-            <img
+            {/* <img
               src={spot.images[0]}
               alt={spot.title}
               style={{ borderRadius: "25px", width: "200px", height: "auto" }}
-            />
+            /> */}
+            <AssetImageCardHorizontalSwipe assetCards={assetCards.assetCards} />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography>{spot.title}</Typography>

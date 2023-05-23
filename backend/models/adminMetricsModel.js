@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const AdminMetricsSchema = new Schema({
   completedMiles: Number,
-  numNewUsers: Number,
+  numUsers: Number,
   numQueuedSpots: Number,
   mostPopularOrigins: [String],
   mostPopularDestinations: [String],

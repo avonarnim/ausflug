@@ -1,9 +1,11 @@
 import {
   Container,
   IconButton,
+  Grid,
   List,
   ListItem,
   ListItemText,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useState, useEffect } from "react";
@@ -56,12 +58,21 @@ export default function Admin(): JSX.Element {
   const [spots, setSpots] = useState<SpotInfoProps[]>([]);
   const [adminMetrics, setAdminMetrics] = useState<AdminMetrics>({
     completedMiles: 0,
-    numNewUsers: 0,
+    numUsers: 0,
     numQueuedSpots: 0,
     mostPopularOrigins: [],
     mostPopularDestinations: [],
     updatedAt: 0,
   });
+  const [windowMetrics, setWindowMetrics] = useState<AdminMetrics>({
+    completedMiles: 0,
+    numUsers: 0,
+    numQueuedSpots: 0,
+    mostPopularOrigins: [],
+    mostPopularDestinations: [],
+    updatedAt: 0,
+  });
+  const [metricsWindow, setMetricsWindow] = useState(7);
   const [adminContent, setAdminContent] = useState<JSX.Element>(
     <Typography>
       Please login as Road Tripper team member to view this page
@@ -70,17 +81,28 @@ export default function Admin(): JSX.Element {
 
   const getSpots = useMutation("GetSpots");
   const getAdminMetrics = useMutation("GetAdminMetrics");
-  const refreshAdminMetrics = useMutation("RefreshAdminMetrics");
+  const getPastNDaysMetrics = useMutation("GetPastNDaysMetrics");
 
   useEffect(() => {
     prepResults();
   }, []);
+
+  useEffect(() => {
+    prepWindowResults();
+  }, [metricsWindow]);
 
   const prepResults = async () => {
     const spotResults = await getSpots.commit({});
     const adminMetrics = await getAdminMetrics.commit({});
     setSpots(spotResults);
     setAdminMetrics(adminMetrics);
+  };
+
+  const prepWindowResults = async () => {
+    const adminMetrics = await getPastNDaysMetrics.commit({
+      days: metricsWindow,
+    });
+    setWindowMetrics(adminMetrics);
   };
 
   auth.currentUser?.getIdTokenResult().then((idTokenResult) => {
@@ -100,14 +122,69 @@ export default function Admin(): JSX.Element {
               TODO: be able to change highlighted categories + items within
               categories
             </Typography>
-            <Typography>Completed miles</Typography>
-            <Typography>{adminMetrics.completedMiles}</Typography>
-            <Typography>New users</Typography>
-            <Typography>{adminMetrics.numNewUsers}</Typography>
-            <Typography>Most popular origins</Typography>
-            <Typography>{adminMetrics.mostPopularOrigins}</Typography>
-            <Typography>Most popular destinations</Typography>
-            <Typography>{adminMetrics.mostPopularDestinations}</Typography>
+            <Grid container item direction="row">
+              <Grid container item direction="column">
+                <Grid item>
+                  <Typography>Overall metrics</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography>Completed miles</Typography>
+                  <Typography>{adminMetrics.completedMiles}</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography>New users since</Typography>
+                  <Typography>{adminMetrics.numUsers}</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography>Most popular origins</Typography>
+                  <Typography>{adminMetrics.mostPopularOrigins}</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography>Most popular destinations</Typography>
+                  <Typography>
+                    {adminMetrics.mostPopularDestinations}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container item direction="column">
+                <Grid item>
+                  <Typography>Window: {metricsWindow} days</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography>Completed miles</Typography>
+                  <Typography>{windowMetrics.completedMiles}</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography>New users</Typography>
+                  <Typography>{windowMetrics.numUsers}</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography>Most popular origins</Typography>
+                  <Typography>{windowMetrics.mostPopularOrigins}</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography>Most popular destinations</Typography>
+                  <Typography>
+                    {windowMetrics.mostPopularDestinations}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    margin="dense"
+                    id="window"
+                    label="window"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    placeholder={metricsWindow.toString()}
+                    name="window"
+                    onChange={(event) => {
+                      setMetricsWindow(Number(event.target.value));
+                    }}
+                  ></TextField>
+                </Grid>
+              </Grid>
+            </Grid>
           </>
         </div>
       );
@@ -119,7 +196,7 @@ export default function Admin(): JSX.Element {
 
 export type AdminMetrics = {
   completedMiles: number;
-  numNewUsers: number;
+  numUsers: number;
   numQueuedSpots: number;
   mostPopularOrigins: string[];
   mostPopularDestinations: string[];

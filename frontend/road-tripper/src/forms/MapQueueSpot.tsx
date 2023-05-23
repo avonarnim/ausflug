@@ -1,6 +1,10 @@
 import {
   Button,
   Box,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
   Grid,
   Input,
   List,
@@ -19,6 +23,8 @@ import {
   Marker,
 } from "@react-google-maps/api";
 import { SpotInfoProps } from "../components/SpotInfo";
+import { useAuth } from "../core/AuthContext";
+import plusSign from "../assets/plusSign.png";
 
 export function QueueSpotFormDetailsSection(props: {
   values: MapQueueSpotFormState;
@@ -38,6 +44,63 @@ export function QueueSpotFormDetailsSection(props: {
   const [descriptionErrorMsg, setDescriptionErrorMsg] = useState("");
 
   const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+
+  const [imageFile, setImageFile] = useState<{
+    selectedFile: File | null;
+    loaded: Number;
+    message: string;
+    defaultMessage: string;
+    uploading: boolean;
+  }>({
+    selectedFile: null,
+    loaded: 0,
+    message: "Choose a profile photo...",
+    defaultMessage: "Choose a profile photo...",
+    uploading: false,
+  });
+  const uploadFile = useMutation("UploadFile");
+  const { currentUser } = useAuth();
+
+  const handleFileChange = (files: FileList) => {
+    setImageFile({
+      ...imageFile,
+      selectedFile: files[0],
+      loaded: 0,
+      message: files[0] ? files[0].name : imageFile.defaultMessage,
+    });
+  };
+
+  const handleUpload = async () => {
+    if (imageFile.uploading) return;
+    if (!imageFile.selectedFile) {
+      setImageFile({ ...imageFile, message: "Select a file first" });
+      return;
+    }
+    setImageFile({ ...imageFile, uploading: true });
+    // define upload
+    const res = await uploadFile.commit({
+      file: imageFile.selectedFile,
+      title: currentUser.uid,
+      onUploadProgress: (ProgressEvent) => {
+        setImageFile({
+          ...imageFile,
+          loaded: Math.round(
+            (ProgressEvent.loaded / ProgressEvent.total) * 100
+          ),
+        });
+      },
+    });
+
+    setImageFile({
+      ...imageFile,
+      message: "Uploaded successfully",
+      uploading: false,
+    });
+    props.handleChange({
+      target: { name: "image", value: res.uploadUrl },
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
   const onPlaceChanged = () => {
     if (autoComplete !== null) {
       const place = autoComplete.getPlace();
@@ -97,6 +160,59 @@ export function QueueSpotFormDetailsSection(props: {
   return (
     <Grid item container xs={12} direction="row">
       <Grid item xs={12} md={6}>
+        <form
+          className="box"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleUpload();
+          }}
+        >
+          <input
+            type="file"
+            name="file-5[]"
+            id="file-5"
+            className="inputfile inputfile-4"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={(e) => {
+              handleFileChange(e.target.files!);
+            }}
+          />
+          <Card sx={{ maxWidth: 345 }}>
+            <CardMedia
+              sx={{ height: 140 }}
+              image={
+                imageFile.selectedFile
+                  ? URL.createObjectURL(imageFile.selectedFile)
+                  : plusSign
+              }
+              title="Profile picture"
+            />
+            <CardContent>
+              <Typography gutterBottom variant="body2">
+                {imageFile.uploading
+                  ? imageFile.loaded + "%"
+                  : imageFile.message}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <label htmlFor="file-5">
+                <Button size="small" component="span" variant="outlined">
+                  Select Image
+                </Button>
+              </label>
+              <Button
+                size="small"
+                // className="submit"
+                variant="contained"
+                onClick={handleUpload}
+                sx={{ ml: 2 }}
+              >
+                Upload
+              </Button>
+            </CardActions>
+          </Card>
+        </form>
         <TextField
           placeholder="Enter the Title"
           name="title"
@@ -159,7 +275,7 @@ export function QueueSpotFormConfirm(props: {
         _id: "",
         title: props.values.title,
         description: props.values.description,
-        images: [""],
+        images: [props.values.image],
         location: {
           lat: props.values.mapLocation.geometry.location.lat(),
           lng: props.values.mapLocation.geometry.location.lng(),
@@ -236,6 +352,9 @@ export function QueueSpotFormConfirm(props: {
             }
           />
         </ListItem>
+        <ListItem>
+          <img src={props.values.image} height={100} />
+        </ListItem>
         {props.values.mapLocation.rating ? (
           <ListItem>
             <ListItemText
@@ -290,6 +409,7 @@ export function MapQueueSpotForm(): JSX.Element {
   const [queueSpotState, setQueueSpotState] = useState<MapQueueSpotFormState>({
     title: "",
     description: "",
+    image: "",
     mapLocation: {
       formatted_address: "",
       formatted_phone_number: "",
@@ -386,6 +506,7 @@ export function MapQueueSpotForm(): JSX.Element {
 export type MapQueueSpotFormState = {
   title: string;
   description: string;
+  image: string;
   mapLocation: {
     formatted_address: string;
     formatted_phone_number: string;
