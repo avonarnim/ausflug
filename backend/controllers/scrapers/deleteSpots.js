@@ -10,7 +10,8 @@ connection.once("open", () => {
 
   Spot.deleteMany(
     // { externalLink: /ticketmaster/ },
-    { highlightedIn: "NationalParks" },
+    // { highlightedIn: "NationalParks" },
+    { featuredBy: "WorthIt" },
     function (err, deletionResult) {
       if (err) console.log(err);
       console.log("All spots successfully deleted", deletionResult);
