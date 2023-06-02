@@ -165,8 +165,8 @@ async function findGooglePlaces(restaurants) {
           restaurant["_geoloc"] = data.candidates[0].geometry.location;
           restaurant["formatted_address"] =
             data.candidates[0].formatted_address;
+          validatedRests.push(restaurant);
         }
-        validatedRests.push(restaurant);
       }
     } else {
       console.log(restaurant.city_name);
@@ -215,6 +215,7 @@ async function uploadSpotsToDB(restaurants) {
       },
       status: "Approved",
       sponsored: false,
+      place_id: restaurant.place_id,
       highlightedIn: [],
       featuredBy: ["WorthIt"],
       duration: 0,
@@ -227,9 +228,9 @@ async function uploadSpotsToDB(restaurants) {
       features: [],
     });
 
-    // new_spot.save(function (err, spot) {
-    //   if (err) console.log("had an error", err);
-    // });
+    new_spot.save(function (err, spot) {
+      if (err) console.log("had an error", err);
+    });
   }
 
   console.log("Inserted spots into DB");
