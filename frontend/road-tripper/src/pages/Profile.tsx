@@ -11,14 +11,19 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../core/AuthContext";
 import logo250 from "../assets/logo250.png";
 import { useMutation } from "../core/api";
 import ProfileFormDialog from "../dialogs/EditProfileDialog";
 import { TripProps } from "./EditTrip";
-import { Edit, AccountCircle, Delete } from "@mui/icons-material";
+import {
+  Edit,
+  AccountCircle,
+  Delete,
+  ConnectingAirportsOutlined,
+} from "@mui/icons-material";
 import { SpotInfoProps } from "../components/SpotInfo";
 import RandomTripButton from "../components/RandomTripButton";
 
@@ -28,6 +33,70 @@ const Img = styled("img")({
   maxWidth: "100%",
   maxHeight: "100%",
 });
+
+const generateSocialLink = (
+  platform: string,
+  link: string | undefined,
+  src: string
+) => {
+  return link === undefined || link === "" ? null : (
+    <Grid item>
+      <Link href={link}>
+        <Img sx={{ width: 24, height: 24 }} alt={platform} src={src} />
+      </Link>
+    </Grid>
+  );
+};
+
+export function FollowingButton(props: {
+  thisUserId: string;
+  userId: string;
+  following: string[];
+}): JSX.Element {
+  const [isHovered, setIsHovered] = useState(false);
+  const followProfile = useMutation("FollowProfile");
+  const unfollowProfile = useMutation("UnfollowProfile");
+
+  return (
+    <>
+      {props.userId ? (
+        props.following && props.following.includes(props.userId) ? (
+          <Button
+            variant="contained"
+            color="secondary"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            onClick={() => {
+              console.log("unfollow");
+              unfollowProfile.commit({
+                profileId: props.thisUserId,
+                followingId: props.userId,
+              });
+            }}
+          >
+            {isHovered ? "Unfollow" : "Following"}
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              console.log("follow");
+              followProfile.commit({
+                profileId: props.thisUserId,
+                followingId: props.userId,
+              });
+            }}
+          >
+            Follow
+          </Button>
+        )
+      ) : (
+        <></>
+      )}
+    </>
+  );
+}
 
 export default function Profile(): JSX.Element {
   const { currentUser, updateUserProfile, setError } = useAuth();
@@ -42,8 +111,10 @@ export default function Profile(): JSX.Element {
   };
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState<ProfileProps | null>(null);
+  const [thisUser, setThisUser] = useState<ProfileProps | null>(null);
   const [trips, setTrips] = useState<TripProps[] | null>(null);
   const [spots, setSpots] = useState<SpotInfoProps[] | null>(null);
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   const params = useParams();
 
@@ -58,22 +129,31 @@ export default function Profile(): JSX.Element {
     if ((!params.userId && currentUser) || params.userId === currentUser?.uid) {
       console.log("getting own profile");
       setUserId(currentUser.uid);
-      getProfileCallback(currentUser.uid);
+      getProfileCallback(currentUser.uid, setUser);
       getTripsCallback(currentUser.uid);
       getSpotsCallback(currentUser.uid);
     } else if (params.userId) {
       console.log("getting profile");
       setUserId(params.userId);
-      getProfileCallback(params.userId);
+      getProfileCallback(params.userId, setUser);
+      getProfileCallback(currentUser.uid, setThisUser);
     } else {
       console.log("no user");
     }
   }, []);
 
-  const getProfileCallback = async (userId: string) => {
+  useEffect(() => {
+    setIsCurrentUser(
+      (!params.userId && currentUser) || params.userId === currentUser?.uid
+    );
+  }, [params.userId, currentUser]);
+
+  const getProfileCallback = async (
+    userId: string,
+    setter: { (value: SetStateAction<ProfileProps | null>): void }
+  ) => {
     const getUserResponse = await getProfile.commit({ profileId: userId });
-    setUser(getUserResponse);
-    console.log("profile set", getUserResponse);
+    setter(getUserResponse);
   };
 
   const getTripsCallback = async (userId: string) => {
@@ -100,57 +180,26 @@ export default function Profile(): JSX.Element {
     });
   };
 
-  const instagramLink =
-    user?.instagram === "" ? null : (
-      <Grid item>
-        <Link href={user?.instagram}>
-          <Img
-            sx={{ width: 24, height: 24 }}
-            alt="Instagram"
-            src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Instagram_colored_svg_1-1024.png"
-          />
-        </Link>
-      </Grid>
-    );
-
-  const twitterLink =
-    user?.twitter === "" ? null : (
-      <Grid item>
-        <Link href={user?.twitter}>
-          <Img
-            sx={{ width: 24, height: 24 }}
-            alt="Twitter"
-            src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Twitter_colored_svg-1024.png"
-          />
-        </Link>
-      </Grid>
-    );
-
-  const youtubeLink =
-    user?.youtube === "" ? null : (
-      <Grid item>
-        <Link href={user?.youtube}>
-          <Img
-            sx={{ width: 24, height: 24 }}
-            alt="YouTube"
-            src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Youtube_colored_svg-1024.png"
-          />
-        </Link>
-      </Grid>
-    );
-
-  const facebookLink =
-    user?.facebook === "" ? null : (
-      <Grid item>
-        <Link href={user?.facebook}>
-          <Img
-            sx={{ width: 24, height: 24 }}
-            alt="Facebook"
-            src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-1024.png"
-          />
-        </Link>
-      </Grid>
-    );
+  const instagramLink = generateSocialLink(
+    "instagram",
+    user?.instagram,
+    "https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Instagram_colored_svg_1-1024.png"
+  );
+  const twitterLink = generateSocialLink(
+    "twitter",
+    user?.twitter,
+    "https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Twitter_colored_svg-1024.png"
+  );
+  const youtubeLink = generateSocialLink(
+    "youtube",
+    user?.youtube,
+    "https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Youtube_colored_svg-1024.png"
+  );
+  const facebookLink = generateSocialLink(
+    "facebook",
+    user?.facebook,
+    "https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-1024.png"
+  );
 
   return (
     <Grid item container xs direction="row" sx={{ p: 4 }}>
@@ -173,7 +222,21 @@ export default function Profile(): JSX.Element {
                 <AccountCircle sx={{ fontSize: 200 }} />
               )}
             </Grid>
-            <Grid item>{user ? <ProfileFormDialog {...user} /> : null}</Grid>
+            <Grid item>
+              {user && isCurrentUser ? (
+                <ProfileFormDialog {...user} />
+              ) : (
+                currentUser?.uid &&
+                params.userId &&
+                user?.following && (
+                  <FollowingButton
+                    thisUserId={currentUser.uid as string}
+                    userId={params.userId}
+                    following={user?.following}
+                  />
+                )
+              )}
+            </Grid>
           </Grid>
         </Grid>
         <Grid item xs sx={{ minWidth: 450 }}>
@@ -199,7 +262,7 @@ export default function Profile(): JSX.Element {
             {twitterLink}
           </Grid>
         </Grid>
-        {(currentUser && !params.userId) || currentUser.uid == params.userId ? (
+        {isCurrentUser && (
           <Grid item xs={12} md={6}>
             <Typography variant="h5">Saved Trips</Typography>
             <List>
@@ -225,10 +288,8 @@ export default function Profile(): JSX.Element {
               ))}
             </List>
           </Grid>
-        ) : (
-          <></>
         )}
-        {(currentUser && !params.userId) || currentUser.uid == params.userId ? (
+        {isCurrentUser && (
           <Grid item xs={12} md={6}>
             <Typography variant="h5">Saved Spots</Typography>
             <List>
@@ -255,8 +316,6 @@ export default function Profile(): JSX.Element {
             {/* TODO: go to NewTrip page with a random set of the saved spots pre-loaded and either the current location or first spot's location set as the beginning/end */}
             {spots && spots.length > 0 && <RandomTripButton spots={spots} />}
           </Grid>
-        ) : (
-          <></>
         )}
       </Grid>
     </Grid>
