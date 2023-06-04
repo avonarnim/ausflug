@@ -21,6 +21,8 @@ type Type =
   | "GetHighlightedSpots"
   | "GetSpotsByHighlightedGroup"
   | "GetSpotsBySource"
+  | "SearchSpots"
+  | "GetSimilarSpots"
   | "SaveSpotToUser"
   | "UnsaveSpotFromUser"
   | "CreateReview"
@@ -77,6 +79,13 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? { subject: string }
   : T extends "GetSpotsBySource"
   ? { source: string }
+  : T extends "SearchSpots"
+  ? { query: string }
+  : T extends "GetSimilarSpots"
+  ? {
+      title: string;
+      description: string;
+    }
   : T extends "SaveSpotToUser"
   ? { spotId: string; userId: string }
   : T extends "UnsaveSpotFromUser"
@@ -164,6 +173,10 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   : T extends "GetSpotsByHighlightedGroup"
   ? SpotInfoProps[]
   : T extends "GetSpotsByFeaturedSource"
+  ? SpotInfoProps[]
+  : T extends "SearchSpots"
+  ? SpotInfoProps[]
+  : T extends "GetSimilarSpots"
   ? SpotInfoProps[]
   : T extends "GetEventsInBoxTime"
   ? EventProps[]
@@ -327,6 +340,24 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
                 headers,
               }
             );
+            break;
+          }
+          case "SearchSpots": {
+            const inputCast = input as { query: string };
+            res = await fetch(`${apiBaseUrl}/api/spots/query`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...inputCast }),
+            });
+            break;
+          }
+          case "GetSimilarSpots": {
+            const inputCast = input as { title: string; description: string };
+            res = await fetch(`${apiBaseUrl}/api/spots/similar`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...inputCast }),
+            });
             break;
           }
           case "SaveSpotToUser": {

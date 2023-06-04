@@ -46,6 +46,12 @@ router.route("/api/spots").get((req, res) => {
   console.log("all");
   spot.search_spots(req, res);
 });
+router.route("/api/spots/query").post((req, res) => {
+  spot.query_spots(req, res);
+});
+router.route("/api/spots/similar").post((req, res) => {
+  spot.spots_like_this(req, res);
+});
 router.route("/api/spots/center/:latitude/:longitude").get((req, res) => {
   console.log("lat lng");
   spot.search_spots_in_area(req, res);

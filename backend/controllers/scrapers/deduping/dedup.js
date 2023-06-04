@@ -22,7 +22,6 @@ connection.once("open", async () => {
     {
       $group: { _id: { title: "$title", location: "$location" } },
     },
-    { $limit: 500 },
   ]);
 
   for (let i = 0; i < uniqueTitles.length; i++) {

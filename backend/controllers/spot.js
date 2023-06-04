@@ -127,6 +127,74 @@ exports.search_spots_by_source = function (req, res) {
   ).limit(10);
 };
 
+exports.query_spots = function (req, res) {
+  console.log;
+  Spot.aggregate(
+    [
+      {
+        $search: {
+          index: "prod-spots",
+          text: {
+            query: req.body.query,
+            path: { wildcard: "*" },
+            fuzzy: {
+              maxEdits: 2,
+              prefixLength: 3,
+            },
+          },
+        },
+      },
+      {
+        $limit: 200,
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          location: 1,
+          description: 1,
+          images: 1,
+        },
+      },
+    ],
+    function (err, spots) {
+      console.log(spots);
+      if (err) res.send(err);
+      res.json(spots);
+    }
+  );
+};
+
+exports.spots_like_this = function (req, res) {
+  Spot.aggregate(
+    [
+      {
+        $search: {
+          index: "prod-spots",
+          moreLikeThis: {
+            like: [
+              {
+                title: req.body.title,
+                description: req.body.description,
+              },
+            ],
+          },
+        },
+      },
+      {
+        $skip: 1,
+      },
+      {
+        $limit: 6,
+      },
+    ],
+    function (err, spots) {
+      if (err) res.send(err);
+      res.json(spots);
+    }
+  );
+};
+
 // add spot
 exports.insert_spot = function (req, res) {
   delete req.body._id;

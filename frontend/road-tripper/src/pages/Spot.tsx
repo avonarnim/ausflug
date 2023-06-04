@@ -21,6 +21,11 @@ import {
   AssetImageCardHorizontalSwipeProps,
   SkeletonAssetImageCardHorizontalSwipe,
 } from "../components/assetSwipers/Image";
+import {
+  AssetBlockCardHorizontalSwipe,
+  AssetBlockCardHorizontalSwipeProps,
+  SkeletonAssetBlockCardHorizontalSwipe,
+} from "../components/assetSwipers/Block";
 
 type Libraries = (
   | "drawing"
@@ -45,12 +50,14 @@ export default function Spot(): JSX.Element {
   const [map, setMap] = useState<google.maps.Map>();
   const [spot, setSpot] = useState<SpotInfoProps>();
   const [events, setEvents] = useState<EventProps[]>();
+  const [similarSpots, setSimilarSpots] = useState<SpotInfoProps[]>();
   const [assetCards, setAssetCards] =
     useState<AssetImageCardHorizontalSwipeProps>({ assetCards: [] });
 
   const getSpot = useMutation("GetSpot");
   const getEvents = useMutation("GetEventsByVenue");
   const saveSpot = useMutation("SaveSpotToUser");
+  const getSimilarSpots = useMutation("GetSimilarSpots");
 
   useEffect(() => {
     console.log("params", params);
@@ -73,6 +80,7 @@ export default function Spot(): JSX.Element {
         );
         if (ticketMasterId?.id) getEventsCallback(ticketMasterId.id);
       }
+      getSimilarSpotsCallback(spot.title, spot.description);
     }
   }, [spot]);
 
@@ -80,9 +88,11 @@ export default function Spot(): JSX.Element {
     const getSpotResponse = await getSpot.commit({ spotId: spotId });
     setSpot(getSpotResponse);
     setAssetCards({
-      assetCards: getSpotResponse.images.map((image) => ({
-        image: image,
-      })),
+      assetCards: getSpotResponse.images
+        .map((image) => ({
+          image: image,
+        }))
+        .filter((image) => image.image !== ""),
     });
     console.log("spot set", getSpotResponse);
     const marker = new google.maps.Marker({
@@ -105,6 +115,17 @@ export default function Spot(): JSX.Element {
     });
     console.log(getEventsResponse);
     setEvents(getEventsResponse);
+  };
+
+  const getSimilarSpotsCallback = async (
+    title: string,
+    description: string
+  ) => {
+    const getSimilarSpotsResponse = await getSimilarSpots.commit({
+      title: title,
+      description: description,
+    });
+    setSimilarSpots(getSimilarSpotsResponse);
   };
 
   // called on-start up of the page
@@ -219,6 +240,23 @@ export default function Spot(): JSX.Element {
                 </Grid>
               ))}
             </Grid>
+          </>
+        ) : (
+          <></>
+        )}
+        {similarSpots ? (
+          <>
+            <Typography variant="h6">Similar Spots</Typography>
+            <AssetBlockCardHorizontalSwipe
+              assetCards={similarSpots.map((spot) => ({
+                title: spot.title,
+                type: "spots",
+                id: spot._id,
+                attribute: "description",
+                value: spot.description,
+                image: spot.images[0],
+              }))}
+            />
           </>
         ) : (
           <></>

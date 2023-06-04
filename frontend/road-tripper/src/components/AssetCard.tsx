@@ -42,7 +42,7 @@ export function AssetCard(props: AssetCardProps): JSX.Element {
     <Card variant="outlined" sx={{ m: 0 }}>
       <CardActionArea
         component={Link}
-        to={`/spots/${props.id}`}
+        to={`/${props.type}/${props.id}`}
         style={{ textDecoration: "none", textAlign: "left" }}
       >
         <Grid container>
@@ -110,4 +110,5 @@ export type AssetCardProps = Omit<CardProps, "children"> & {
   description: string;
   id: string;
   title: string;
+  type: string;
 };

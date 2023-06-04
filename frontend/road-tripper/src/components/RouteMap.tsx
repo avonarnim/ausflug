@@ -91,10 +91,12 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
   const nameRef = useRef<HTMLInputElement>();
+  const descriptionRef = useRef<HTMLInputElement>();
 
   const getSpotsInBox = useMutation("GetSpotsInBox");
   const getEventsInBoxTime = useMutation("GetEventsInBoxTime");
   const createTrip = useMutation("CreateTrip");
+  const updateTrip = useMutation("UpdateTrip");
   const getSpot = useMutation("GetSpot");
   // TODO: need ability to update vs trip based on whether this is new vs an edit
 
@@ -783,12 +785,23 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
             <Grid item xs={6} sx={{ pl: 4, pr: 4 }}>
               {currentUser ? (
                 <>
-                  <Input type="text" placeholder="Name" inputRef={nameRef} />
+                  <Input
+                    type="text"
+                    defaultValue={props.tripResult?.name || "Name"}
+                    inputRef={nameRef}
+                  />
+                  <Input
+                    type="text"
+                    defaultValue={
+                      props.tripResult?.description || "Description"
+                    }
+                    inputRef={descriptionRef}
+                  />
                   <Button
                     onClick={() => {
-                      createTrip.commit({
+                      let tripDetails = {
                         name: nameRef.current?.value || "Unnamed Trip",
-                        description: "",
+                        description: descriptionRef.current?.value || "",
                         creatorId: currentUser.uid,
                         originPlaceId: originPlace?.place_id || "",
                         originVal: originRef.current?.value || "",
@@ -821,10 +834,23 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                         completedAt: 0,
                         duration: cumulativeDuration,
                         distance: cumulativeDistance,
-                      });
+                      };
+                      if (props.tripResult?.creatorId !== currentUser.uid) {
+                        createTrip.commit(tripDetails);
+                      } else {
+                        updateTrip.commit({
+                          ...tripDetails,
+                          _id: props.tripResult!._id,
+                        });
+                      }
+                      // TODO: if currentUser.uid !== props.tripResult.creatorId, do not include _id & make this a create operation
+                      // if currentUser.uid === props.tripResult.creatorId, include _id & make this an update operation
                     }}
                   >
-                    Save
+                    {/* TODO: verify this displays properly */}
+                    {props.tripResult?.creatorId !== currentUser.uid
+                      ? "Save"
+                      : "Clone as mine"}
                   </Button>
                 </>
               ) : (

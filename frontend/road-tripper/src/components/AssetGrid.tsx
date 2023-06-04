@@ -22,6 +22,7 @@ export function AssetGrid(props: AssetGridProps): JSX.Element {
             description={assets[i].description}
             image={assets[i].image}
             id={assets[i].id}
+            type={assets[i].type}
           />
         </Item>
       ))}

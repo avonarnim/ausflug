@@ -19,8 +19,13 @@ import {
 } from "react-instantsearch-hooks-web";
 import { AssetCardProps } from "./AssetCard";
 import { AssetGrid } from "./AssetGrid";
+import { IconButton, TextField } from "@mui/material";
+import { Search } from "@mui/icons-material";
+import { useState } from "react";
+import { useMutation } from "../core/api";
 
 import "../styles/searchbar.css";
+import { SpotInfoProps } from "./SpotInfo";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -66,5 +71,60 @@ export function SearchBar() {
         </Grid>
       </Grid>
     </InstantSearch>
+  );
+}
+
+export function CustomSearchBar() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SpotInfoProps[]>([]);
+  const searchSpots = useMutation("SearchSpots");
+
+  const search = async () => {
+    setSearchResults(await searchSpots.commit({ query: searchQuery }));
+  };
+
+  return (
+    <Grid item container direction="column" pb={2}>
+      <Grid item pb={2}>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="search-bar"
+          className="text"
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") search();
+          }}
+          label="Search for spots"
+          variant="outlined"
+          placeholder="Search..."
+          size="small"
+          type="text"
+          name="query"
+          InputProps={{
+            endAdornment: (
+              <IconButton type="submit" aria-label="search" onClick={search}>
+                <Search style={{ fill: "blue" }} />
+              </IconButton>
+            ),
+          }}
+        />
+      </Grid>
+      <Grid item>
+        {searchResults.length > 0 && (
+          <AssetGrid
+            assetCards={searchResults.map((spot) => {
+              return {
+                id: spot._id,
+                title: spot.title,
+                description: spot.description,
+                image: spot.images[0],
+                type: "spots",
+              };
+            })}
+          />
+        )}
+      </Grid>
+    </Grid>
   );
 }

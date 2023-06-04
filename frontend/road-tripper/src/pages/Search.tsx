@@ -1,5 +1,5 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import { SearchBar } from "../components/SearchBar";
+import { CustomSearchBar } from "../components/SearchBar";
 import { Link } from "react-router-dom";
 
 export default function Search(): JSX.Element {
@@ -21,7 +21,7 @@ export default function Search(): JSX.Element {
           </Box>
         </Grid>
       </Grid>
-      <SearchBar />
+      <CustomSearchBar />
     </Container>
   );
 }
