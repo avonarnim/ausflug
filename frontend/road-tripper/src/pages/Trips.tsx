@@ -1,9 +1,11 @@
 import {
+  Avatar,
   Grid,
   IconButton,
   Link,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
   Typography,
@@ -112,6 +114,11 @@ export default function Trips(): JSX.Element {
                 ?.filter((trip) => trip.isComplete == false)
                 .map((trip) => (
                   <ListItemWith3SecondaryAction key={trip.name + trip._id}>
+                    {trip.image && (
+                      <ListItemAvatar>
+                        <Avatar alt={trip.image} src={trip.image} />
+                      </ListItemAvatar>
+                    )}
                     <ListItemText
                       primary={
                         trip.name +
@@ -151,6 +158,11 @@ export default function Trips(): JSX.Element {
                 ?.filter((trip) => trip.isComplete == true)
                 .map((trip) => (
                   <ListItemWithWiderSecondaryAction key={trip.name + trip._id}>
+                    {trip.image && (
+                      <ListItemAvatar>
+                        <Avatar alt={trip.image} src={trip.image} />
+                      </ListItemAvatar>
+                    )}
                     <ListItemText
                       primary={
                         trip.name +
