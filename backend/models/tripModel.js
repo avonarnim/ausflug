@@ -37,6 +37,7 @@ var TripSchema = new Schema({
   duration: Number,
   distance: Number,
   completed: Boolean,
+  image: String,
 });
 
 module.exports = mongoose.model("Trip", TripSchema);

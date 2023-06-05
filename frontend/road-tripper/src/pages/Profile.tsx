@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Button,
   Card,
   CardMedia,
@@ -7,6 +8,7 @@ import {
   Link,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemText,
   Typography,
 } from "@mui/material";
@@ -291,6 +293,11 @@ export default function Profile(): JSX.Element {
                     </IconButton>
                   }
                 >
+                  {trip.image && (
+                    <ListItemAvatar>
+                      <Avatar alt={trip.name} src={trip.image} />
+                    </ListItemAvatar>
+                  )}
                   <ListItemText
                     primary={
                       trip.name +
@@ -320,6 +327,11 @@ export default function Profile(): JSX.Element {
                     </IconButton>
                   }
                 >
+                  {spot.images.length > 0 && (
+                    <ListItemAvatar>
+                      <Avatar alt={spot.title} src={spot.images[0]} />
+                    </ListItemAvatar>
+                  )}
                   <ListItemText
                     primary={spot.title}
                     secondary={spot.description}

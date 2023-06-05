@@ -75,4 +75,5 @@ export type TripProps = {
   completedAt: number;
   duration: Number;
   distance: Number;
+  image: string;
 };

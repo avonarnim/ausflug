@@ -191,7 +191,6 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 onChange={handleChange}
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="name"
                 label="name"
@@ -203,7 +202,6 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 onChange={handleChange}
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="bio"
                 label="bio"
@@ -215,7 +213,6 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 onChange={handleChange}
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="instagram"
                 label="instagram"
@@ -227,7 +224,6 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 onChange={handleChange}
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="twitter"
                 label="twitter"
@@ -239,7 +235,6 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 onChange={handleChange}
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="facebook"
                 label="facebook"
@@ -251,7 +246,6 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 onChange={handleChange}
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="youtube"
                 label="youtube"

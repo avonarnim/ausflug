@@ -35,6 +35,7 @@ import { TripProps } from "../pages/EditTrip";
 import { categoryToIcon } from "../core/util";
 import { DetourDayTabPanel, groupDetoursByDay } from "./DetourDayTabPanel";
 import dayjs from "dayjs";
+import { PhotoUploader } from "./PhotoUploader";
 
 type Libraries = (
   | "drawing"
@@ -87,6 +88,15 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
   const [chosenDetoursByDay, setChosenDetoursByDay] = useState<
     SpotInfoProps[][]
   >([[]]);
+
+  const [image, setImage] = useState<string>(props.tripResult?.image || "");
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setImage(event.target.value);
+    } catch (err) {
+      console.log("error handling change", err);
+    }
+  };
 
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
@@ -515,6 +525,113 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 
   return isLoaded ? (
     <>
+      <Grid item container direction="row" xs={12} sx={{ p: 4 }}>
+        {currentUser ? (
+          <>
+            <Grid item xs={4}>
+              {image ? (
+                <img
+                  src={image}
+                  alt={"trip photo"}
+                  style={{
+                    borderRadius: "50%",
+                    width: "200px",
+                    height: "200px",
+                    objectFit: "cover",
+                  }}
+                />
+              ) : (
+                <PhotoUploader
+                  id={`${currentUser.uid} ${Date.now()}`}
+                  setImageString={handleImageChange}
+                />
+              )}
+            </Grid>
+
+            <Grid
+              item
+              container
+              direction="column"
+              xs={4}
+              sx={{ pl: 4, pr: 4 }}
+            >
+              <Input
+                type="text"
+                defaultValue={props.tripResult?.name || "Name"}
+                inputRef={nameRef}
+              />
+              <Input
+                type="text"
+                defaultValue={props.tripResult?.description || "Description"}
+                inputRef={descriptionRef}
+              />
+              <Grid container direction="row">
+                <Button
+                  onClick={() => {
+                    let tripDetails = {
+                      name: nameRef.current?.value || "Unnamed Trip",
+                      description: descriptionRef.current?.value || "",
+                      creatorId: currentUser.uid,
+                      originPlaceId: originPlace?.place_id || "",
+                      originVal: originRef.current?.value || "",
+                      destinationPlaceId: destinationPlace?.place_id || "",
+                      destinationVal: destinationRef.current?.value || "",
+                      waypoints: chosenDetours.map((spot) => {
+                        return {
+                          _id: spot._id,
+                          place_id: spot.place_id,
+                          location: {
+                            lat: spot.location.lat,
+                            lng: spot.location.lng,
+                          },
+                          stopover: true,
+                        };
+                      }),
+                      startDate:
+                        props.startDate ||
+                        startDate?.toString() ||
+                        Date.now().toString(),
+                      endDate:
+                        props.endDate ||
+                        endDate?.toString() ||
+                        Date.now().toString(),
+                      isPublic: false,
+                      isComplete: false,
+                      isArchived: false,
+                      createdAt: Date.now(),
+                      updatedAt: Date.now(),
+                      completedAt: 0,
+                      duration: cumulativeDuration,
+                      distance: cumulativeDistance,
+                      image: image,
+                    };
+                    if (props.tripResult?.creatorId !== currentUser.uid) {
+                      createTrip.commit(tripDetails);
+                    } else {
+                      updateTrip.commit({
+                        ...tripDetails,
+                        _id: props.tripResult!._id,
+                      });
+                    }
+                  }}
+                >
+                  {props.tripResult?.creatorId === currentUser.uid
+                    ? "Save"
+                    : "Clone as mine"}
+                </Button>
+                <IconButton aria-label="delete route" onClick={clearRoute}>
+                  <Delete />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </>
+        ) : (
+          <Link to={`/login`} style={{ textDecoration: "none" }}>
+            <Button>Log in to save your trip</Button>
+          </Link>
+        )}
+      </Grid>
+
       <GoogleMap
         mapContainerStyle={{ width: "100%", height: "500px" }}
         center={center}
@@ -781,88 +898,6 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                 <NearMe />
               </IconButton>
             </Grid> */}
-            {/* TODO: add "update" button */}
-            <Grid item xs={6} sx={{ pl: 4, pr: 4 }}>
-              {currentUser ? (
-                <>
-                  <Input
-                    type="text"
-                    defaultValue={props.tripResult?.name || "Name"}
-                    inputRef={nameRef}
-                  />
-                  <Input
-                    type="text"
-                    defaultValue={
-                      props.tripResult?.description || "Description"
-                    }
-                    inputRef={descriptionRef}
-                  />
-                  <Button
-                    onClick={() => {
-                      let tripDetails = {
-                        name: nameRef.current?.value || "Unnamed Trip",
-                        description: descriptionRef.current?.value || "",
-                        creatorId: currentUser.uid,
-                        originPlaceId: originPlace?.place_id || "",
-                        originVal: originRef.current?.value || "",
-                        destinationPlaceId: destinationPlace?.place_id || "",
-                        destinationVal: destinationRef.current?.value || "",
-                        waypoints: chosenDetours.map((spot) => {
-                          return {
-                            _id: spot._id,
-                            place_id: spot.place_id,
-                            location: {
-                              lat: spot.location.lat,
-                              lng: spot.location.lng,
-                            },
-                            stopover: true,
-                          };
-                        }),
-                        startDate:
-                          props.startDate ||
-                          startDate?.toString() ||
-                          Date.now().toString(),
-                        endDate:
-                          props.endDate ||
-                          endDate?.toString() ||
-                          Date.now().toString(),
-                        isPublic: false,
-                        isComplete: false,
-                        isArchived: false,
-                        createdAt: Date.now(),
-                        updatedAt: Date.now(),
-                        completedAt: 0,
-                        duration: cumulativeDuration,
-                        distance: cumulativeDistance,
-                      };
-                      if (props.tripResult?.creatorId !== currentUser.uid) {
-                        createTrip.commit(tripDetails);
-                      } else {
-                        updateTrip.commit({
-                          ...tripDetails,
-                          _id: props.tripResult!._id,
-                        });
-                      }
-                      // TODO: if currentUser.uid !== props.tripResult.creatorId, do not include _id & make this a create operation
-                      // if currentUser.uid === props.tripResult.creatorId, include _id & make this an update operation
-                    }}
-                  >
-                    {/* TODO: verify this displays properly */}
-                    {props.tripResult?.creatorId !== currentUser.uid
-                      ? "Save"
-                      : "Clone as mine"}
-                  </Button>
-                </>
-              ) : (
-                <Link to={`/login`} style={{ textDecoration: "none" }}>
-                  <Button>Log in to save your trip</Button>
-                </Link>
-              )}
-
-              <IconButton aria-label="delete route" onClick={clearRoute}>
-                <Delete />
-              </IconButton>
-            </Grid>
             {routeCreated && (
               <Grid item xs={12} sx={{ pl: 4, pr: 4 }}>
                 <DetourDayTabPanel
