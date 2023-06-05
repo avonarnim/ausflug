@@ -35,6 +35,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
   const handleClose = async (submitting: boolean) => {
     if (submitting) {
       const updateRes = await updateProfile.commit(editAccountState);
+      console.log(updateRes);
       setSuccessfulEdit(updateRes != null);
     }
     setOpen(false);

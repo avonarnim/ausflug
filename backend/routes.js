@@ -116,28 +116,25 @@ router.use("/api/users", VerifyToken);
 router.route("/api/users").post((req, res) => {
   user.create_profile(req, res);
 });
-router.use("/api/users", VerifyAdminToken);
-router.route("/api/users").get((req, res) => {
-  user.list_users(req, res);
-});
 // TODO: create get profile by username --> prevent duplicates in frontend
 router.use("/api/users/:userId", VerifyToken);
 router.route("/api/users/:userId").get((req, res) => {
   user.get_profile(req, res);
+});
+router.use("/api/users/username/:userId", VerifyToken);
+router.route("/api/users/username/:userId").get((req, res) => {
+  user.get_profile_by_username(req, res);
 });
 // TODO: deprecate follow/unfollow.. maybe also save_trip_to_user
 router.use("/api/users/:userId", VerifyToken);
 router.route("/api/users/:userId").post((req, res) => {
   user.update_user(req, res);
 });
-router.use("/api/users/:userId", VerifyAdminToken);
-router.route("/api/users/:userId").delete((req, res) => {
-  user.delete_profile(req, res);
-});
 router.use("/api/users/follow/:userId/:followingId", VerifyToken);
 router.route("/api/users/follow/:userId/:followingId").put((req, res) => {
   user.add_user_to_following(req, res);
 });
+router.use("/api/users/unfollow/:userId/:followingId", VerifyToken);
 router.route("/api/users/unfollow/:userId/:followingId").put((req, res) => {
   user.remove_user_from_following(req, res);
 });
@@ -148,6 +145,14 @@ router.route("/api/users/saveSpot/:userId/:spotId").put((req, res) => {
 router.use("/api/users/unsaveSpot/:userId/:spotId", VerifyToken);
 router.route("/api/users/unsaveSpot/:userId/:spotId").put((req, res) => {
   user.unsave_spot_to_user(req, res);
+});
+router.use("/api/users", VerifyAdminToken);
+router.route("/api/users").get((req, res) => {
+  user.list_users(req, res);
+});
+router.use("/api/users/:userId", VerifyAdminToken);
+router.route("/api/users/:userId").delete((req, res) => {
+  user.delete_profile(req, res);
 });
 
 router.route("/api/util/image").post((req, res) => {

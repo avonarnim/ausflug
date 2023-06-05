@@ -26,6 +26,7 @@ import {
 } from "@mui/icons-material";
 import { SpotInfoProps } from "../components/SpotInfo";
 import RandomTripButton from "../components/RandomTripButton";
+import FollowList from "../dialogs/FollowList";
 
 const Img = styled("img")({
   margin: "auto",
@@ -57,13 +58,15 @@ export function FollowingButton(props: {
   const followProfile = useMutation("FollowProfile");
   const unfollowProfile = useMutation("UnfollowProfile");
 
+  console.log("following", props.following, props.userId);
+
   return (
     <>
       {props.userId ? (
         props.following && props.following.includes(props.userId) ? (
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={() => {
@@ -153,6 +156,7 @@ export default function Profile(): JSX.Element {
     setter: { (value: SetStateAction<ProfileProps | null>): void }
   ) => {
     const getUserResponse = await getProfile.commit({ profileId: userId });
+    console.log(getUserResponse);
     setter(getUserResponse);
   };
 
@@ -228,11 +232,11 @@ export default function Profile(): JSX.Element {
               ) : (
                 currentUser?.uid &&
                 params.userId &&
-                user?.following && (
+                thisUser?.following && (
                   <FollowingButton
                     thisUserId={currentUser.uid as string}
                     userId={params.userId}
-                    following={user?.following}
+                    following={thisUser?.following}
                   />
                 )
               )}
@@ -249,12 +253,22 @@ export default function Profile(): JSX.Element {
           <Typography gutterBottom variant="body1" component="div">
             {user?.bio}
           </Typography>
-          <Typography variant="body1">
-            {user?.followers.length} Followers
-          </Typography>
-          <Typography variant="body1">
-            {user?.following.length} Following
-          </Typography>
+          <Grid container direction="row" spacing={2}>
+            <Grid item>
+              <FollowList
+                userId={userId}
+                users={user?.followers || []}
+                following={false}
+              />
+            </Grid>
+            <Grid item>
+              <FollowList
+                userId={userId}
+                users={user?.following || []}
+                following={true}
+              />
+            </Grid>
+          </Grid>
           <Grid container direction="row" spacing={2} sx={{ pb: 4 }}>
             {facebookLink}
             {youtubeLink}

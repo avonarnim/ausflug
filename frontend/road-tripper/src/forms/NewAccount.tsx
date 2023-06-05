@@ -52,6 +52,7 @@ export function NewAccountRegisterSection(props: {
       props.handleChange({
         target: { name: "_id", value: res.user.uid },
       } as React.ChangeEvent<HTMLInputElement>);
+      props.handleNext();
     } catch (error: unknown) {
       const errorCast = error as Error;
       console.log(errorCast);
@@ -70,7 +71,9 @@ export function NewAccountRegisterSection(props: {
       ) {
         setPasswordErrorMsg(errorCast.message);
       } else if (
-        errorCast.message === "Firebase: Error (auth/invalid-password)."
+        errorCast.message === "Firebase: Error (auth/invalid-password)." ||
+        errorCast.message ===
+          "Firebase: Password should be at least 6 characters (auth/weak-password)."
       ) {
         setPasswordErrorMsg(
           "Invalid password. Password must be at least 6 characters"
@@ -81,8 +84,6 @@ export function NewAccountRegisterSection(props: {
       setError("Failed to register", error);
       setLoading(false);
     }
-
-    props.handleNext();
   };
 
   return (
@@ -153,11 +154,20 @@ export function NewAccountFormDetailsSection(props: {
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }): JSX.Element {
   const uploadFile = useMutation("UploadFile");
+  const getProfileByUsername = useMutation("GetProfileByUsername");
   const { currentUser } = useAuth();
+  const [usernameErrorMsg, setUsernameErrorMsg] = useState("");
 
-  const attemptContinue = () => {
+  const attemptContinue = async () => {
     if (props.values.username.length > 0 && props.values.name.length > 0) {
-      props.handleNext();
+      const profileRes = await getProfileByUsername.commit({
+        username: props.values.username,
+      });
+      if (profileRes._id) {
+        setUsernameErrorMsg("Username already exists");
+      } else {
+        props.handleNext();
+      }
     }
   };
 
@@ -279,6 +289,8 @@ export function NewAccountFormDetailsSection(props: {
         defaultValue={props.values.username}
         margin="normal"
         fullWidth
+        error={usernameErrorMsg !== ""}
+        helperText={usernameErrorMsg !== "" ? "Username is already taken" : ""}
       />
       <br />
       <TextField

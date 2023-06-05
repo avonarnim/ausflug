@@ -30,6 +30,7 @@ type Type =
   | "GetEventsByVenue"
   | "CreateProfile"
   | "GetProfile"
+  | "GetProfileByUsername"
   | "GetProfiles"
   | "DeleteProfile"
   | "UpdateProfile"
@@ -113,6 +114,8 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? ProfileProps
   : T extends "GetProfile"
   ? { profileId: string }
+  : T extends "GetProfileByUsername"
+  ? { username: string }
   : T extends "GetProfiles"
   ? {}
   : T extends "DeleteProfile"
@@ -157,6 +160,8 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   : T extends "GetProfiles"
   ? ProfileProps[]
   : T extends "GetProfile"
+  ? ProfileProps
+  : T extends "GetProfileByUsername"
   ? ProfileProps
   : T extends "GetSpot"
   ? SpotInfoProps
@@ -430,6 +435,14 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
           case "GetProfile": {
             const profileId = (input as { profileId: string }).profileId;
             res = await fetch(`${apiBaseUrl}/api/users/${profileId}`, {
+              method: "GET",
+              headers,
+            });
+            break;
+          }
+          case "GetProfileByUsername": {
+            const username = (input as { username: string }).username;
+            res = await fetch(`${apiBaseUrl}/api/users/username/${username}`, {
               method: "GET",
               headers,
             });

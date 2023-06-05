@@ -22,7 +22,19 @@ exports.get_profile = async function (req, res) {
   // }
 };
 
-exports.create_profile = function (req, res) {
+exports.get_profile_by_username = async function (req, res) {
+  User.findOne({ username: req.params.username }, function (err, user) {
+    if (err) {
+      console.log("error", err);
+      res.send(err);
+    } else {
+      console.log("user", user);
+      res.json(user);
+    }
+  });
+};
+
+exports.create_profile = async function (req, res) {
   console.log("creating profile", req.body);
   var new_user = new User(req.body);
 
@@ -37,7 +49,46 @@ exports.create_profile = function (req, res) {
   });
 };
 
-exports.delete_profile = function (req, res) {
+exports.delete_profile = async function (req, res) {
+  const user = await User.findOne({
+    _id: req.params.userId,
+  });
+
+  for (let i = 0; i < user.followers.length; i++) {
+    const follower = await User.findOne({
+      _id: user.followers[i],
+    });
+    follower.following.remove(req.params.userId);
+    const update = { following: follower.following };
+    User.findOneAndUpdate(
+      { _id: user.followers[i] },
+      update,
+      function (err, resp) {
+        if (err) {
+          res.send(err);
+        }
+      }
+    );
+  }
+
+  for (let i = 0; i < user.following.length; i++) {
+    const following = await User.findOne({
+      _id: user.following[i],
+    });
+    following.followers.remove(req.params.userId);
+    const update = { followers: following.followers };
+
+    User.findOneAndUpdate(
+      { _id: user.following[i] },
+      update,
+      function (err, resp) {
+        if (err) {
+          res.send(err);
+        }
+      }
+    );
+  }
+
   User.deleteOne(
     {
       username: req.params.userId,
@@ -147,22 +198,37 @@ exports.unsave_spot_to_user = async function (req, res) {
 
 exports.add_user_to_following = async function (req, res) {
   try {
-    const user = await User.findById({ username: req.params.userId });
+    const user = await User.findById({ _id: req.params.userId });
+    const following = await User.findById({ _id: req.params.followingId });
 
     user.following.push(req.params.followingId);
+    following.followers.push(req.params.userId);
     const update = { following: user.following };
+    const update2 = { followers: following.followers };
+
+    let firstResult = true;
 
     User.findOneAndUpdate(
-      { username: req.params.userId },
+      { _id: req.params.userId },
       update,
       function (err, resp) {
         if (err) {
-          res.send(err);
-        } else {
-          res.send("Successfully added following");
+          firstResult = false;
         }
       }
     );
+
+    User.findOneAndUpdate(
+      { _id: req.params.followingId },
+      update2,
+      function (err, resp) {
+        if (err) {
+          firstResult = false;
+        }
+      }
+    );
+
+    res.send(firstResult ? "Successfully added user" : "Failed to add user");
   } catch (err) {
     res.send(err);
   }
@@ -189,20 +255,39 @@ exports.update_user = async function (req, res) {
 
 exports.remove_user_from_following = async function (req, res) {
   try {
-    const user = await User.findById({ username: req.params.userId });
+    const user = await User.findById({ _id: req.params.userId });
+    const following = await User.findById({ _id: req.params.followingId });
 
     user.following.remove(req.params.followingId);
+    following.followers.remove(req.params.userId);
+
+    const update = { following: user.following };
+    const update2 = { followers: following.followers };
+
+    let firstResult = true;
 
     User.findOneAndUpdate(
-      { username: req.params.userId },
+      { _id: req.params.userId },
       update,
       function (err, resp) {
         if (err) {
-          res.send(err);
-        } else {
-          res.send("Successfully added following");
+          firstResult = false;
         }
       }
+    );
+
+    User.findOneAndUpdate(
+      { _id: req.params.followingId },
+      update2,
+      function (err, resp) {
+        if (err) {
+          firstResult = false;
+        }
+      }
+    );
+
+    res.send(
+      firstResult ? "Successfully removed user" : "Failed to remove user"
     );
   } catch (err) {
     res.send(err);
