@@ -22,7 +22,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useMutation } from "../core/api";
-import { Delete, Add } from "@mui/icons-material";
 import { SpotInfoProps } from "./SpotInfo";
 import { Dayjs } from "dayjs";
 import { useAuth } from "../core/AuthContext";
@@ -35,7 +34,12 @@ import { TripProps } from "../pages/EditTrip";
 import { categoryToIcon } from "../core/util";
 import { DetourDayTabPanel, groupDetoursByDay } from "./DetourDayTabPanel";
 import dayjs from "dayjs";
-import { PhotoUploader } from "./PhotoUploader";
+import FuzzySearch from "fuzzy-search";
+import { ChosenDetoursDisplay } from "./RouteMapComponents/ChosenDetoursDisplay";
+import { BrowseEventsDisplay } from "./RouteMapComponents/BrowseEventsDisplay";
+import { BrowseSpotsDisplay } from "./RouteMapComponents/BrowseSpotsDisplay";
+import { RouteInfo } from "./RouteMapComponents/RouteInfo";
+import { HeaderInfo } from "./RouteMapComponents/HeaderInfo";
 
 type Libraries = (
   | "drawing"
@@ -69,7 +73,6 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     props.waypoints ?? []
   );
   const [tempChosenDetour, setTempChosenDetour] = useState<SpotInfoProps>();
-  const [wayPointElements, setWayPointElements] = useState<JSX.Element[]>([]);
   const [eventElements, setEventElements] = useState<JSX.Element[]>([]);
   const [routeCreated, setRouteCreated] = useState(false);
   const [startAutocomplete, setStartAutocomplete] =
@@ -105,8 +108,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 
   const getSpotsInBox = useMutation("GetSpotsInBox");
   const getEventsInBoxTime = useMutation("GetEventsInBoxTime");
-  const createTrip = useMutation("CreateTrip");
-  const updateTrip = useMutation("UpdateTrip");
+
   const getSpot = useMutation("GetSpot");
   // TODO: need ability to update vs trip based on whether this is new vs an edit
 
@@ -323,44 +325,6 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     setChosenDetours(newDetours);
   }
 
-  // finds ~10 random spots within the bounding box of the route
-  function generateRandomRoute() {
-    if (
-      originPlace &&
-      originPlace.geometry &&
-      originPlace.geometry.location &&
-      destinationPlace &&
-      destinationPlace.geometry &&
-      destinationPlace.geometry.location
-    ) {
-      const lat1 = originPlace.geometry.location.lat();
-      const lng1 = originPlace.geometry.location.lng();
-      const lat2 = destinationPlace.geometry.location.lat();
-      const lng2 = destinationPlace.geometry.location.lng();
-
-      const inRange = savedSpots.filter((spot) => {
-        const insideLat =
-          (spot.location.lat > lat1 && spot.location.lat < lat2) ||
-          (spot.location.lat < lat1 && spot.location.lat > lat2);
-        const insideLng =
-          (spot.location.lng > lng1 && spot.location.lng < lng2) ||
-          (spot.location.lng < lng1 && spot.location.lng > lng2);
-        return insideLat && insideLng;
-      });
-
-      const idealNumberOfSpots = daysDriving * 4;
-      const necessaryProbability = idealNumberOfSpots / inRange.length;
-
-      const randomChoice = inRange
-        .filter((spot) => {
-          return Math.random() > necessaryProbability;
-        })
-        .slice(0, idealNumberOfSpots);
-
-      setChosenDetours(randomChoice);
-    }
-  }
-
   // called once originPlace and destinationPlace lat/lng data is available
   // pulls spots from within reasonable range and renders
   async function loadSpots() {
@@ -384,106 +348,14 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 
     setSavedEvents(eventResults);
 
-    const eventElementsWithRefs = eventResults.map(
-      (eventResult: EventProps) => {
-        const eventRef = createRef<HTMLDivElement>();
-
-        const element = (
-          <ListItem
-            key={
-              eventResult.title +
-              eventResult._id +
-              eventResult.endDate.toString() +
-              "_event"
-            }
-            // secondaryAction={
-            //   <IconButton edge="end" onClick={() => addEventToRoute(eventResult)}>
-            //     <Add />
-            //   </IconButton>
-            // }
-          >
-            <ListItemButton
-              onClick={() => {
-                map!.setCenter(eventResult.location);
-                map!.setZoom(10);
-              }}
-            >
-              <ListItemText
-                ref={eventRef}
-                primary={eventResult.title}
-                secondary={eventResult.description}
-              ></ListItemText>
-            </ListItemButton>
-          </ListItem>
-        );
-        return {
-          event: { eventResult, eventRef },
-          element,
-        };
-      }
-    );
-
-    const eventElements = eventElementsWithRefs.map((event) => event.element);
-    const eventsWithRefs = eventElementsWithRefs.map((event) => event.event);
-
-    setEventElements(
-      eventElements.length > 0
-        ? eventElements
-        : [<ListItem>No events are available during this time</ListItem>]
-    );
-
-    const wayPointsWithRefs = spotResults.map((spotResult: SpotInfoProps) => {
-      const waypointRef = createRef<HTMLDivElement>();
-
-      const element = (
-        <ListItem
-          key={
-            spotResult.title +
-            spotResult._id +
-            spotResult.location.lat +
-            spotResult.location.lng +
-            "_BrowseWaypoint"
-          }
-          secondaryAction={
-            <IconButton edge="end" onClick={() => addSpotToRoute(spotResult)}>
-              <Add />
-            </IconButton>
-          }
-        >
-          <ListItemButton
-            onClick={() => {
-              map!.setCenter(spotResult.location);
-              map!.setZoom(10);
-            }}
-          >
-            <ListItemIcon>{categoryToIcon(spotResult.category)}</ListItemIcon>
-            <ListItemText
-              ref={waypointRef}
-              primary={spotResult.title}
-              secondary={spotResult.description}
-            ></ListItemText>
-          </ListItemButton>
-        </ListItem>
-      );
-      return {
-        spot: { spotResult, waypointRef },
-        element,
-      };
-    });
-
-    const elements = wayPointsWithRefs.map((wayPoint) => wayPoint.element);
-    const spotsWithRefs = wayPointsWithRefs.map((wayPoint) => wayPoint.spot);
-
-    setWayPointElements(elements);
-
     if (map) {
       const infoWindow = new google.maps.InfoWindow({ content: "" });
 
-      const markers = spotsWithRefs.map((spot) => {
+      const markers = spotResults.map((spot) => {
         const marker = new google.maps.Marker({
           position: {
-            lat: spot.spotResult.location.lat,
-            lng: spot.spotResult.location.lng,
+            lat: spot.location.lat,
+            lng: spot.location.lng,
           },
           map: map,
         });
@@ -492,17 +364,16 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
           infoWindow.close();
           infoWindow.setContent(
             `<div>` +
-              (spot.spotResult.images.length > 0
-                ? `<img src=${spot.spotResult.images[0]} style="height:100px;"/>`
+              (spot.images.length > 0
+                ? `<img src=${spot.images[0]} style="height:100px;"/>`
                 : "") +
-              `<h2 style="color:black;">${spot.spotResult.title}</h2>
-            <p style="color:black;">${spot.spotResult.description}</p>
-            <p style="color:black;">${spot.spotResult.category}</p>
-            <p style="color:black;">Quality: ${spot.spotResult.quality}</p>
-            <p style="color:black;">Specialty: ${spot.spotResult.specialty}</p>
+              `<h2 style="color:black;">${spot.title}</h2>
+            <p style="color:black;">${spot.description}</p>
+            <p style="color:black;">${spot.category}</p>
+            <p style="color:black;">Quality: ${spot.quality}</p>
+            <p style="color:black;">Specialty: ${spot.specialty}</p>
           </div>`
           );
-          // scrollToMarkerElement(spot.waypointRef);
           infoWindow.open(map, marker);
         });
 
@@ -525,113 +396,29 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 
   return isLoaded ? (
     <>
-      <Grid item container direction="row" xs={12} sx={{ p: 4 }}>
-        {currentUser ? (
-          <>
-            <Grid item xs={4}>
-              {image ? (
-                <img
-                  src={image}
-                  alt={"trip photo"}
-                  style={{
-                    borderRadius: "50%",
-                    width: "200px",
-                    height: "200px",
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <PhotoUploader
-                  id={`${currentUser.uid} ${Date.now()}`}
-                  setImageString={handleImageChange}
-                />
-              )}
-            </Grid>
-
-            <Grid
-              item
-              container
-              direction="column"
-              xs={4}
-              sx={{ pl: 4, pr: 4 }}
-            >
-              <Input
-                type="text"
-                defaultValue={props.tripResult?.name || "Name"}
-                inputRef={nameRef}
-              />
-              <Input
-                type="text"
-                defaultValue={props.tripResult?.description || "Description"}
-                inputRef={descriptionRef}
-              />
-              <Grid container direction="row">
-                <Button
-                  onClick={() => {
-                    let tripDetails = {
-                      name: nameRef.current?.value || "Unnamed Trip",
-                      description: descriptionRef.current?.value || "",
-                      creatorId: currentUser.uid,
-                      originPlaceId: originPlace?.place_id || "",
-                      originVal: originRef.current?.value || "",
-                      destinationPlaceId: destinationPlace?.place_id || "",
-                      destinationVal: destinationRef.current?.value || "",
-                      waypoints: chosenDetours.map((spot) => {
-                        return {
-                          _id: spot._id,
-                          place_id: spot.place_id,
-                          location: {
-                            lat: spot.location.lat,
-                            lng: spot.location.lng,
-                          },
-                          stopover: true,
-                        };
-                      }),
-                      startDate:
-                        props.startDate ||
-                        startDate?.toString() ||
-                        Date.now().toString(),
-                      endDate:
-                        props.endDate ||
-                        endDate?.toString() ||
-                        Date.now().toString(),
-                      isPublic: false,
-                      isComplete: false,
-                      isArchived: false,
-                      createdAt: Date.now(),
-                      updatedAt: Date.now(),
-                      completedAt: 0,
-                      duration: cumulativeDuration,
-                      distance: cumulativeDistance,
-                      image: image,
-                    };
-                    if (props.tripResult?.creatorId !== currentUser.uid) {
-                      createTrip.commit(tripDetails);
-                    } else {
-                      updateTrip.commit({
-                        ...tripDetails,
-                        _id: props.tripResult!._id,
-                      });
-                    }
-                  }}
-                >
-                  {props.tripResult?.creatorId === currentUser.uid
-                    ? "Save"
-                    : "Clone as mine"}
-                </Button>
-                <IconButton aria-label="delete route" onClick={clearRoute}>
-                  <Delete />
-                </IconButton>
-              </Grid>
-            </Grid>
-          </>
-        ) : (
-          <Link to={`/login`} style={{ textDecoration: "none" }}>
-            <Button>Log in to save your trip</Button>
-          </Link>
-        )}
-      </Grid>
-
+      <HeaderInfo
+        currentUser={currentUser}
+        image={image}
+        handleImageChange={handleImageChange}
+        name={props.tripResult?.name || "Name"}
+        nameRef={nameRef}
+        description={props.tripResult?.description || "Description"}
+        descriptionRef={descriptionRef}
+        startDate={
+          props.startDate || startDate?.toString() || Date.now().toString()
+        }
+        endDate={props.endDate || endDate?.toString() || Date.now().toString()}
+        cumulativeDistance={cumulativeDistance}
+        cumulativeDuration={cumulativeDuration}
+        clearRoute={clearRoute}
+        originRef={originRef}
+        destinationRef={destinationRef}
+        originPlace={originPlace}
+        destinationPlace={destinationPlace}
+        chosenDetours={chosenDetours}
+        tripCreatorId={props.tripResult?.creatorId}
+        tripResultId={props.tripResult?._id || ""}
+      />
       <GoogleMap
         mapContainerStyle={{ width: "100%", height: "500px" }}
         center={center}
@@ -727,128 +514,24 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
             <br />
             <br />
             <br />
-            <Grid
-              item
-              container
-              direction="column"
-              xs={12}
-              sm={6}
-              md={4}
-              sx={{ p: 4 }}
-            >
-              <Grid item>
-                <Typography>Browse Stops</Typography>
-              </Grid>
-              <Grid item>
-                <Paper style={{ height: 300, overflow: "auto" }}>
-                  <List dense sx={{ width: "100%" }}>
-                    {wayPointElements.length === 0 ? (
-                      <ListItem>Loading...</ListItem>
-                    ) : (
-                      wayPointElements
-                    )}
-                  </List>
-                </Paper>
-              </Grid>
-            </Grid>
-            <Grid
-              item
-              container
-              direction="column"
-              xs={12}
-              sm={6}
-              md={4}
-              sx={{ p: 4 }}
-            >
-              <Grid item>
-                <Typography>Browse Events</Typography>
-              </Grid>
-              <Grid item>
-                <Paper style={{ height: 300, overflow: "auto", maxWidth: 360 }}>
-                  <List dense sx={{ width: "100%" }}>
-                    {eventElements.length === 0 ? (
-                      <ListItem>Loading...</ListItem>
-                    ) : (
-                      eventElements
-                    )}
-                  </List>
-                </Paper>
-              </Grid>
-            </Grid>
-            <Grid
-              item
-              container
-              direction="column"
-              xs={12}
-              sm={6}
-              md={4}
-              sx={{ p: 4 }}
-            >
-              <Grid item>
-                <Typography>Selected Detours</Typography>
-              </Grid>
-              <Grid item>
-                <Paper style={{ height: 300, overflow: "auto", maxWidth: 360 }}>
-                  {chosenDetours.length === 0 &&
-                  originRef.current?.value === "" &&
-                  destinationRef.current?.value === "" ? (
-                    <Box sx={{ p: 2 }}>
-                      <Typography>No detours selected</Typography>
-                      <Typography>
-                        Enter an origin and destination to get recommendations
-                      </Typography>
-                    </Box>
-                  ) : chosenDetours.length === 0 ? (
-                    <Box sx={{ p: 2 }}>
-                      <Typography>No detours selected</Typography>
-                      <Button onClick={generateRandomRoute}>
-                        Choose for me
-                      </Button>
-                    </Box>
-                  ) : (
-                    <List
-                      dense
-                      sx={{
-                        width: "100%",
-                      }}
-                    >
-                      {chosenDetours.map((detour, index) => {
-                        console.log("mapping", index, detour.title);
-                        return (
-                          <ListItem
-                            key={detour._id + "_chosenDetour"}
-                            secondaryAction={
-                              <IconButton
-                                edge="end"
-                                aria-label="comments"
-                                onClick={() => removeSpotFromRoute(index)}
-                              >
-                                <Delete />
-                              </IconButton>
-                            }
-                          >
-                            <ListItemButton
-                              onClick={() => {
-                                map?.setCenter(detour.location);
-                                map?.setZoom(10);
-                              }}
-                            >
-                              <ListItemIcon>
-                                {categoryToIcon(detour.category)}
-                              </ListItemIcon>
-                              <ListItemText
-                                primary={detour.title}
-                                secondary={detour.description}
-                              ></ListItemText>
-                            </ListItemButton>
-                          </ListItem>
-                        );
-                      })}
-                    </List>
-                  )}
-                </Paper>
-              </Grid>
-            </Grid>
+            <BrowseSpotsDisplay
+              spots={savedSpots}
+              addSpotToRoute={addSpotToRoute}
+              map={map}
+            />
+            <BrowseEventsDisplay events={savedEvents} map={map} />
+            <ChosenDetoursDisplay
+              chosenDetours={chosenDetours}
+              savedSpots={savedSpots}
+              originRef={originRef}
+              originPlace={originPlace}
+              destinationRef={destinationRef}
+              destinationPlace={destinationPlace}
+              map={map}
+              daysDriving={daysDriving}
+              removeSpotFromRoute={removeSpotFromRoute}
+              setChosenDetours={setChosenDetours}
+            />
 
             <Grid container spacing={0} justifyContent="flex-begin">
               <Grid item xs={3} sx={{ p: 4 }}>
@@ -874,38 +557,13 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
               </Grid>
             </Grid>
 
-            {routeCreated ? (
-              <>
-                <Grid item xs={6} sx={{ pl: 4, pr: 4 }}>
-                  <Typography>Distance: {distance} </Typography>
-                </Grid>
-                <Grid item xs={6} sx={{ pl: 4, pr: 4 }}>
-                  <Typography>Duration: {duration} </Typography>
-                </Grid>
-              </>
-            ) : (
-              <></>
-            )}
-
-            {/* <Grid item xs={6} sx={{ pl: 4, pr: 4 }}>
-              <IconButton
-                aria-label="center back"
-                onClick={() => {
-                  map?.panTo(center);
-                  map?.setZoom(4);
-                }}
-              >
-                <NearMe />
-              </IconButton>
-            </Grid> */}
-            {routeCreated && (
-              <Grid item xs={12} sx={{ pl: 4, pr: 4 }}>
-                <DetourDayTabPanel
-                  daysDriving={daysDriving}
-                  chosenDetoursByDay={chosenDetoursByDay}
-                />
-              </Grid>
-            )}
+            <RouteInfo
+              routeCreated={routeCreated}
+              distance={distance}
+              duration={duration}
+              daysDriving={daysDriving}
+              chosenDetoursByDay={chosenDetoursByDay}
+            />
           </Grid>
         </Box>
       </Box>
