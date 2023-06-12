@@ -142,6 +142,7 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? {
       file: File;
       title: string;
+      prevImage: string;
       onUploadProgress: (progressEvent: any) => void;
     }
   : T extends "GetAdminMetrics"
@@ -562,11 +563,13 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             const castedInput = input as {
               file: File;
               title: string;
+              prevImage: string;
               onUploadProgress: (progressEvent: AxiosProgressEvent) => void;
             };
             const formData = new FormData();
             formData.append("file", castedInput.file);
             formData.append("destFileName", castedInput.title);
+            formData.append("prevImage", castedInput.prevImage);
 
             const config = {
               headers: {

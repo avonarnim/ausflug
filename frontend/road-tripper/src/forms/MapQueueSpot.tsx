@@ -81,6 +81,7 @@ export function QueueSpotFormDetailsSection(props: {
     const res = await uploadFile.commit({
       file: imageFile.selectedFile,
       title: currentUser.uid,
+      prevImage: "",
       onUploadProgress: (ProgressEvent) => {
         setImageFile({
           ...imageFile,
@@ -141,8 +142,9 @@ export function QueueSpotFormDetailsSection(props: {
     }
   };
 
-  const attemptContinue = () => {
+  const attemptContinue = async () => {
     console.log("attempting to continue...", props.values);
+    await handleUpload();
     props.values.title.length === 0
       ? setTitleErrorMsg("Please enter a title")
       : setTitleErrorMsg("");
@@ -201,15 +203,6 @@ export function QueueSpotFormDetailsSection(props: {
                   Select Image
                 </Button>
               </label>
-              <Button
-                size="small"
-                // className="submit"
-                variant="contained"
-                onClick={handleUpload}
-                sx={{ ml: 2 }}
-              >
-                Upload
-              </Button>
             </CardActions>
           </Card>
         </form>

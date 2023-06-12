@@ -18,11 +18,20 @@ import { useMutation } from "../core/api";
 import { useState } from "react";
 import { useAuth } from "../core/AuthContext";
 import profileIcon from "../assets/profileIcon.png";
+import { PhotoUploader } from "../components/PhotoUploader";
 
 export default function ProfileFormDialog(props: ProfileProps) {
   const [open, setOpen] = React.useState(false);
   const [editAccountState, setEditAccountState] = React.useState(props);
   const [successfulEdit, setSuccessfulEdit] = React.useState(false);
+  // const [image, setImage] = React.useState(props.image);
+  // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   try {
+  //     setImage(event.target.value);
+  //   } catch (err) {
+  //     console.log("error handling change", err);
+  //   }
+  // };
 
   const updateProfile = useMutation("UpdateProfile");
   const uploadFile = useMutation("UploadFile");
@@ -35,6 +44,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
   const handleClose = async (submitting: boolean) => {
     if (submitting) {
       const updateRes = await updateProfile.commit(editAccountState);
+      await handleUpload();
       console.log(updateRes);
       setSuccessfulEdit(updateRes != null);
     }
@@ -83,6 +93,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
     const res = await uploadFile.commit({
       file: profileFile.selectedFile,
       title: currentUser.uid,
+      prevImage: editAccountState.image,
       onUploadProgress: (ProgressEvent) => {
         setProfileFile({
           ...profileFile,
@@ -166,7 +177,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                         Select Image
                       </Button>
                     </label>
-                    <Button
+                    {/* <Button
                       size="small"
                       // className="submit"
                       variant="contained"
@@ -174,10 +185,16 @@ export default function ProfileFormDialog(props: ProfileProps) {
                       sx={{ ml: 2 }}
                     >
                       Upload
-                    </Button>
+                    </Button> */}
                   </CardActions>
                 </Card>
               </form>
+              {/* <PhotoUploader
+                id={`${currentUser.uid}`}
+                setImageString={handleImageChange}
+                prevImageString={image}
+                defaultImage={profileIcon}
+              /> */}
               <TextField
                 autoFocus
                 margin="dense"
@@ -188,6 +205,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 variant="standard"
                 placeholder="username"
                 name="username"
+                defaultValue={editAccountState.username}
                 onChange={handleChange}
               />
               <TextField
@@ -199,6 +217,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 variant="standard"
                 placeholder="name"
                 name="name"
+                defaultValue={editAccountState.name}
                 onChange={handleChange}
               />
               <TextField
@@ -210,6 +229,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 variant="standard"
                 placeholder="bio"
                 name="bio"
+                defaultValue={editAccountState.bio}
                 onChange={handleChange}
               />
               <TextField
@@ -221,6 +241,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 variant="standard"
                 placeholder="instagram"
                 name="instagram"
+                defaultValue={editAccountState.instagram}
                 onChange={handleChange}
               />
               <TextField
@@ -232,6 +253,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 variant="standard"
                 placeholder="twitter"
                 name="twitter"
+                defaultValue={editAccountState.twitter}
                 onChange={handleChange}
               />
               <TextField
@@ -243,6 +265,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 variant="standard"
                 placeholder="facebook"
                 name="facebook"
+                defaultValue={editAccountState.facebook}
                 onChange={handleChange}
               />
               <TextField
@@ -254,6 +277,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
                 variant="standard"
                 placeholder="youtube"
                 name="youtube"
+                defaultValue={editAccountState.youtube}
                 onChange={handleChange}
               />
             </DialogContent>

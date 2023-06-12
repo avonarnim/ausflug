@@ -50,6 +50,7 @@ export function HeaderInfo(props: {
               <PhotoUploader
                 id={`${props.currentUser.uid} ${Date.now()}`}
                 setImageString={props.handleImageChange}
+                prevImageString={props.image}
               />
             )}
           </Grid>

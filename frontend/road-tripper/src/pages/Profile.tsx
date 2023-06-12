@@ -14,7 +14,12 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { SetStateAction, useEffect, useState } from "react";
-import { useParams, Link as RouterLink } from "react-router-dom";
+import {
+  useParams,
+  Link as RouterLink,
+  redirect,
+  useNavigate,
+} from "react-router-dom";
 import { useAuth } from "../core/AuthContext";
 import logo250 from "../assets/logo250.png";
 import { useMutation } from "../core/api";
@@ -122,6 +127,7 @@ export default function Profile(): JSX.Element {
   const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   const params = useParams();
+  const navigate = useNavigate();
 
   const getProfile = useMutation("GetProfile");
   const updateProfile = useMutation("UpdateProfile");
@@ -317,6 +323,9 @@ export default function Profile(): JSX.Element {
               {spots?.map((spot) => (
                 <ListItem
                   key={spot._id}
+                  onClick={() => {
+                    navigate(`/spots/${spot._id}`);
+                  }}
                   secondaryAction={
                     <IconButton
                       edge="end"

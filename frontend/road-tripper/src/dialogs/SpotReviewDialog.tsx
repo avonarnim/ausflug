@@ -42,9 +42,10 @@ export default function SpotReviewFormDialog(props: { spotId: string }) {
 
   const handleClose = async (submitting: boolean) => {
     if (submitting) {
+      const uploadRes = await handleUpload();
       const updateRes = await submitSpotReview.commit(reviewState);
       setSuccessfulEdit(updateRes != null);
-      setSuccessfulEdit(true);
+      setSuccessfulEdit(true && uploadRes);
     }
     setOpen(false);
   };
@@ -82,16 +83,17 @@ export default function SpotReviewFormDialog(props: { spotId: string }) {
   };
 
   const handleUpload = async () => {
-    if (spotImage.uploading) return;
+    if (spotImage.uploading) return false;
     if (!spotImage.selectedFile) {
       setSpotImage({ ...spotImage, message: "Select a file first" });
-      return;
+      return false;
     }
     setSpotImage({ ...spotImage, uploading: true });
     // define upload
     const res = await uploadFile.commit({
       file: spotImage.selectedFile,
       title: currentUser.uid + "/" + props.spotId,
+      prevImage: "",
       onUploadProgress: (ProgressEvent) => {
         setSpotImage({
           ...spotImage,
@@ -110,6 +112,7 @@ export default function SpotReviewFormDialog(props: { spotId: string }) {
     handleChange({
       target: { name: "image", value: res.uploadUrl },
     } as React.ChangeEvent<HTMLInputElement>);
+    return true;
   };
 
   return (
@@ -173,15 +176,6 @@ export default function SpotReviewFormDialog(props: { spotId: string }) {
                         Select Image
                       </Button>
                     </label>
-                    <Button
-                      size="small"
-                      // className="submit"
-                      variant="contained"
-                      onClick={handleUpload}
-                      sx={{ ml: 2 }}
-                    >
-                      Upload
-                    </Button>
                   </CardActions>
                 </Card>
               </form>

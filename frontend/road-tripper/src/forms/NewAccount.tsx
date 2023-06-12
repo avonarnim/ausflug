@@ -160,13 +160,16 @@ export function NewAccountFormDetailsSection(props: {
 
   const attemptContinue = async () => {
     if (props.values.username.length > 0 && props.values.name.length > 0) {
-      const profileRes = await getProfileByUsername.commit({
-        username: props.values.username,
-      });
-      if (profileRes._id) {
-        setUsernameErrorMsg("Username already exists");
-      } else {
-        props.handleNext();
+      const profileImageRes = await handleUpload();
+      if (profileImageRes) {
+        const profileRes = await getProfileByUsername.commit({
+          username: props.values.username,
+        });
+        if (profileRes._id) {
+          setUsernameErrorMsg("Username already exists");
+        } else {
+          props.handleNext();
+        }
       }
     }
   };
@@ -195,16 +198,17 @@ export function NewAccountFormDetailsSection(props: {
   };
 
   const handleUpload = async () => {
-    if (profileFile.uploading) return;
+    if (profileFile.uploading) return false;
     if (!profileFile.selectedFile) {
       setProfileFile({ ...profileFile, message: "Select a file first" });
-      return;
+      return false;
     }
     setProfileFile({ ...profileFile, uploading: true });
     // define upload
     const res = await uploadFile.commit({
       file: profileFile.selectedFile,
       title: currentUser.uid,
+      prevImage: "",
       onUploadProgress: (ProgressEvent) => {
         setProfileFile({
           ...profileFile,
@@ -224,6 +228,8 @@ export function NewAccountFormDetailsSection(props: {
     props.handleChange({
       target: { name: "image", value: res.uploadUrl },
     } as React.ChangeEvent<HTMLInputElement>);
+
+    return true;
   };
 
   return (
@@ -270,7 +276,7 @@ export function NewAccountFormDetailsSection(props: {
                 Select Image
               </Button>
             </label>
-            <Button
+            {/* <Button
               size="small"
               // className="submit"
               variant="contained"
@@ -278,7 +284,7 @@ export function NewAccountFormDetailsSection(props: {
               sx={{ ml: 2 }}
             >
               Upload
-            </Button>
+            </Button> */}
           </CardActions>
         </Card>
       </form>
