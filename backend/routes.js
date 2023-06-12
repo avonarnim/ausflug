@@ -100,6 +100,16 @@ router.route("/api/spots/review").post((req, res) => {
   spot.add_review(req, res);
 });
 
+router.use("/api/votes/:spotId/:userId", VerifyToken);
+router.route("/api/votes/:spotId/:userId").get((req, res) => {
+  spotInteractionModel.get_vote(req, res);
+});
+
+router.use("/api/votes/:spotId/:userId", VerifyToken);
+router.route("/api/votes/:spotId/:userId").put((req, res) => {
+  spotInteractionModel.set_vote(req, res);
+});
+
 router
   .route(
     "/api/events/boxTime/:latitude1/:longitude1/:latitude2/:longitude2/:startDate/:endDate"

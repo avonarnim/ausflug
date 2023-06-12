@@ -142,7 +142,7 @@ export default function Spot(): JSX.Element {
       <Box>
         <Grid item container sx={{ marginBottom: 4 }}>
           <Grid item xs={1} sm={1} alignItems="center" justifyContent="center">
-            <Upvote />
+            <Upvote spot={spot} userId={currentUser.uid} />
           </Grid>
           <Grid item xs={11} sm={6}>
             <AssetImageCardHorizontalSwipe assetCards={assetCards.assetCards} />

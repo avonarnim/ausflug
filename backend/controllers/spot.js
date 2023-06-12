@@ -210,9 +210,10 @@ exports.insert_spot = function (req, res) {
 // either hide or approve spot
 exports.update_spot = async function (req, res) {
   try {
-    const update = {
-      status: req.body.status,
-    };
+    // const update = {
+    //   status: req.body.status,
+    // };
+    const update = req.body.update;
     Spot.findOneAndUpdate(
       { _id: req.params.spotId },
       update,

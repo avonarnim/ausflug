@@ -6,6 +6,7 @@ import { TripProps } from "../pages/EditTrip";
 import axios, { AxiosProgressEvent, AxiosHeaders, AxiosResponse } from "axios";
 import { EventProps } from "../pages/Event";
 import { AdminMetrics } from "../pages/Admin";
+import { SpotInteraction } from "../components/Upvote";
 
 // #region TypeScript Definitions
 
@@ -44,7 +45,9 @@ type Type =
   | "GetUserTrips"
   | "UploadFile"
   | "GetAdminMetrics"
-  | "GetPastNDaysMetrics";
+  | "GetPastNDaysMetrics"
+  | "GetVote"
+  | "SetVote";
 
 type State<T extends Type> = {
   loading: boolean;
@@ -149,6 +152,10 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? {}
   : T extends "GetPastNDaysMetrics"
   ? { days: number }
+  : T extends "GetVote"
+  ? { userId: string; spotId: string }
+  : T extends "SetVote"
+  ? { userId: string; spotId: string; value: boolean }
   : null;
 
 export interface SiteData {
@@ -200,6 +207,8 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? AdminMetrics
   : T extends "GetPastNDaysMetrics"
   ? AdminMetrics
+  : T extends "GetVote"
+  ? SpotInteraction
   : any;
 
 export type Mutation<T extends Type> = State<T> & {
@@ -250,7 +259,7 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             res = await fetch(`${apiBaseUrl}/api/spots/update/${spotId}`, {
               method: "POST",
               headers,
-              body: JSON.stringify({ ...input }),
+              body: JSON.stringify({ update: { ...input } }),
             });
             break;
           }
@@ -605,6 +614,33 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
               {
                 method: "GET",
                 headers,
+              }
+            );
+            break;
+          }
+          case "GetVote": {
+            const castedInput = input as { userId: string; spotId: string };
+            res = await fetch(
+              `${apiBaseUrl}/api/votes/${castedInput.userId}/${castedInput.spotId}`,
+              {
+                method: "GET",
+                headers,
+              }
+            );
+            break;
+          }
+          case "SetVote": {
+            const castedInput = input as {
+              userId: string;
+              spotId: string;
+              vote: number;
+            };
+            res = await fetch(
+              `${apiBaseUrl}/api/votes/${castedInput.userId}/${castedInput.spotId}`,
+              {
+                method: "PUT",
+                headers,
+                body: JSON.stringify({ vote: castedInput.vote }),
               }
             );
             break;
