@@ -1,4 +1,9 @@
 import React from "react";
+import { Grid, IconButton, Typography } from "@mui/material";
+import {
+  ArrowUpwardOutlined,
+  ArrowDownwardOutlined,
+} from "@mui/icons-material";
 
 export function Upvote() {
   const [count, setCount] = React.useState(0);
@@ -13,10 +18,14 @@ export function Upvote() {
   };
 
   return (
-    <div>
-      <button onClick={toggleIncrement}>+</button>
-      <span>{count + addend}</span>
-      <button onClick={toggleDecrement}>-</button>
-    </div>
+    <Grid container alignItems="center" direction="column">
+      <IconButton onClick={toggleIncrement}>
+        <ArrowUpwardOutlined />
+      </IconButton>
+      <Typography>{count + addend}</Typography>
+      <IconButton onClick={toggleDecrement}>
+        <ArrowDownwardOutlined />
+      </IconButton>
+    </Grid>
   );
 }

@@ -141,18 +141,13 @@ export default function Spot(): JSX.Element {
     <Container sx={{ marginTop: 4 }}>
       <Box>
         <Grid item container sx={{ marginBottom: 4 }}>
-          <Grid item xs={12} sm={6}>
-            {/* <img
-              src={spot.images[0]}
-              alt={spot.title}
-              style={{ borderRadius: "25px", width: "200px", height: "auto" }}
-            /> */}
-            <AssetImageCardHorizontalSwipe assetCards={assetCards.assetCards} />
-          </Grid>
-          <Grid item xs={2} sm={1}>
+          <Grid item xs={1} sm={1} alignItems="center" justifyContent="center">
             <Upvote />
           </Grid>
-          <Grid item xs={10} sm={5}>
+          <Grid item xs={11} sm={6}>
+            <AssetImageCardHorizontalSwipe assetCards={assetCards.assetCards} />
+          </Grid>
+          <Grid item xs={12} sm={5}>
             <Typography>{spot.title}</Typography>
             <Typography>{spot.description}</Typography>
             <Typography>Category: {spot.category}</Typography>
