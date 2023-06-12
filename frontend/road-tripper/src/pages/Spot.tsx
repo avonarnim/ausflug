@@ -26,6 +26,7 @@ import {
   AssetBlockCardHorizontalSwipeProps,
   SkeletonAssetBlockCardHorizontalSwipe,
 } from "../components/assetSwipers/Block";
+import { Upvote } from "../components/Upvote";
 
 type Libraries = (
   | "drawing"
@@ -148,7 +149,10 @@ export default function Spot(): JSX.Element {
             /> */}
             <AssetImageCardHorizontalSwipe assetCards={assetCards.assetCards} />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={2} sm={1}>
+            <Upvote />
+          </Grid>
+          <Grid item xs={10} sm={5}>
             <Typography>{spot.title}</Typography>
             <Typography>{spot.description}</Typography>
             <Typography>Category: {spot.category}</Typography>
