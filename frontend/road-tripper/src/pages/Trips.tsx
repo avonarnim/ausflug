@@ -80,6 +80,8 @@ export default function Trips(): JSX.Element {
       isComplete: complete,
       completedAt: complete ? Date.now() : 0,
     });
+    // TODO: allow for posts
+    console.log("Would you like to post?");
   };
 
   const deleteAndRemoveTrip = async (trip: TripProps) => {

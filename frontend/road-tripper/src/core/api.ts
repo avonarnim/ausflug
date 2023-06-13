@@ -7,6 +7,7 @@ import axios, { AxiosProgressEvent, AxiosHeaders, AxiosResponse } from "axios";
 import { EventProps } from "../pages/Event";
 import { AdminMetrics } from "../pages/Admin";
 import { SpotInteraction } from "../components/Upvote";
+import { PostProps } from "../pages/Feed";
 
 // #region TypeScript Definitions
 
@@ -47,7 +48,13 @@ type Type =
   | "GetAdminMetrics"
   | "GetPastNDaysMetrics"
   | "GetVote"
-  | "SetVote";
+  | "SetVote"
+  | "CreatePost"
+  | "GetPost"
+  | "GetUserPosts"
+  | "UpdatePost"
+  | "DeletePost"
+  | "GetFeedPosts";
 
 type State<T extends Type> = {
   loading: boolean;
@@ -156,6 +163,18 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? { userId: string; spotId: string }
   : T extends "SetVote"
   ? { userId: string; spotId: string; value: boolean }
+  : T extends "CreatePost"
+  ? PostProps
+  : T extends "GetPost"
+  ? { postId: string }
+  : T extends "GetUserPosts"
+  ? { userId: string }
+  : T extends "UpdatePost"
+  ? PostProps
+  : T extends "DeletePost"
+  ? { postId: string }
+  : T extends "GetFeedPosts"
+  ? { userId: string }
   : null;
 
 export interface SiteData {
@@ -209,6 +228,12 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? AdminMetrics
   : T extends "GetVote"
   ? SpotInteraction
+  : T extends "GetPost"
+  ? PostProps
+  : T extends "GetUserPosts"
+  ? PostProps[]
+  : T extends "GetFeedPosts"
+  ? PostProps[]
   : any;
 
 export type Mutation<T extends Type> = State<T> & {
@@ -643,6 +668,55 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
                 body: JSON.stringify({ vote: castedInput.vote }),
               }
             );
+            break;
+          }
+          case "CreatePost": {
+            res = await fetch(`${apiBaseUrl}/api/posts`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...input }),
+            });
+            break;
+          }
+          case "GetPost": {
+            const postId = (input as { postId: string }).postId;
+            res = await fetch(`${apiBaseUrl}/api/posts/${postId}`, {
+              method: "GET",
+              headers,
+            });
+            break;
+          }
+          case "GetUserPosts": {
+            const userId = (input as { userId: string }).userId;
+            res = await fetch(`${apiBaseUrl}/api/posts/user/${userId}`, {
+              method: "GET",
+              headers,
+            });
+            break;
+          }
+          case "UpdatePost": {
+            const castedInput = input as { postId: string };
+            res = await fetch(`${apiBaseUrl}/api/posts/${castedInput.postId}`, {
+              method: "PUT",
+              headers,
+              body: JSON.stringify({ ...input }),
+            });
+            break;
+          }
+          case "DeletePost": {
+            const postId = (input as { postId: string }).postId;
+            res = await fetch(`${apiBaseUrl}/api/posts/${postId}`, {
+              method: "DELETE",
+              headers,
+            });
+            break;
+          }
+          case "GetFeedPosts": {
+            const userId = (input as { userId: string }).userId;
+            res = await fetch(`${apiBaseUrl}/api/posts/feed/${userId}`, {
+              method: "GET",
+              headers,
+            });
             break;
           }
           default:

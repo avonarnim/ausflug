@@ -11,6 +11,7 @@ import {
   Admin,
   // Donate,
   EditTrip,
+  Feed,
   Home,
   Login,
   NewTrip,
@@ -70,6 +71,10 @@ function App() {
           <Route
             path="/search"
             element={<React.Suspense children={<Search />} />}
+          />
+          <Route
+            path="/following"
+            element={<React.Suspense children={<Feed />} />}
           />
           <Route
             path="/profile"

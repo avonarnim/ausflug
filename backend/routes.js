@@ -13,7 +13,7 @@ router.route("/").get((req, res) => {
   res.send("Success");
 });
 
-// trip-user Routes
+// #region Trips
 router.use("/api/trips", VerifyToken);
 router.route("/api/trips").post((req, res) => {
   trip.create_trip(req, res);
@@ -34,14 +34,13 @@ router.use("/api/trips/user/:username", VerifyToken);
 router.route("/api/trips/user/:username").get((req, res) => {
   trip.view_user_trips(req, res);
 });
-
-// trip Routes
 router.use("/api/trips/:tripId", VerifyToken);
 router.route("/api/trips/:tripId").get((req, res) => {
   trip.view_trip(req, res);
 });
+// #endregion
 
-// spot Routes
+// #region Spots
 router.route("/api/spots").get((req, res) => {
   console.log("all");
   spot.search_spots(req, res);
@@ -99,7 +98,9 @@ router.use("/api/spots/review", VerifyToken);
 router.route("/api/spots/review").post((req, res) => {
   spot.add_review(req, res);
 });
+// #endregion
 
+// #region Votes
 router.use("/api/votes/:spotId/:userId", VerifyToken);
 router.route("/api/votes/:spotId/:userId").get((req, res) => {
   spotInteractionModel.get_vote(req, res);
@@ -109,7 +110,9 @@ router.use("/api/votes/:spotId/:userId", VerifyToken);
 router.route("/api/votes/:spotId/:userId").put((req, res) => {
   spotInteractionModel.set_vote(req, res);
 });
+// #endregion
 
+// #region Events
 router
   .route(
     "/api/events/boxTime/:latitude1/:longitude1/:latitude2/:longitude2/:startDate/:endDate"
@@ -120,8 +123,9 @@ router
 router.route("/api/events/venue/:externalId").get((req, res) => {
   event.search_events_venue(req, res);
 });
+// #endregion
 
-// user Routes
+// #region Users
 router.use("/api/users", VerifyToken);
 router.route("/api/users").post((req, res) => {
   user.create_profile(req, res);
@@ -164,11 +168,49 @@ router.use("/api/users/:userId", VerifyAdminToken);
 router.route("/api/users/:userId").delete((req, res) => {
   user.delete_profile(req, res);
 });
+// #endregion
 
+// #region Posts
+router.use("/api/posts", VerifyToken);
+router.route("/api/posts").post((req, res) => {
+  post.create_post(req, res);
+});
+router.use("/api/posts/:postId", VerifyToken);
+router.route("/api/posts/:postId").get((req, res) => {
+  post.get_post(req, res);
+});
+router.use("/api/posts/:postId", VerifyToken);
+router.route("/api/posts/:postId").put((req, res) => {
+  post.update_post(req, res);
+});
+router.use("/api/posts/:postId", VerifyToken);
+router.route("/api/posts/:postId").delete((req, res) => {
+  post.delete_post(req, res);
+});
+router.use("/api/posts/user/:userId", VerifyToken);
+router.route("/api/posts/user/:userId").get((req, res) => {
+  post.get_user_posts(req, res);
+});
+// #endregion
+
+// #region Feed
+router.use("/api/feed/posts/:userId", VerifyToken);
+router.route("/api/feed/posts/:userId").get((req, res) => {
+  feed.get_feed_posts(req, res);
+});
+router.use("/api/feed/ids/:userId", VerifyToken);
+router.route("/api/feed/ids/:userId").get((req, res) => {
+  feed.get_feed_ids(req, res);
+});
+// #endregion
+
+// #region Util
 router.route("/api/util/image").post((req, res) => {
   util.upload_image(req, res);
 });
+// #endregion
 
+// #region Admin
 router.use("/api/admin/metrics", VerifyAdminToken);
 router.route("/api/admin/metrics").get((req, res) => {
   adminMetrics.get_metrics(req, res);
@@ -178,6 +220,7 @@ router.use("/api/admin/metrics/window/:days", VerifyAdminToken);
 router.route("/api/admin/metrics/window/:days").get((req, res) => {
   adminMetrics.get_metrics_past_n_days(req, res);
 });
+// #endregion
 
 // // scraper Routes
 // router.route("/api/scrapers/michelin").get((req, res) => {
