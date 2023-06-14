@@ -103,14 +103,11 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
-  const nameRef = useRef<HTMLInputElement>();
-  const descriptionRef = useRef<HTMLInputElement>();
 
   const getSpotsInBox = useMutation("GetSpotsInBox");
   const getEventsInBoxTime = useMutation("GetEventsInBoxTime");
 
   const getSpot = useMutation("GetSpot");
-  // TODO: need ability to update vs trip based on whether this is new vs an edit
 
   const { currentUser } = useAuth();
 
@@ -401,9 +398,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
         image={image}
         handleImageChange={handleImageChange}
         name={props.tripResult?.name || "Name"}
-        nameRef={nameRef}
         description={props.tripResult?.description || "Description"}
-        descriptionRef={descriptionRef}
         startDate={
           props.startDate || startDate?.toString() || Date.now().toString()
         }
@@ -418,6 +413,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
         chosenDetours={chosenDetours}
         tripCreatorId={props.tripResult?.creatorId}
         tripResultId={props.tripResult?._id || ""}
+        isComplete={props.tripResult?.isComplete || false}
       />
       <GoogleMap
         mapContainerStyle={{ width: "100%", height: "500px" }}

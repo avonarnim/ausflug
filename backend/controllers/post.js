@@ -16,6 +16,21 @@ exports.create_post = async function (req, res) {
 
   User.findOne({ _id: req.body.authorId }).then((user) => {
     if (user) {
+      // update user's feed
+      Feed.findOneAndUpdate(user._id, {
+        $push: { postIds: req.body._id },
+      }).then((feed) => {
+        if (!feed) {
+          const newFeed = new Feed({
+            _id: user._id,
+            userId: user._id,
+            postIds: [req.body._id],
+          });
+          newFeed.save();
+        }
+      });
+
+      // update followers' feeds
       user.followers.forEach((follower) => {
         Feed.findOneAndUpdate(
           { _id: follower },

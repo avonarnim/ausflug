@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { PhotoUploader } from "../PhotoUploader";
 import { Delete } from "@mui/icons-material";
 import { useMutation } from "../../core/api";
+import { useRef, useState } from "react";
+import TripPostDialog from "../../dialogs/TripPostDialog";
 
 export function HeaderInfo(props: {
   currentUser: any;
@@ -12,8 +14,6 @@ export function HeaderInfo(props: {
   handleImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
   description: string;
-  nameRef: any;
-  descriptionRef: any;
   startDate: string;
   endDate: string;
   cumulativeDuration: number;
@@ -26,9 +26,16 @@ export function HeaderInfo(props: {
   chosenDetours: SpotInfoProps[];
   tripCreatorId: string | undefined;
   tripResultId: string;
+  isComplete: boolean;
 }): JSX.Element {
+  const [isComplete, setIsComplete] = useState<boolean>(props.isComplete);
+
   const createTrip = useMutation("CreateTrip");
   const updateTrip = useMutation("UpdateTrip");
+  const createPost = useMutation("CreatePost");
+
+  const nameRef = useRef<HTMLInputElement>();
+  const descriptionRef = useRef<HTMLInputElement>();
 
   return (
     <Grid item container direction="row" xs={12} sx={{ p: 4 }}>
@@ -56,22 +63,18 @@ export function HeaderInfo(props: {
           </Grid>
 
           <Grid item container direction="column" xs={4} sx={{ pl: 4, pr: 4 }}>
-            <Input
-              type="text"
-              defaultValue={props.name}
-              inputRef={props.nameRef}
-            />
+            <Input type="text" defaultValue={props.name} inputRef={nameRef} />
             <Input
               type="text"
               defaultValue={props.description}
-              inputRef={props.descriptionRef}
+              inputRef={descriptionRef}
             />
             <Grid container direction="row">
               <Button
                 onClick={() => {
                   let tripDetails = {
-                    name: props.nameRef.current?.value || "Unnamed Trip",
-                    description: props.descriptionRef.current?.value || "",
+                    name: nameRef.current?.value || "Unnamed Trip",
+                    description: descriptionRef.current?.value || "",
                     creatorId: props.currentUser.uid,
                     originPlaceId: props.originPlace?.place_id || "",
                     originVal: props.originRef.current?.value || "",
@@ -115,6 +118,53 @@ export function HeaderInfo(props: {
                   ? "Save"
                   : "Clone as mine"}
               </Button>
+              {props.tripResultId !== "" && isComplete && (
+                <TripPostDialog tripId={props.tripResultId} />
+              )}
+              {!isComplete && (
+                <Button
+                  onClick={async () => {
+                    let tripDetails = {
+                      name: nameRef.current?.value || "Unnamed Trip",
+                      description: descriptionRef.current?.value || "",
+                      creatorId: props.currentUser.uid,
+                      originPlaceId: props.originPlace?.place_id || "",
+                      originVal: props.originRef.current?.value || "",
+                      destinationPlaceId:
+                        props.destinationPlace?.place_id || "",
+                      destinationVal: props.destinationRef.current?.value || "",
+                      waypoints: props.chosenDetours.map((spot) => {
+                        return {
+                          _id: spot._id,
+                          place_id: spot.place_id,
+                          location: {
+                            lat: spot.location.lat,
+                            lng: spot.location.lng,
+                          },
+                          stopover: true,
+                        };
+                      }),
+                      startDate: props.startDate,
+                      endDate: props.endDate,
+                      isPublic: false,
+                      isComplete: true,
+                      isArchived: false,
+                      createdAt: Date.now(),
+                      updatedAt: Date.now(),
+                      completedAt: Date.now(),
+                      duration: props.cumulativeDuration,
+                      distance: props.cumulativeDistance,
+                      image: props.image,
+                    };
+                    updateTrip.commit({
+                      ...tripDetails,
+                      _id: props.tripResultId,
+                    });
+                  }}
+                >
+                  Mark complete
+                </Button>
+              )}
               <IconButton aria-label="delete route" onClick={props.clearRoute}>
                 <Delete />
               </IconButton>

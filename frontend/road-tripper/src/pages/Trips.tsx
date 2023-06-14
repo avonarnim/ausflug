@@ -17,6 +17,7 @@ import { useAuth } from "../core/AuthContext";
 import { useMutation } from "../core/api";
 import { TripProps } from "./EditTrip";
 import { Edit, Check, AccountCircle, Delete } from "@mui/icons-material";
+import TripPostDialog from "../dialogs/TripPostDialog";
 
 const Img = styled("img")({
   margin: "auto",
@@ -80,7 +81,7 @@ export default function Trips(): JSX.Element {
       isComplete: complete,
       completedAt: complete ? Date.now() : 0,
     });
-    // TODO: allow for posts
+    // TODO: allow for posts (use TripPostDialog)
     console.log("Would you like to post?");
   };
 
@@ -115,7 +116,9 @@ export default function Trips(): JSX.Element {
               {trips
                 ?.filter((trip) => trip.isComplete == false)
                 .map((trip) => (
-                  <ListItemWith3SecondaryAction key={trip.name + trip._id}>
+                  <ListItemWith3SecondaryAction
+                    key={trip.name + trip._id + "/incomplete"}
+                  >
                     {trip.image && (
                       <ListItemAvatar>
                         <Avatar alt={trip.image} src={trip.image} />
@@ -159,7 +162,10 @@ export default function Trips(): JSX.Element {
               {trips
                 ?.filter((trip) => trip.isComplete == true)
                 .map((trip) => (
-                  <ListItemWithWiderSecondaryAction key={trip.name + trip._id}>
+                  <ListItemWith3SecondaryAction
+                    key={trip.name + trip._id + "/completed"}
+                  >
+                    {/* <ListItemWithWiderSecondaryAction key={trip.name + trip._id + "/completed"}> */}
                     {trip.image && (
                       <ListItemAvatar>
                         <Avatar alt={trip.image} src={trip.image} />
@@ -173,6 +179,7 @@ export default function Trips(): JSX.Element {
                       secondary={trip.originVal + " to " + trip.destinationVal}
                     />
                     <ListItemSecondaryAction>
+                      <TripPostDialog tripId={trip._id} />
                       <IconButton
                         aria-label="incomplete"
                         onClick={() =>
@@ -188,7 +195,8 @@ export default function Trips(): JSX.Element {
                         <Delete />
                       </IconButton>
                     </ListItemSecondaryAction>
-                  </ListItemWithWiderSecondaryAction>
+                    {/* </ListItemWithWiderSecondaryAction> */}
+                  </ListItemWith3SecondaryAction>
                 ))}
             </List>
           </Grid>
