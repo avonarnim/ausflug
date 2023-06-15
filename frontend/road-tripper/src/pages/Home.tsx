@@ -256,11 +256,16 @@ export default function Home(): JSX.Element {
   }, []);
 
   return (
-    <Container>
-      {/* <Hero /> */}
+    <Container
+      sx={{ p: 0, mr: 0, ml: 0 }}
+      disableGutters
+      maxWidth={false}
+      id="home container"
+    >
       <HeroCarousel />
-      {isLoaded ? (
-        <>
+
+      <Container>
+        {isLoaded && (
           <Box>
             <Box>
               <Grid item container direction="row" alignItems="center">
@@ -354,38 +359,35 @@ export default function Home(): JSX.Element {
               </Grid>
             </Box>
           </Box>
-        </>
-      ) : (
-        <></>
-      )}
-
-      <Grid container spacing={1} p={1} alignItems="stretch">
-        <Grid item xs={12} mt={2}>
-          <Divider style={{ marginTop: 10, marginBottom: 10 }} />
-          <Typography variant="h4">Around You</Typography>
-          {yourCenterSpots.assetCards.length != 0 ? (
-            <>
-              <AssetBlockCardHorizontalSwipe
-                assetCards={yourCenterSpots.assetCards}
-              />
-            </>
-          ) : (
-            <>
-              <SkeletonAssetBlockCardHorizontalSwipe />
-            </>
-          )}
-        </Grid>
-        {featurettes.map(({ title, spots }, index) => (
-          <Grid key={index} item xs={12} mt={2}>
-            <Typography variant="h4">{title}</Typography>
-            {spots.assetCards.length != 0 ? (
-              <AssetBlockCardHorizontalSwipe assetCards={spots.assetCards} />
+        )}
+        <Grid container spacing={1} p={1} alignItems="stretch">
+          <Grid item xs={12} mt={2}>
+            <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+            <Typography variant="h4">Around You</Typography>
+            {yourCenterSpots.assetCards.length != 0 ? (
+              <>
+                <AssetBlockCardHorizontalSwipe
+                  assetCards={yourCenterSpots.assetCards}
+                />
+              </>
             ) : (
-              <SkeletonAssetBlockCardHorizontalSwipe />
+              <>
+                <SkeletonAssetBlockCardHorizontalSwipe />
+              </>
             )}
           </Grid>
-        ))}
-      </Grid>
+          {featurettes.map(({ title, spots }, index) => (
+            <Grid key={index} item xs={12} mt={2}>
+              <Typography variant="h4">{title}</Typography>
+              {spots.assetCards.length != 0 ? (
+                <AssetBlockCardHorizontalSwipe assetCards={spots.assetCards} />
+              ) : (
+                <SkeletonAssetBlockCardHorizontalSwipe />
+              )}
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
     </Container>
   );
 }

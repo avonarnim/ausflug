@@ -10,6 +10,7 @@ const captionStyle = {
   paddingTop: "60px",
   paddingLeft: "20px",
   paddingBottom: "10px",
+  marginTop: 0,
   color: "#efefef",
   fontSize: "3rem",
   fontWeight: "bold",
@@ -31,8 +32,9 @@ const divStyle = {
   backgroundSize: "cover",
   backgroundPosition: "center",
   backgroundRepeat: "no-repeat",
-  height: "400px",
+  height: "min(60vw, 80vh)",
   width: "100%",
+  top: 0,
 };
 
 const slideImages = [
