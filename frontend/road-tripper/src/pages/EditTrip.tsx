@@ -68,12 +68,13 @@ export type TripProps = {
   startDate: string;
   endDate: string;
   isPublic: boolean;
-  isComplete: boolean;
   isArchived: boolean;
   createdAt: number;
   updatedAt: number;
   completedAt: number;
   duration: Number;
   distance: Number;
+  completed: boolean;
+  posted: boolean;
   image: string;
 };

@@ -6,6 +6,11 @@ import { logEvent } from "firebase/analytics";
 import * as React from "react";
 import { useLocation } from "react-router-dom";
 
+// const appName = APP_NAME;
+const appName = "Road Tripper";
+// const appOrigin = `https://${APP_HOSTNAME}`;
+const appOrigin = `https://road-tripper.vercel.app`;
+
 export function usePageEffect(options?: Options, deps?: React.DependencyList) {
   const location = useLocation();
 
@@ -15,10 +20,10 @@ export function usePageEffect(options?: Options, deps?: React.DependencyList) {
 
     document.title =
       location.pathname === "/"
-        ? options?.title ?? APP_NAME
+        ? options?.title ?? appName
         : options?.title
-        ? `${options.title} - ${APP_NAME}`
-        : APP_NAME;
+        ? `${options.title} - ${appName}`
+        : appName;
 
     return function () {
       document.title = previousTitle;
@@ -30,7 +35,7 @@ export function usePageEffect(options?: Options, deps?: React.DependencyList) {
   React.useEffect(() => {
     if (!(options?.trackPageView === false)) {
       logEvent(analytics, "page_view", {
-        page_title: options?.title ?? APP_NAME,
+        page_title: options?.title ?? appName,
         page_path: `${location.pathname}${location.search}`,
       });
     }

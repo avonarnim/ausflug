@@ -26,13 +26,12 @@ export function HeaderInfo(props: {
   chosenDetours: SpotInfoProps[];
   tripCreatorId: string | undefined;
   tripResultId: string;
-  isComplete: boolean;
+  completed: boolean;
 }): JSX.Element {
-  const [isComplete, setIsComplete] = useState<boolean>(props.isComplete);
+  const [completed, setCompleted] = useState<boolean>(props.completed);
 
   const createTrip = useMutation("CreateTrip");
   const updateTrip = useMutation("UpdateTrip");
-  const createPost = useMutation("CreatePost");
 
   const nameRef = useRef<HTMLInputElement>();
   const descriptionRef = useRef<HTMLInputElement>();
@@ -94,7 +93,8 @@ export function HeaderInfo(props: {
                     startDate: props.startDate,
                     endDate: props.endDate,
                     isPublic: false,
-                    isComplete: false,
+                    completed: false,
+                    posted: false,
                     isArchived: false,
                     createdAt: Date.now(),
                     updatedAt: Date.now(),
@@ -118,10 +118,10 @@ export function HeaderInfo(props: {
                   ? "Save"
                   : "Clone as mine"}
               </Button>
-              {props.tripResultId !== "" && isComplete && (
+              {props.tripResultId !== "" && completed && (
                 <TripPostDialog tripId={props.tripResultId} />
               )}
-              {!isComplete && (
+              {!completed && (
                 <Button
                   onClick={async () => {
                     let tripDetails = {
@@ -147,9 +147,10 @@ export function HeaderInfo(props: {
                       startDate: props.startDate,
                       endDate: props.endDate,
                       isPublic: false,
-                      isComplete: true,
+                      completed: true,
+                      posted: false,
                       isArchived: false,
-                      createdAt: Date.now(),
+                      createdAt: Date.now(), // TODO: change to trip creation date
                       updatedAt: Date.now(),
                       completedAt: Date.now(),
                       duration: props.cumulativeDuration,
@@ -160,6 +161,7 @@ export function HeaderInfo(props: {
                       ...tripDetails,
                       _id: props.tripResultId,
                     });
+                    setCompleted(true);
                   }}
                 >
                   Mark complete

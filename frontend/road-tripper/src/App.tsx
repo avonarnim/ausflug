@@ -73,7 +73,7 @@ function App() {
             element={<React.Suspense children={<Search />} />}
           />
           <Route
-            path="/following"
+            path="/activity"
             element={<React.Suspense children={<Feed />} />}
           />
           <Route

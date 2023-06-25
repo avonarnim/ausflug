@@ -5,6 +5,7 @@ var mongoose = require("mongoose");
 const Post = require("../models/postModel");
 const User = require("../models/userModel");
 const Feed = require("../models/feedModel");
+const Trip = require("../models/tripModel");
 
 // retrieve single user's profile with matching id
 exports.create_post = async function (req, res) {
@@ -13,6 +14,16 @@ exports.create_post = async function (req, res) {
     if (err) res.send(err);
     res.json(post);
   });
+
+  // Validate that this works
+  // Update trip to be posted
+  Trip.findOneAndUpdate({ _id: req.body.tripId }, { posted: true }).then(
+    (trip) => {
+      if (!trip) {
+        res.send("Trip not found");
+      }
+    }
+  );
 
   User.findOne({ _id: req.body.authorId }).then((user) => {
     if (user) {
@@ -52,7 +63,7 @@ exports.create_post = async function (req, res) {
   });
 };
 
-// remove spot from database
+// remove post from database
 exports.delete_post = function (req, res) {
   Post.deleteOne(
     {
@@ -63,6 +74,46 @@ exports.delete_post = function (req, res) {
       res.json({ message: "Post successfully deleted" });
     }
   );
+
+  Trip.findOneAndUpdate({ _id: req.body.tripId }, { posted: false }).then(
+    (trip) => {
+      if (!trip) {
+        res.send("Trip not found");
+      }
+    }
+  );
+
+  // remove post from followers' feeds
+  User.findOne({ _id: req.body.authorId }).then((user) => {
+    if (user) {
+      user.followers.forEach((follower) => {
+        Feed.findOneAndUpdate(
+          { _id: follower },
+          { $pull: { postIds: req.body.postId } }
+        ).then((feed) => {
+          if (!feed) {
+            res.send("Feed not found");
+          }
+        });
+      });
+    } else {
+      res.send("User not found");
+    }
+  });
+
+  // remove post from user's feed
+  Feed.findOneAndUpdate(
+    {
+      _id: req.body.authorId,
+    },
+    {
+      $pull: { postIds: req.body.postId },
+    }
+  ).then((feed) => {
+    if (!feed) {
+      res.send("Feed not found");
+    }
+  });
 };
 
 exports.update_post = async function (req, res) {

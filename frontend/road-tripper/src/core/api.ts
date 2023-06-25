@@ -713,7 +713,7 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
           }
           case "GetFeedPosts": {
             const userId = (input as { userId: string }).userId;
-            res = await fetch(`${apiBaseUrl}/api/posts/feed/${userId}`, {
+            res = await fetch(`${apiBaseUrl}/api/feed/posts/${userId}`, {
               method: "GET",
               headers,
             });

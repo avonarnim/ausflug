@@ -19,7 +19,7 @@ exports.get_feed_ids = async function (req, res) {
 exports.get_feed_posts = async function (req, res) {
   const feed = await Feed.findOne({ userId: req.params.userId });
 
-  Post.findMany({ _id: feed.postIds }, function (err, posts) {
+  Post.find({ _id: { $in: feed.postIds } }, function (err, posts) {
     if (err) res.send(err);
     res.json(posts);
   }).sort({ createdAt: -1 });

@@ -5,36 +5,19 @@ import {
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import React, { useRef, useState, createRef, useEffect } from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Input,
-  List,
-  ListItem,
-  ListItemText,
-  IconButton,
-  ListItemButton,
-  Paper,
-  ListItemIcon,
-  Typography,
-} from "@mui/material";
+import React, { useRef, useState, useEffect } from "react";
+import { Box, Button, Container, Grid, Input } from "@mui/material";
 import { useMutation } from "../core/api";
 import { SpotInfoProps } from "./SpotInfo";
 import { Dayjs } from "dayjs";
 import { useAuth } from "../core/AuthContext";
-import { Link } from "react-router-dom";
 import { EventProps } from "../pages/Event";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TripProps } from "../pages/EditTrip";
-import { categoryToIcon } from "../core/util";
-import { DetourDayTabPanel, groupDetoursByDay } from "./DetourDayTabPanel";
+import { groupDetoursByDay } from "./DetourDayTabPanel";
 import dayjs from "dayjs";
-import FuzzySearch from "fuzzy-search";
 import { ChosenDetoursDisplay } from "./RouteMapComponents/ChosenDetoursDisplay";
 import { BrowseEventsDisplay } from "./RouteMapComponents/BrowseEventsDisplay";
 import { BrowseSpotsDisplay } from "./RouteMapComponents/BrowseSpotsDisplay";
@@ -413,7 +396,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
         chosenDetours={chosenDetours}
         tripCreatorId={props.tripResult?.creatorId}
         tripResultId={props.tripResult?._id || ""}
-        isComplete={props.tripResult?.isComplete || false}
+        completed={props.tripResult?.completed || false}
       />
       <GoogleMap
         mapContainerStyle={{ width: "100%", height: "500px" }}

@@ -102,9 +102,7 @@ export default function TripPostDialog(props: { tripId: string }) {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Post
-      </Button>
+      <Button onClick={handleClickOpen}>Post</Button>
       <Dialog open={open} onClose={handleClose}>
         {successfulEdit ? (
           <>

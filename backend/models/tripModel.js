@@ -29,7 +29,6 @@ var TripSchema = new Schema({
   startDate: String,
   endDate: String,
   isPublic: Boolean,
-  isComplete: Boolean,
   isArchived: Boolean,
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
@@ -37,6 +36,7 @@ var TripSchema = new Schema({
   duration: Number,
   distance: Number,
   completed: Boolean,
+  posted: Boolean,
   image: String,
 });
 

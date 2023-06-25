@@ -28,13 +28,13 @@ const Img = styled("img")({
 
 const ListItemWithWiderSecondaryAction = styled(ListItem)(({ theme }) => ({
   "&.MuiListItem-secondaryAction": {
-    paddingRight: 96,
+    paddingRight: 144,
   },
 }));
 
 const ListItemWith3SecondaryAction = styled(ListItem)(({ theme }) => ({
   "&.MuiListItem-secondaryAction": {
-    paddingRight: 144,
+    paddingRight: 216,
   },
 }));
 
@@ -71,14 +71,14 @@ export default function Trips(): JSX.Element {
     let subbedTrips = [...trips];
     for (let i = 0; i < subbedTrips.length; i++) {
       if (subbedTrips[i]._id == trip._id) {
-        subbedTrips[i].isComplete = complete;
+        subbedTrips[i].completed = complete;
         break;
       }
     }
     setTrips(subbedTrips);
     await updateTrip.commit({
       ...trip,
-      isComplete: complete,
+      completed: complete,
       completedAt: complete ? Date.now() : 0,
     });
     // TODO: allow for posts (use TripPostDialog)
@@ -114,7 +114,7 @@ export default function Trips(): JSX.Element {
           <Grid item xs={12} md={6}>
             <List>
               {trips
-                ?.filter((trip) => trip.isComplete == false)
+                ?.filter((trip) => trip.completed == false)
                 .map((trip) => (
                   <ListItemWith3SecondaryAction
                     key={trip.name + trip._id + "/incomplete"}
@@ -160,7 +160,7 @@ export default function Trips(): JSX.Element {
           <Grid item xs={12} md={6}>
             <List>
               {trips
-                ?.filter((trip) => trip.isComplete == true)
+                ?.filter((trip) => trip.completed == true)
                 .map((trip) => (
                   <ListItemWith3SecondaryAction
                     key={trip.name + trip._id + "/completed"}

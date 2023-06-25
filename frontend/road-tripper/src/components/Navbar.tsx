@@ -112,6 +112,17 @@ export function NavBar(props: AppBarProps): JSX.Element {
             >
               Spots
             </Link>
+            {currentUser && (
+              <Link
+                color="inherit"
+                underline="none"
+                to="/activity"
+                component={NavLink}
+                sx={{ pl: 2, pr: 2 }}
+              >
+                Activity
+              </Link>
+            )}
             {/* {currentUser && (
               <>
                 <button

@@ -1,4 +1,5 @@
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, Link, TextField, Typography } from "@mui/material";
+import { Link as NavLink } from "react-router-dom";
 
 export function Footer(): JSX.Element {
   return (
@@ -34,8 +35,22 @@ export function Footer(): JSX.Element {
             pb={2}
           >
             <Typography variant="h6">Links</Typography>
-            <Typography>Terms of Use</Typography>
-            <Typography>Privacy Policy</Typography>
+            <Link
+              color="inherit"
+              underline="none"
+              to="/terms"
+              component={NavLink}
+            >
+              Terms of Use
+            </Link>
+            <Link
+              color="inherit"
+              underline="none"
+              to="/privacy"
+              component={NavLink}
+            >
+              Privacy Policy
+            </Link>
           </Box>
           <Box
             sx={{ display: "inline-flex", flexDirection: "column" }}
