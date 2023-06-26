@@ -11,27 +11,21 @@ const User = require("../models/userModel");
 // should be passed trip data (start/end/stops/stop data)
 // id could be username + timestamp (NEED to be returned tripId for subsequent saving of id to user profile)
 exports.create_trip = async function (req, res) {
-  console.log("saving trip", req.body);
-  try {
-    var new_trip = new Trip(req.body);
-    errSaveTrip = await new_trip.save().catch((err) => err);
+  var newTrip = new Trip(req.body);
+  newTrip = await newTrip.save();
 
-    const user = await User.find({ username: req.body.creatorId });
+  const user = await User.findOne({ _id: req.body.creatorId });
 
-    user.savedTripIDs.push(req.params.tripId);
-    const update = { savedTripIDs: user.savedTripIDs };
+  user.savedTripIDs.push(newTrip._id);
+  const update = { savedTripIDs: user.savedTripIDs };
 
-    errAddTripToUser = await User.findOneAndUpdate(
-      { username: req.params.username },
-      update
-    );
+  await User.findOneAndUpdate({ _id: req.body.creatorId }, update).catch(
+    (err) => {
+      res.send(err);
+    }
+  );
 
-    res.send("Successfully added trip");
-
-    throw errSaveTrip || errAddTripToUser;
-  } catch (err) {
-    res.send(err);
-  }
+  res.json(newTrip);
 };
 
 // retrieve single trip with matching id
@@ -58,6 +52,7 @@ exports.update_trip = function (req, res) {
     { new: true, upsert: true },
     function (err, trip) {
       if (err) res.send(err);
+      console.log("updated trip", trip);
       res.json(trip);
     }
   );

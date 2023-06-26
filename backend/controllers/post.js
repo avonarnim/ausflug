@@ -17,7 +17,7 @@ exports.create_post = async function (req, res) {
 
   // Validate that this works
   // Update trip to be posted
-  Trip.findOneAndUpdate({ _id: req.body.tripId }, { posted: true }).then(
+  Trip.findOneAndUpdate({ _id: req.body._id }, { posted: true }).then(
     (trip) => {
       if (!trip) {
         res.send("Trip not found");

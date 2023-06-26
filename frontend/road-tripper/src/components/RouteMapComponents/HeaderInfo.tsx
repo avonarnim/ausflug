@@ -25,10 +25,15 @@ export function HeaderInfo(props: {
   destinationPlace: any;
   chosenDetours: SpotInfoProps[];
   tripCreatorId: string | undefined;
-  tripResultId: string;
+  tripId: string;
+  setTripId: (tripId: string) => void;
   completed: boolean;
+  posted: boolean;
 }): JSX.Element {
   const [completed, setCompleted] = useState<boolean>(props.completed);
+  const [tripCreatorId, setTripCreatorId] = useState<string>(
+    props.tripCreatorId || ""
+  );
 
   const createTrip = useMutation("CreateTrip");
   const updateTrip = useMutation("UpdateTrip");
@@ -70,7 +75,7 @@ export function HeaderInfo(props: {
             />
             <Grid container direction="row">
               <Button
-                onClick={() => {
+                onClick={async () => {
                   let tripDetails = {
                     name: nameRef.current?.value || "Unnamed Trip",
                     description: descriptionRef.current?.value || "",
@@ -93,7 +98,7 @@ export function HeaderInfo(props: {
                     startDate: props.startDate,
                     endDate: props.endDate,
                     isPublic: false,
-                    completed: false,
+                    completed: completed || false,
                     posted: false,
                     isArchived: false,
                     createdAt: Date.now(),
@@ -103,23 +108,27 @@ export function HeaderInfo(props: {
                     distance: props.cumulativeDistance,
                     image: props.image,
                   };
-                  if (props.tripCreatorId !== props.currentUser.uid) {
-                    createTrip.commit(tripDetails);
+                  if (tripCreatorId !== props.currentUser.uid) {
+                    const tripResult = await createTrip.commit(tripDetails);
+                    props.setTripId(tripResult._id);
+                    setTripCreatorId(tripResult.creatorId);
                   } else {
                     updateTrip.commit({
                       ...tripDetails,
-                      _id: props.tripResultId,
+                      _id: props.tripId,
                     });
                   }
                 }}
               >
-                {props.tripCreatorId === undefined ||
-                props.tripCreatorId === props.currentUser.uid
+                {tripCreatorId === "" || tripCreatorId === props.currentUser.uid
                   ? "Save"
                   : "Clone as mine"}
               </Button>
-              {props.tripResultId !== "" && completed && (
-                <TripPostDialog tripId={props.tripResultId} />
+              {props.tripId !== "" && completed && !props.posted && (
+                <TripPostDialog tripId={props.tripId} />
+              )}
+              {props.tripId !== "" && completed && props.posted && (
+                <Typography variant="body1">Posted!</Typography>
               )}
               {!completed && (
                 <Button
@@ -157,11 +166,12 @@ export function HeaderInfo(props: {
                       distance: props.cumulativeDistance,
                       image: props.image,
                     };
-                    updateTrip.commit({
+                    const tripResult = await updateTrip.commit({
                       ...tripDetails,
-                      _id: props.tripResultId,
+                      _id: props.tripId,
                     });
                     setCompleted(true);
+                    props.setTripId(tripResult._id);
                   }}
                 >
                   Mark complete

@@ -42,6 +42,7 @@ export default function EditTrip(): JSX.Element {
         startDate={startDate}
         endDate={endDate}
         tripId={params.tripId}
+        setTripId={() => {}}
         tripResult={tripResult}
       />
     </div>

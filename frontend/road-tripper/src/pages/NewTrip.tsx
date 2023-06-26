@@ -1,9 +1,11 @@
 import { useParams } from "react-router-dom";
 import { RouteMap } from "../components/RouteMap";
 import dayjs from "dayjs";
+import { useState } from "react";
 
 export default function NewTrip(): JSX.Element {
   const params = useParams();
+  const [tripId, setTripId] = useState<string>("");
 
   console.log("IN NEW TRIP", params);
 
@@ -25,6 +27,8 @@ export default function NewTrip(): JSX.Element {
         destinationVal={destinationVal}
         startDate={startDate}
         endDate={endDate}
+        tripId={tripId}
+        setTripId={setTripId}
       />
     </div>
   );

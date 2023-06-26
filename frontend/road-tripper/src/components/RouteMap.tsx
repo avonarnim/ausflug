@@ -395,8 +395,10 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
         destinationPlace={destinationPlace}
         chosenDetours={chosenDetours}
         tripCreatorId={props.tripResult?.creatorId}
-        tripResultId={props.tripResult?._id || ""}
+        tripId={props.tripResult?._id || props.tripId || ""}
+        setTripId={props.setTripId}
         completed={props.tripResult?.completed || false}
+        posted={props.tripResult?.posted || false}
       />
       <GoogleMap
         mapContainerStyle={{ width: "100%", height: "500px" }}
@@ -560,6 +562,7 @@ export type RouteMapProps = {
   startDate?: string;
   endDate?: string;
   tripId?: string;
+  setTripId: (tripId: string) => void;
   tripResult?: TripProps;
   waypoints?: SpotInfoProps[];
 };

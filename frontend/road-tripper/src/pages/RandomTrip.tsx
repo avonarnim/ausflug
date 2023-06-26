@@ -2,9 +2,11 @@ import { useParams } from "react-router-dom";
 import { RouteMap } from "../components/RouteMap";
 import dayjs from "dayjs";
 import { SpotInfoProps } from "../components/SpotInfo";
+import { useState } from "react";
 
 export default function RandomTrip(): JSX.Element {
   const params = useParams();
+  const [tripId, setTripId] = useState<string>("");
 
   console.log("IN RANDOM TRIP", params);
 
@@ -33,6 +35,8 @@ export default function RandomTrip(): JSX.Element {
         startDate={startDate}
         endDate={endDate}
         waypoints={waypoints}
+        tripId={tripId}
+        setTripId={setTripId}
       />
     </div>
   );

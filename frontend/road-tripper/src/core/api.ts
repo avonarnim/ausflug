@@ -216,6 +216,8 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? EventProps[]
   : T extends "CreateTrip"
   ? TripProps
+  : T extends "UpdateTrip"
+  ? TripProps
   : T extends "UpdateProfile"
   ? ProfileProps
   : T extends "GetUserTrips"
