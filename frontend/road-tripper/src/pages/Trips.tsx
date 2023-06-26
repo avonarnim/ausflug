@@ -16,8 +16,10 @@ import { useParams, Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../core/AuthContext";
 import { useMutation } from "../core/api";
 import { TripProps } from "./EditTrip";
+import { TripMarkersMap } from "../components/TripComponents/TripMarkersMap";
 import { Edit, Check, AccountCircle, Delete } from "@mui/icons-material";
 import TripPostDialog from "../dialogs/TripPostDialog";
+import { PlaceFrequencyWidget } from "../components/TripComponents/PlaceFrequencyWidget";
 
 const Img = styled("img")({
   margin: "auto",
@@ -41,6 +43,18 @@ const ListItemWith3SecondaryAction = styled(ListItem)(({ theme }) => ({
 export default function Trips(): JSX.Element {
   const { currentUser, updateUserProfile, setError } = useAuth();
   const [trips, setTrips] = useState<TripProps[]>([]);
+  const [incompleteOriginDestinations, setIncompleteOriginDestinations] =
+    useState<{ originPlaceIds: string[]; destinationPlaceIds: string[] }>({
+      originPlaceIds: [],
+      destinationPlaceIds: [],
+    });
+  const [completeOriginDestinations, setCompleteOriginDestinations] = useState<{
+    originPlaceIds: string[];
+    destinationPlaceIds: string[];
+  }>({
+    originPlaceIds: [],
+    destinationPlaceIds: [],
+  });
 
   const params = useParams();
 
@@ -62,6 +76,24 @@ export default function Trips(): JSX.Element {
       userId: userId,
     });
     setTrips(getUserTripsResponse);
+
+    const incompleteTrips = getUserTripsResponse.filter(
+      (trip) => trip.completed == false
+    );
+    setIncompleteOriginDestinations({
+      originPlaceIds: incompleteTrips.map((trip) => trip.originPlaceId),
+      destinationPlaceIds: incompleteTrips.map(
+        (trip) => trip.destinationPlaceId
+      ),
+    });
+
+    const completeTrips = getUserTripsResponse.filter(
+      (trip) => trip.completed == true
+    );
+    setCompleteOriginDestinations({
+      originPlaceIds: completeTrips.map((trip) => trip.originPlaceId),
+      destinationPlaceIds: completeTrips.map((trip) => trip.destinationPlaceId),
+    });
   };
 
   const markTripAsCompleteIncomplete = async (
@@ -154,6 +186,14 @@ export default function Trips(): JSX.Element {
                 ))}
             </List>
           </Grid>
+          <Grid item xs={0} md={6}>
+            <TripMarkersMap
+              originPlaceIds={incompleteOriginDestinations.originPlaceIds}
+              destinationPlaceIds={
+                incompleteOriginDestinations.destinationPlaceIds
+              }
+            />
+          </Grid>
           <Grid item xs={12}>
             <Typography variant="h5">Completed Trips</Typography>
           </Grid>
@@ -199,6 +239,30 @@ export default function Trips(): JSX.Element {
                   </ListItemWith3SecondaryAction>
                 ))}
             </List>
+          </Grid>
+          <Grid item xs={0} md={6}>
+            <TripMarkersMap
+              originPlaceIds={completeOriginDestinations.originPlaceIds}
+              destinationPlaceIds={
+                completeOriginDestinations.destinationPlaceIds
+              }
+            />
+          </Grid>
+          <Grid item xs={6} md={3}>
+            <Typography>My most common origins</Typography>
+            <PlaceFrequencyWidget
+              places={trips.map((trip) => {
+                return trip.originVal;
+              })}
+            />
+          </Grid>
+          <Grid item xs={6} md={3}>
+            <Typography>My most common destinations</Typography>
+            <PlaceFrequencyWidget
+              places={trips.map((trip) => {
+                return trip.destinationVal;
+              })}
+            />
           </Grid>
         </>
       ) : (

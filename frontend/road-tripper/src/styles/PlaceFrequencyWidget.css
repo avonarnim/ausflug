@@ -1,0 +1,41 @@
+.widget-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #ffffff; /* Add your desired background color */
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add your desired box shadow */
+  padding: 20px; /* Add padding for the container */
+}
+
+.widget-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.widget-name {
+  font-weight: bold;
+  margin-bottom: 5px; /* Add spacing between name and bar */
+}
+
+.widget-bar-container {
+  height: 20px;
+  background-color: #f2f2f2; /* Add desired background color for bar container */
+  border-radius: 10px;
+}
+
+.widget-bar {
+  height: 100%;
+  background-color: #ff7f50; /* Change the color to your desired pop of color */
+  border-radius: 10px;
+  position: relative;
+}
+
+.widget-value {
+  position: absolute;
+  top: 50%;
+  right: 5px; /* Adjust the value to position the percentage text */
+  transform: translateY(-50%);
+  color: white;
+  font-size: 12px;
+}
