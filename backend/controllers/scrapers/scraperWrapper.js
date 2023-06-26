@@ -3,6 +3,7 @@ const atlasObscura = require("./atlasObscura");
 const atlasObscuraLocations = require("./atlasObscuraLocations");
 const ticketMaster = require("./ticketMaster");
 const algolia = require("./algolia");
+const tripleD = require("./tripleD");
 
 const mongoose = require("mongoose");
 require("dotenv").config();
@@ -76,6 +77,19 @@ exports.uploadAllSpotsToAlgoliaSearch = async () => {
   connection.once("open", async () => {
     console.log("Connection established w MongoDB");
     await algolia.transferFromMDBtoAlgolia();
+    mongoose.disconnect();
+  });
+};
+
+exports.runTripleDScraper = async () => {
+  const uri = process.env.ATLAS_URI;
+  mongoose.connect(uri);
+  const connection = mongoose.connection;
+  connection.once("open", async () => {
+    console.log("Connection established w MongoDB");
+    const items = await tripleD.getItems();
+    console.log("should now upload " + items.length + " spots to db");
+    await tripleD.uploadRestaurantsToDb(items);
     mongoose.disconnect();
   });
 };
