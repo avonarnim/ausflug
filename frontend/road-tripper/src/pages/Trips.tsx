@@ -259,8 +259,8 @@ export default function Trips(): JSX.Element {
                 .map((trip) => trip.destinationPlaceId)}
             />
           </Grid>
-          <Grid item xs={12} p={2}>
-            <Grid xs={5} m={0}>
+          <Grid container item xs={12}>
+            <Grid item xs={6} m={0} p={2}>
               <Typography>My most common origins</Typography>
               <PlaceFrequencyWidget
                 places={trips.map((trip) => {
@@ -268,7 +268,7 @@ export default function Trips(): JSX.Element {
                 })}
               />
             </Grid>
-            <Grid xs={5} m={0}>
+            <Grid item xs={6} m={0} p={2}>
               <Typography>My most common destinations</Typography>
               <PlaceFrequencyWidget
                 places={trips.map((trip) => {

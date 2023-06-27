@@ -7,6 +7,7 @@ import { Footer } from "./components/Footer";
 import { useTheme } from "./core/theme";
 import { Route, Routes } from "react-router-dom";
 import {
+  About,
   AddSpot,
   Admin,
   // Donate,
@@ -43,6 +44,10 @@ function App() {
           <Route
             path="/privacy"
             element={<React.Suspense children={<Privacy />} />}
+          />
+          <Route
+            path="/about"
+            element={<React.Suspense children={<About />} />}
           />
           <Route
             path="/trips"

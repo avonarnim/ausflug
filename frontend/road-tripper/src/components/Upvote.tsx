@@ -10,7 +10,7 @@ import { SpotInfoProps } from "./SpotInfo";
 // TODO: should have records of what each user has liked --> find initial "added" value from there for user
 export function Upvote(props: { spot: SpotInfoProps; userId: string }) {
   const [initialCount, setInitialCount] = React.useState(
-    Math.floor(props.spot.popularity)
+    Math.floor(props.spot.popularity ?? 0)
   );
   const [added, setAdded] = React.useState(0);
 

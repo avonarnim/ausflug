@@ -6,6 +6,7 @@ import * as React from "react";
 export const Home = React.lazy(() => import("./Home"));
 export const Privacy = React.lazy(() => import("./Privacy"));
 export const Terms = React.lazy(() => import("./Terms"));
+export const About = React.lazy(() => import("./About"));
 export const Settings = React.lazy(() => import("./Settings"));
 export const Profile = React.lazy(() => import("./Profile"));
 export const Spot = React.lazy(() => import("./Spot"));
