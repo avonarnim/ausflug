@@ -77,23 +77,30 @@ export default function Trips(): JSX.Element {
     });
     setTrips(getUserTripsResponse);
 
-    const incompleteTrips = getUserTripsResponse.filter(
-      (trip) => trip.completed == false
-    );
-    setIncompleteOriginDestinations({
-      originPlaceIds: incompleteTrips.map((trip) => trip.originPlaceId),
-      destinationPlaceIds: incompleteTrips.map(
-        (trip) => trip.destinationPlaceId
-      ),
-    });
+    // const incompleteTrips = getUserTripsResponse.filter(
+    //   (trip) => trip.completed == false
+    // );
+    // setIncompleteOriginDestinations({
+    //   originPlaceIds: incompleteTrips.map((trip) => trip.originPlaceId),
+    //   destinationPlaceIds: incompleteTrips.map(
+    //     (trip) => trip.destinationPlaceId
+    //   ),
+    // });
 
-    const completeTrips = getUserTripsResponse.filter(
-      (trip) => trip.completed == true
-    );
-    setCompleteOriginDestinations({
-      originPlaceIds: completeTrips.map((trip) => trip.originPlaceId),
-      destinationPlaceIds: completeTrips.map((trip) => trip.destinationPlaceId),
-    });
+    // const completeTrips = getUserTripsResponse.filter(
+    //   (trip) => trip.completed == true
+    // );
+    // console.log("incomplete", incompleteTrips);
+    // console.log("complete", completeTrips);
+    // setCompleteOriginDestinations({
+    //   originPlaceIds: completeTrips.map((trip) => trip.originPlaceId),
+    //   destinationPlaceIds: completeTrips.map((trip) => trip.destinationPlaceId),
+    // });
+    // console.log("incompleteOds", incompleteOriginDestinations);
+    // console.log("completeOds", completeOriginDestinations, {
+    //   originPlaceIds: completeTrips.map((trip) => trip.originPlaceId),
+    //   destinationPlaceIds: completeTrips.map((trip) => trip.destinationPlaceId),
+    // });
   };
 
   const markTripAsCompleteIncomplete = async (
@@ -188,10 +195,12 @@ export default function Trips(): JSX.Element {
           </Grid>
           <Grid item xs={0} md={6}>
             <TripMarkersMap
-              originPlaceIds={incompleteOriginDestinations.originPlaceIds}
-              destinationPlaceIds={
-                incompleteOriginDestinations.destinationPlaceIds
-              }
+              originPlaceIds={trips
+                .filter((x) => !x.completed)
+                .map((trip) => trip.originPlaceId)}
+              destinationPlaceIds={trips
+                .filter((x) => !x.completed)
+                .map((trip) => trip.destinationPlaceId)}
             />
           </Grid>
           <Grid item xs={12}>
@@ -242,27 +251,31 @@ export default function Trips(): JSX.Element {
           </Grid>
           <Grid item xs={0} md={6}>
             <TripMarkersMap
-              originPlaceIds={completeOriginDestinations.originPlaceIds}
-              destinationPlaceIds={
-                completeOriginDestinations.destinationPlaceIds
-              }
+              originPlaceIds={trips
+                .filter((x) => x.completed)
+                .map((trip) => trip.originPlaceId)}
+              destinationPlaceIds={trips
+                .filter((x) => x.completed)
+                .map((trip) => trip.destinationPlaceId)}
             />
           </Grid>
-          <Grid item xs={6} md={3}>
-            <Typography>My most common origins</Typography>
-            <PlaceFrequencyWidget
-              places={trips.map((trip) => {
-                return trip.originVal;
-              })}
-            />
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Typography>My most common destinations</Typography>
-            <PlaceFrequencyWidget
-              places={trips.map((trip) => {
-                return trip.destinationVal;
-              })}
-            />
+          <Grid item xs={12} p={2}>
+            <Grid xs={5} m={0}>
+              <Typography>My most common origins</Typography>
+              <PlaceFrequencyWidget
+                places={trips.map((trip) => {
+                  return trip.originVal;
+                })}
+              />
+            </Grid>
+            <Grid xs={5} m={0}>
+              <Typography>My most common destinations</Typography>
+              <PlaceFrequencyWidget
+                places={trips.map((trip) => {
+                  return trip.destinationVal;
+                })}
+              />
+            </Grid>
           </Grid>
         </>
       ) : (
