@@ -17,6 +17,7 @@ type Type =
   | "DeleteSpot"
   | "GetSpot"
   | "GetSpots"
+  | "GetSpotsQueue"
   | "GetSpotsList"
   | "GetSpotsByCenter"
   | "GetSpotsInBox"
@@ -74,6 +75,8 @@ type Input<T extends Type> = T extends "CreateSpot"
   : T extends "GetSpot"
   ? { spotId: string }
   : T extends "GetSpots"
+  ? {}
+  : T extends "GetSpotsQueue"
   ? {}
   : T extends "GetSpotsList"
   ? { userId: string }
@@ -198,6 +201,8 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? SpotInfoProps
   : T extends "GetSpots"
   ? SpotInfoProps[]
+  : T extends "GetSpotsQueue"
+  ? SpotInfoProps[]
   : T extends "GetSpotsList"
   ? SpotInfoProps[]
   : T extends "GetSpotsByCenter"
@@ -313,14 +318,17 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             break;
           }
           case "GetSpots": {
-            console.log("getting spots");
-
             res = await fetch(`${apiBaseUrl}/api/spots`, {
               method: "GET",
               headers,
             });
-
-            console.log("RES", res);
+            break;
+          }
+          case "GetSpotsQueue": {
+            res = await fetch(`${apiBaseUrl}/api/spots/queue`, {
+              method: "GET",
+              headers,
+            });
             break;
           }
           case "GetSpotsList": {

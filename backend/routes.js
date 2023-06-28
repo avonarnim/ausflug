@@ -83,6 +83,11 @@ router.route("/api/spots/source/:source").get((req, res) => {
 router.route("/api/spots").post((req, res) => {
   spot.insert_spot(req, res);
 });
+router.use("/api/spots/queue", VerifyAdminToken);
+router.route("/api/spots/queue").get((req, res) => {
+  console.log("queue");
+  spot.search_spots_queue(req, res);
+});
 router.use("/api/spots/saved/:userId", VerifyToken);
 router.route("/api/spots/saved/:userId").get((req, res) => {
   spot.search_saved_spots_list(req, res);

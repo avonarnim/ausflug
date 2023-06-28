@@ -49,7 +49,9 @@ export default function FeedbackDialog() {
 
   return (
     <div>
-      <Typography onClick={handleClickOpen}>Give Feedback</Typography>
+      <Typography pl={4} pb={4} onClick={handleClickOpen}>
+        Give Feedback
+      </Typography>
       <Dialog open={open} onClose={handleClose}>
         {successfulEdit ? (
           <>
@@ -66,7 +68,6 @@ export default function FeedbackDialog() {
           <>
             <DialogTitle>Feedback</DialogTitle>
             <DialogContent>
-              {" "}
               <TextField
                 autoFocus
                 margin="dense"
@@ -89,7 +90,7 @@ export default function FeedbackDialog() {
                 variant="standard"
                 placeholder="contact"
                 name="contact"
-                defaultValue={feedbackState.contact}
+                defaultValue="your@email.com"
                 onChange={handleChange}
               />
             </DialogContent>

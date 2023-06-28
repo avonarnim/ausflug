@@ -15,10 +15,11 @@ exports.get_metrics = async function (req, res) {
       .limit(1);
     const mostRecentTime = mostRecentMetrics.updatedAt ?? new Date(0);
 
-    console.log(mostRecentTime);
+    console.log("most recent time", mostRecentTime);
     const recentCompletedTrips = await Trip.find({
       completedAt: { $gt: mostRecentTime },
     });
+    console.log("recent completed trips", recentCompletedTrips);
 
     const recentDistance = recentCompletedTrips
       ? recentCompletedTrips.reduce((acc, cur) => {
@@ -29,6 +30,8 @@ exports.get_metrics = async function (req, res) {
           }
         }, 0)
       : 0;
+
+    console.log("recent distance", recentDistance);
 
     const mostPopularOrigins = await Trip.aggregate([
       {
@@ -62,8 +65,14 @@ exports.get_metrics = async function (req, res) {
       { $limit: 3 },
     ]);
 
-    const users = User.find().length;
-    const numQueuedSpots = Spot.find({ status: "pending" }).length;
+    console.log("most popular origins", mostPopularOrigins);
+    console.log("most popular destinations", mostPopularDestinations);
+
+    const users = (await User.find({})).length;
+    const numQueuedSpots = (await Spot.find({ status: "pending" })).length;
+
+    console.log("users", users);
+    console.log("num queued spots", numQueuedSpots);
 
     const update = {
       numUsers: users,
@@ -76,16 +85,11 @@ exports.get_metrics = async function (req, res) {
 
     var new_metrics = new AdminMetrics(update);
 
-    new_metrics = await new_metrics
-      .save()
-      .then(() => {
-        res.json(update);
-      })
-      .catch((err) => err);
-
-    throw new_metrics;
+    await new_metrics.save().then(() => {
+      res.json(update);
+    });
   } catch (err) {
-    console.log(err);
+    console.log("error", err);
     res.send(err);
   }
 };
@@ -130,7 +134,7 @@ exports.get_metrics_past_n_days = async function (req, res) {
     const popularDestinations = await Trip.aggregate([
       {
         $match: {
-          updatedAt: { $gt: mostRecentTime },
+          updatedAt: { $gt: windowTime },
         },
       },
       {
@@ -143,11 +147,13 @@ exports.get_metrics_past_n_days = async function (req, res) {
       { $limit: 3 },
     ]);
 
-    const recentCreatedUsers = User.find({
-      createdAt: { $gt: windowTime },
-    }).length;
+    const recentCreatedUsers = (
+      await User.find({
+        createdAt: { $gt: windowTime },
+      })
+    ).length;
 
-    const numQueuedSpots = Spot.find({ status: "pending" }).length;
+    const numQueuedSpots = (await Spot.find({ status: "pending" })).length;
 
     const summary = {
       numUsers: recentCreatedUsers,
@@ -158,9 +164,7 @@ exports.get_metrics_past_n_days = async function (req, res) {
       updatedAt: Date.now(),
     };
 
-    res.json(update);
-
-    throw new_metrics;
+    res.json(summary);
   } catch (err) {
     console.log(err);
     res.send(err);

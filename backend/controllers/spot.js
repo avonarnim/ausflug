@@ -127,6 +127,41 @@ exports.search_spots_by_source = function (req, res) {
   ).limit(10);
 };
 
+// retrieve list of spots that are featured by a specific source
+exports.search_spots_by_n_sources = function (req, res) {
+  Spot.find(
+    {
+      featuredBy: {
+        $in: req.params.sources.split(","),
+      },
+    },
+    function (err, spots) {
+      if (err) res.send(err);
+      console.log(spots.length, "featured by", req.params.source);
+
+      spots.sort(function (a, b) {
+        return (
+          req.params.sources.indexOf(a.featuredBy) -
+          req.params.sources.indexOf(b.featuredBy)
+        );
+      });
+
+      // create an object with each value of req.params.sources as a key and an array of spots as the value
+      var spotsBySource = {};
+      req.params.sources.split(",").forEach(function (source) {
+        spotsBySource[source] = [];
+      });
+
+      // add each spot to the array of the source it is featured by
+      spots.forEach(function (spot) {
+        spotsBySource[spot.featuredBy].push(spot);
+      });
+
+      res.json(spotsBySource);
+    }
+  );
+};
+
 exports.query_spots = function (req, res) {
   console.log;
   Spot.aggregate(
@@ -157,6 +192,19 @@ exports.query_spots = function (req, res) {
         },
       },
     ],
+    function (err, spots) {
+      console.log(spots);
+      if (err) res.send(err);
+      res.json(spots);
+    }
+  );
+};
+
+exports.search_spots_queue = function (req, res) {
+  Spot.find(
+    {
+      status: "pending",
+    },
     function (err, spots) {
       console.log(spots);
       if (err) res.send(err);

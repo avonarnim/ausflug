@@ -7,12 +7,13 @@ import {
   ListItemText,
   TextField,
   Typography,
+  Divider,
+  Box,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { SpotInfoProps } from "../components/SpotInfo";
 import { useMutation } from "../core/api";
-import { NearMe, Delete, Add } from "@mui/icons-material";
-import { useAuth } from "../core/AuthContext";
+import { Delete, Add } from "@mui/icons-material";
 import { auth } from "../core/firebase";
 
 export function QueuedSpots(props: QueueSpotsProps): JSX.Element {
@@ -23,7 +24,7 @@ export function QueuedSpots(props: QueueSpotsProps): JSX.Element {
   };
 
   return (
-    <Container>
+    <Container sx={{ borderRadius: "5px", backgroundColor: "white" }}>
       <List>
         {props.spots.map((spot) => {
           return (
@@ -54,7 +55,7 @@ type QueueSpotsProps = {
 };
 
 export default function Admin(): JSX.Element {
-  const { currentUser, updateUserProfile, setError } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
   const [spots, setSpots] = useState<SpotInfoProps[]>([]);
   const [adminMetrics, setAdminMetrics] = useState<AdminMetrics>({
     completedMiles: 0,
@@ -80,21 +81,37 @@ export default function Admin(): JSX.Element {
   );
   const [feedback, setFeedback] = useState<FeedbackProps[]>([]);
 
-  const getSpots = useMutation("GetSpots");
+  const getSpotsQueue = useMutation("GetSpotsQueue");
   const getAdminMetrics = useMutation("GetAdminMetrics");
   const getPastNDaysMetrics = useMutation("GetPastNDaysMetrics");
   const getFeedback = useMutation("GetFeedback");
 
   useEffect(() => {
-    prepResults();
+    auth.currentUser
+      ?.getIdTokenResult()
+      .then((idTokenResult) => {
+        console.log("have id token", idTokenResult);
+        if (!!idTokenResult.claims.admin) {
+          console.log("is admin");
+          setIsAdmin(true);
+          prepResults();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   useEffect(() => {
-    prepWindowResults();
+    auth.currentUser?.getIdTokenResult().then((idTokenResult) => {
+      if (!!idTokenResult.claims.admin) {
+        prepWindowResults();
+      }
+    });
   }, [metricsWindow]);
 
   const prepResults = async () => {
-    const spotResults = await getSpots.commit({});
+    const spotResults = await getSpotsQueue.commit({});
     const adminMetrics = await getAdminMetrics.commit({});
     const feedbackResults = await getFeedback.commit(null);
     setSpots(spotResults);
@@ -109,111 +126,131 @@ export default function Admin(): JSX.Element {
     setWindowMetrics(adminMetrics);
   };
 
-  auth.currentUser?.getIdTokenResult().then((idTokenResult) => {
-    console.log(idTokenResult.claims);
-    console.log(idTokenResult.claims.admin);
-    console.log(!!idTokenResult.claims.admin);
-    if (!!idTokenResult.claims.admin) {
-      setAdminContent(
-        <div>
-          <>
-            <Typography variant="h1">Admin</Typography>
-            <Typography>Queued spots</Typography>
-            <Typography>{spots.length}</Typography>
-            <QueuedSpots spots={spots.filter((x) => x.status == "pending")} />
-            <Typography>Highlighted Categories</Typography>
-            <Typography>
-              TODO: be able to change highlighted categories + items within
-              categories
-            </Typography>
-            <Grid container item direction="row">
-              <Grid container item direction="column">
-                <Grid item>
-                  <Typography>Overall metrics</Typography>
-                </Grid>
-                <Grid item>
-                  <Typography>Completed miles</Typography>
-                  <Typography>{adminMetrics.completedMiles}</Typography>
-                </Grid>
-                <Grid item>
-                  <Typography>New users since</Typography>
-                  <Typography>{adminMetrics.numUsers}</Typography>
-                </Grid>
-                <Grid item>
-                  <Typography>Most popular origins</Typography>
-                  <Typography>{adminMetrics.mostPopularOrigins}</Typography>
-                </Grid>
-                <Grid item>
-                  <Typography>Most popular destinations</Typography>
-                  <Typography>
-                    {adminMetrics.mostPopularDestinations}
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid container item direction="column">
-                <Grid item>
-                  <Typography>Window: {metricsWindow} days</Typography>
-                </Grid>
-                <Grid item>
-                  <Typography>Completed miles</Typography>
-                  <Typography>{windowMetrics.completedMiles}</Typography>
-                </Grid>
-                <Grid item>
-                  <Typography>New users</Typography>
-                  <Typography>{windowMetrics.numUsers}</Typography>
-                </Grid>
-                <Grid item>
-                  <Typography>Most popular origins</Typography>
-                  <Typography>{windowMetrics.mostPopularOrigins}</Typography>
-                </Grid>
-                <Grid item>
-                  <Typography>Most popular destinations</Typography>
-                  <Typography>
-                    {windowMetrics.mostPopularDestinations}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <TextField
-                    margin="dense"
-                    id="window"
-                    label="window"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    placeholder={metricsWindow.toString()}
-                    name="window"
-                    onChange={(event) => {
-                      setMetricsWindow(Number(event.target.value));
-                    }}
-                  ></TextField>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Typography>Feedback</Typography>
-            {feedback.map((feedback) => {
-              return (
-                <div>
-                  <Typography>{feedback.contact}</Typography>
-                  <Typography>{feedback.feedback}</Typography>
-                  <Typography>{feedback.creationDate}</Typography>
-                </div>
-              );
-            })}
-          </>
-        </div>
-      );
-    }
-  });
-
-  return <>{adminContent}</>;
+  return false || isAdmin ? (
+    <Box p={4}>
+      <Typography variant="h3">Admin</Typography>
+      <Typography variant="h5">Queued spots {spots.length}</Typography>
+      <QueuedSpots spots={spots} />
+      <Typography variant="h5">Highlighted Categories</Typography>
+      <Typography>
+        TODO: be able to change highlighted categories + items within categories
+      </Typography>
+      <Grid container item xs={12}>
+        <Grid
+          item
+          direction="column"
+          xs={6}
+          p={2}
+          m={2}
+          style={{ backgroundColor: "white", borderRadius: "5px" }}
+        >
+          <Grid item>
+            <Typography variant="h5">Overall metrics</Typography>
+          </Grid>
+          <Grid item>
+            <Typography>Completed miles</Typography>
+            <Typography>{adminMetrics.completedMiles}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography>New users since</Typography>
+            <Typography>{adminMetrics.numUsers}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography>Most popular origins</Typography>
+            {adminMetrics.mostPopularOrigins.map((origin) => (
+              <Typography>
+                {origin._id} ({origin.count})
+              </Typography>
+            ))}
+          </Grid>
+          <Grid item>
+            <Typography>Most popular destinations</Typography>
+            {adminMetrics.mostPopularDestinations.map((origin) => (
+              <Typography>
+                {origin._id} ({origin.count})
+              </Typography>
+            ))}
+          </Grid>
+        </Grid>
+        <Grid
+          item
+          direction="column"
+          xs={6}
+          style={{ backgroundColor: "white", borderRadius: "5px" }}
+          p={2}
+          m={2}
+        >
+          <Grid item>
+            <Typography variant="h5">Window: {metricsWindow} days</Typography>
+            <TextField
+              margin="dense"
+              id="window"
+              label="window"
+              type="text"
+              variant="standard"
+              placeholder={metricsWindow.toString()}
+              name="window"
+              onChange={(event) => {
+                setMetricsWindow(Number(event.target.value));
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item>
+            <Typography>Completed miles</Typography>
+            <Typography>{windowMetrics.completedMiles}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography>New users</Typography>
+            <Typography>{windowMetrics.numUsers}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography>Most popular origins</Typography>
+            {windowMetrics.mostPopularOrigins.map((origin) => (
+              <Typography>
+                {origin._id} ({origin.count})
+              </Typography>
+            ))}
+          </Grid>
+          <Grid item>
+            <Typography>Most popular destinations</Typography>
+            {windowMetrics.mostPopularDestinations.map((origin) => (
+              <Typography>
+                {origin._id} ({origin.count})
+              </Typography>
+            ))}
+          </Grid>
+        </Grid>
+      </Grid>
+      <Typography variant="h5">Feedback</Typography>
+      <List>
+        {feedback.map((fbEl) => {
+          return (
+            <>
+              <ListItem>
+                <ListItemText
+                  primary={fbEl.feedback}
+                  secondary={fbEl.contact + " " + fbEl.creationDate}
+                />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </>
+          );
+        })}
+      </List>
+    </Box>
+  ) : (
+    <Typography>
+      Please login as Road Tripper team member to view this page
+    </Typography>
+  );
 }
 
 export type AdminMetrics = {
   completedMiles: number;
   numUsers: number;
   numQueuedSpots: number;
-  mostPopularOrigins: string[];
-  mostPopularDestinations: string[];
+  mostPopularOrigins: { _id: string; count: number }[];
+  mostPopularDestinations: { _id: string; count: number }[];
   updatedAt: number;
 };
 
