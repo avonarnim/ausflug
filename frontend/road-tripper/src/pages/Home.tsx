@@ -262,102 +262,104 @@ export default function Home(): JSX.Element {
       maxWidth={false}
       id="home container"
     >
-      <HeroCarousel />
+      {/* <HeroCarousel /> */}
 
       <Container>
         {isLoaded && (
-          <Box>
-            <Box>
-              <Grid item container direction="row" alignItems="center">
-                <Grid item xs={6} sx={{ p: 4 }}>
-                  <Autocomplete
-                    fields={["formatted_address", "name", "place_id"]}
-                    onLoad={(autocomplete) =>
-                      setStartAutocomplete(autocomplete)
+          <Box
+            mt={4}
+            sx={{ borderRadius: "5px", borderColor: "black", border: 1 }}
+          >
+            <Typography variant="h6" sx={{ pl: 4, pt: 2 }}>
+              Start planning your next trip
+            </Typography>
+            <Grid item container direction="row" alignItems="center">
+              <Grid item xs={6} sx={{ pl: 4, pr: 4, pt: 4, pb: 2 }}>
+                <Autocomplete
+                  fields={["formatted_address", "name", "place_id"]}
+                  onLoad={(autocomplete) => setStartAutocomplete(autocomplete)}
+                  onPlaceChanged={() => {
+                    const place = startAutocomplete?.getPlace();
+                    if (!place || !place.place_id) {
+                      return;
+                    } else {
+                      setOriginPlace(place.place_id);
                     }
-                    onPlaceChanged={() => {
-                      const place = startAutocomplete?.getPlace();
-                      if (!place || !place.place_id) {
-                        return;
-                      } else {
-                        setOriginPlace(place.place_id);
-                      }
-                    }}
-                  >
-                    <Input
-                      type="text"
-                      placeholder="Origin"
-                      inputRef={originRef}
-                      fullWidth
-                    />
-                  </Autocomplete>
+                  }}
+                >
+                  <Input
+                    type="text"
+                    placeholder="Origin"
+                    inputRef={originRef}
+                    fullWidth
+                  />
+                </Autocomplete>
+              </Grid>
+              <Grid item xs={6} sx={{ pl: 4, pr: 4, pt: 4, pb: 2 }}>
+                <Autocomplete
+                  fields={["formatted_address", "name", "place_id"]}
+                  onLoad={(autocomplete) =>
+                    setDestinationAutocomplete(autocomplete)
+                  }
+                  onPlaceChanged={() => {
+                    const place = destinationAutocomplete?.getPlace();
+                    if (!place || !place.place_id) {
+                      return;
+                    } else {
+                      setDestinationPlace(place.place_id);
+                    }
+                  }}
+                >
+                  <Input
+                    type="text"
+                    placeholder="Destination"
+                    inputRef={destinationRef}
+                    fullWidth
+                  />
+                </Autocomplete>
+              </Grid>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Grid item xs={6} sx={{ p: 4 }}>
+                  <DatePicker
+                    label="Start"
+                    value={startDate}
+                    onChange={(newValue) => setStartDate(newValue)}
+                  />
                 </Grid>
                 <Grid item xs={6} sx={{ p: 4 }}>
-                  <Autocomplete
-                    fields={["formatted_address", "name", "place_id"]}
-                    onLoad={(autocomplete) =>
-                      setDestinationAutocomplete(autocomplete)
+                  <DatePicker
+                    label="End"
+                    value={endDate}
+                    onChange={(newValue) => setEndDate(newValue)}
+                  />
+                </Grid>
+              </LocalizationProvider>
+              <br />
+              <Grid container spacing={0} justifyContent="flex-begin">
+                <Grid item xs={3} sx={{ pl: 4, pr: 4, pt: 2, pb: 4 }}>
+                  <Link
+                    to={
+                      originPlace && destinationPlace && startDate && endDate
+                        ? `/trips/${originPlace}/${
+                            originRef.current!.value
+                          }/${destinationPlace}/${
+                            destinationRef.current!.value
+                          }/${startDate.format()}/${endDate.format()}`
+                        : originPlace && destinationPlace
+                        ? `/trips/${originPlace}/${
+                            originRef.current!.value
+                          }/${destinationPlace}/${
+                            destinationRef.current!.value
+                          }`
+                        : `/`
                     }
-                    onPlaceChanged={() => {
-                      const place = destinationAutocomplete?.getPlace();
-                      if (!place || !place.place_id) {
-                        return;
-                      } else {
-                        setDestinationPlace(place.place_id);
-                      }
-                    }}
+                    style={{ textDecoration: "none" }}
                   >
-                    <Input
-                      type="text"
-                      placeholder="Destination"
-                      inputRef={destinationRef}
-                      fullWidth
-                    />
-                  </Autocomplete>
-                </Grid>
-                <Grid>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Container>
-                      <DatePicker
-                        label="Start"
-                        value={startDate}
-                        onChange={(newValue) => setStartDate(newValue)}
-                      />
-                      <DatePicker
-                        label="End"
-                        value={endDate}
-                        onChange={(newValue) => setEndDate(newValue)}
-                      />
-                    </Container>
-                  </LocalizationProvider>
-                </Grid>
-                <br />
-                <Grid container spacing={0} justifyContent="flex-begin">
-                  <Grid item xs={3} sx={{ p: 4 }}>
-                    <Link
-                      to={
-                        originPlace && destinationPlace && startDate && endDate
-                          ? `/trips/${originPlace}/${
-                              originRef.current!.value
-                            }/${destinationPlace}/${
-                              destinationRef.current!.value
-                            }/${startDate.format()}/${endDate.format()}`
-                          : originPlace && destinationPlace
-                          ? `/trips/${originPlace}/${
-                              originRef.current!.value
-                            }/${destinationPlace}/${
-                              destinationRef.current!.value
-                            }`
-                          : `/`
-                      }
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Button variant="contained">Find spots</Button>
-                    </Link>
-                  </Grid>
+                    <Button variant="contained">Find spots</Button>
+                  </Link>
                 </Grid>
               </Grid>
-            </Box>
+            </Grid>
           </Box>
         )}
         <Grid container spacing={1} p={1} alignItems="stretch">

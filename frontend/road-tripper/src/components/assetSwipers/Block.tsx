@@ -26,10 +26,20 @@ export function AssetBlockCard(props: AssetBlockCardProps): JSX.Element {
       >
         <CardMedia component="img" height="140" image={props.image} alt="" />
         <CardContent>
-          <Typography variant="body1" color="text.primary" align="left">
+          <Typography
+            variant="body1"
+            color="text.primary"
+            align="left"
+            sx={{ textOverflow: "elipsis" }}
+          >
             {props.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary" align="left">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            align="left"
+            sx={{ textOverflow: "elipsis" }}
+          >
             {props.value}
           </Typography>
         </CardContent>
