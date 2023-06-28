@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Typography,
 } from "@mui/material";
 import { useMutation } from "../core/api";
 import { FeedbackProps } from "../pages/Admin";
@@ -48,9 +49,7 @@ export default function FeedbackDialog() {
 
   return (
     <div>
-      <Button variant="standard" onClick={handleClickOpen}>
-        Give Feedback
-      </Button>
+      <Typography onClick={handleClickOpen}>Give Feedback</Typography>
       <Dialog open={open} onClose={handleClose}>
         {successfulEdit ? (
           <>
