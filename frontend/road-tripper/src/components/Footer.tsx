@@ -59,11 +59,11 @@ export function Footer(): JSX.Element {
             >
               Privacy Policy
             </Link>
-            <FeedbackDialog />
           </Box>
         </Box>
 
         <Typography p={4}>Copyright Road Tripper</Typography>
+        <FeedbackDialog />
       </Box>
     </footer>
   );

@@ -48,7 +48,7 @@ export default function FeedbackDialog() {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button variant="standard" onClick={handleClickOpen}>
         Give Feedback
       </Button>
       <Dialog open={open} onClose={handleClose}>
