@@ -47,8 +47,9 @@ export default function ProfileFormDialog(props: ProfileProps) {
       await handleUpload();
       console.log(updateRes);
       setSuccessfulEdit(updateRes != null);
+    } else {
+      setOpen(false);
     }
-    setOpen(false);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,8 +129,7 @@ export default function ProfileFormDialog(props: ProfileProps) {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => handleClose(false)}>Cancel</Button>
-              <Button onClick={() => handleClose(true)}>Submit</Button>
+              <Button onClick={() => handleClose(false)}>Close</Button>
             </DialogActions>
           </>
         ) : (

@@ -78,10 +78,12 @@ export default function Admin(): JSX.Element {
       Please login as Road Tripper team member to view this page
     </Typography>
   );
+  const [feedback, setFeedback] = useState<FeedbackProps[]>([]);
 
   const getSpots = useMutation("GetSpots");
   const getAdminMetrics = useMutation("GetAdminMetrics");
   const getPastNDaysMetrics = useMutation("GetPastNDaysMetrics");
+  const getFeedback = useMutation("GetFeedback");
 
   useEffect(() => {
     prepResults();
@@ -94,8 +96,10 @@ export default function Admin(): JSX.Element {
   const prepResults = async () => {
     const spotResults = await getSpots.commit({});
     const adminMetrics = await getAdminMetrics.commit({});
+    const feedbackResults = await getFeedback.commit(null);
     setSpots(spotResults);
     setAdminMetrics(adminMetrics);
+    setFeedback(feedbackResults);
   };
 
   const prepWindowResults = async () => {
@@ -185,6 +189,16 @@ export default function Admin(): JSX.Element {
                 </Grid>
               </Grid>
             </Grid>
+            <Typography>Feedback</Typography>
+            {feedback.map((feedback) => {
+              return (
+                <div>
+                  <Typography>{feedback.contact}</Typography>
+                  <Typography>{feedback.feedback}</Typography>
+                  <Typography>{feedback.creationDate}</Typography>
+                </div>
+              );
+            })}
           </>
         </div>
       );
@@ -201,4 +215,10 @@ export type AdminMetrics = {
   mostPopularOrigins: string[];
   mostPopularDestinations: string[];
   updatedAt: number;
+};
+
+export type FeedbackProps = {
+  feedback: string;
+  contact: string;
+  creationDate: string;
 };

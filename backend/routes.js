@@ -9,6 +9,7 @@ const adminMetrics = require("./controllers/adminMetrics");
 const post = require("./controllers/post");
 const feed = require("./controllers/feed");
 const spotInteraction = require("./controllers/spotInteraction");
+const feedback = require("./controllers/feedback");
 const { VerifyToken, VerifyAdminToken } = require("./middleware/VerifyToken");
 
 // Health Test
@@ -222,6 +223,17 @@ router.route("/api/admin/metrics").get((req, res) => {
 router.use("/api/admin/metrics/window/:days", VerifyAdminToken);
 router.route("/api/admin/metrics/window/:days").get((req, res) => {
   adminMetrics.get_metrics_past_n_days(req, res);
+});
+// #endregion
+
+// #region Feedback
+router.route("/api/feedback").post((req, res) => {
+  feedback.create_feedback(req, res);
+});
+
+router.use("/api/feedback", VerifyAdminToken);
+router.route("/api/feedback").get((req, res) => {
+  feedback.view_feedback(req, res);
 });
 // #endregion
 

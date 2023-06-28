@@ -5,7 +5,7 @@ import { ProfileProps } from "../pages/Profile";
 import { TripProps } from "../pages/EditTrip";
 import axios, { AxiosProgressEvent, AxiosHeaders, AxiosResponse } from "axios";
 import { EventProps } from "../pages/Event";
-import { AdminMetrics } from "../pages/Admin";
+import { AdminMetrics, FeedbackProps } from "../pages/Admin";
 import { SpotInteraction } from "../components/Upvote";
 import { PostProps } from "../pages/Feed";
 
@@ -54,7 +54,9 @@ type Type =
   | "GetUserPosts"
   | "UpdatePost"
   | "DeletePost"
-  | "GetFeedPosts";
+  | "GetFeedPosts"
+  | "CreateFeedback"
+  | "GetFeedback";
 
 type State<T extends Type> = {
   loading: boolean;
@@ -175,6 +177,8 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? { postId: string }
   : T extends "GetFeedPosts"
   ? { userId: string }
+  : T extends "CreateFeedback"
+  ? FeedbackProps
   : null;
 
 export interface SiteData {
@@ -236,6 +240,8 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? PostProps[]
   : T extends "GetFeedPosts"
   ? PostProps[]
+  : T extends "GetFeedback"
+  ? FeedbackProps[]
   : any;
 
 export type Mutation<T extends Type> = State<T> & {
@@ -716,6 +722,21 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
           case "GetFeedPosts": {
             const userId = (input as { userId: string }).userId;
             res = await fetch(`${apiBaseUrl}/api/feed/posts/${userId}`, {
+              method: "GET",
+              headers,
+            });
+            break;
+          }
+          case "CreateFeedback": {
+            res = await fetch(`${apiBaseUrl}/api/feedback`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...input }),
+            });
+            break;
+          }
+          case "GetFeedback": {
+            res = await fetch(`${apiBaseUrl}/api/feedback`, {
               method: "GET",
               headers,
             });

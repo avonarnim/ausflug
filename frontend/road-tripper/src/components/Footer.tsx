@@ -1,5 +1,6 @@
 import { Box, Link, TextField, Typography } from "@mui/material";
 import { Link as NavLink } from "react-router-dom";
+import FeedbackDialog from "../dialogs/FeedbackDialog";
 
 export function Footer(): JSX.Element {
   return (
@@ -58,6 +59,7 @@ export function Footer(): JSX.Element {
             >
               Privacy Policy
             </Link>
+            <FeedbackDialog />
           </Box>
         </Box>
 
