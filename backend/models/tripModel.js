@@ -38,6 +38,7 @@ var TripSchema = new Schema({
   completed: Boolean,
   posted: Boolean,
   image: String,
+  oneWayRoundTrip: "oneWay" | "roundTrip",
 });
 
 module.exports = mongoose.model("Trip", TripSchema);

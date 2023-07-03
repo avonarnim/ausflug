@@ -8,6 +8,7 @@ const util = require("./controllers/util");
 const adminMetrics = require("./controllers/adminMetrics");
 const post = require("./controllers/post");
 const feed = require("./controllers/feed");
+const gas = require("./controllers/gas");
 const spotInteraction = require("./controllers/spotInteraction");
 const feedback = require("./controllers/feedback");
 const { VerifyToken, VerifyAdminToken } = require("./middleware/VerifyToken");
@@ -106,6 +107,29 @@ router.route("/api/spots").delete((req, res) => {
 router.use("/api/spots/review", VerifyToken);
 router.route("/api/spots/review").post((req, res) => {
   spot.add_review(req, res);
+});
+// #endregion
+
+// #region Gas
+router
+  .route("/api/gas/stations/box/:latitude1/:longitude1/:latitude2/:longitude2")
+  .get((req, res) => {
+    console.log("in here 1");
+    gas.get_gas_stations_in_area(req, res);
+  });
+router
+  .route("/api/gas/avgPrice/box/:latitude1/:longitude1/:latitude2/:longitude2")
+  .get((req, res) => {
+    gas.avg_price_along_route(req, res);
+  });
+router.route("/api/gas/prices").post((req, res) => {
+  gas.add_gas_prices(req, res);
+});
+router.route("/api/gas/stations").post((req, res) => {
+  gas.add_gas_station(req, res);
+});
+router.route("/api/gas/stations/:id").get((req, res) => {
+  gas.get_gas_station(req, res);
 });
 // #endregion
 
