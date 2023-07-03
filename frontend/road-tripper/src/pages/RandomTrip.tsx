@@ -28,6 +28,7 @@ export default function RandomTrip(): JSX.Element {
   return (
     <div>
       <RouteMap
+        oneWayRoundTrip="roundTrip"
         origin={origin}
         originVal={originVal}
         destination={destination}

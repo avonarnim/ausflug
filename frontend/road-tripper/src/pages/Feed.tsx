@@ -4,6 +4,7 @@ import { useMutation } from "../core/api";
 import { SpotInfoProps } from "../components/SpotInfo";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -16,11 +17,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { useAuth } from "../core/AuthContext";
-import {
-  FavoriteOutlined,
-  FavoriteBorderOutlined,
-  SendOutlined,
-} from "@mui/icons-material";
+import { FavoriteOutlined, FavoriteBorderOutlined } from "@mui/icons-material";
 
 export default function Feed(): JSX.Element {
   const [comments, setComments] = useState<Record<string, string>>({});
@@ -111,22 +108,28 @@ export default function Feed(): JSX.Element {
                     )}
                   </IconButton>
                   {renderComments(post)}
-                  <TextField
-                    fullWidth
-                    label="Add a comment"
-                    value={comments[post._id] || ""}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      handleCommentChange(post._id, e)
-                    }
-                    variant="outlined"
-                  />
-                  <IconButton
-                    onClick={() => handleCommentSubmit(post)}
-                    color="primary"
-                    disabled={!comments[post._id]}
-                  >
-                    <SendOutlined />
-                  </IconButton>
+                  <Grid container xs={12}>
+                    <Grid item xs={10}>
+                      <TextField
+                        fullWidth
+                        label="Add a comment"
+                        value={comments[post._id] || ""}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          handleCommentChange(post._id, e)
+                        }
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid xs={2}>
+                      <Button
+                        onClick={() => handleCommentSubmit(post)}
+                        color="primary"
+                        disabled={!comments[post._id]}
+                      >
+                        Post
+                      </Button>
+                    </Grid>
+                  </Grid>
                 </CardContent>
               </Card>
             </Grid>

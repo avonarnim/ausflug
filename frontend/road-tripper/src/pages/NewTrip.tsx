@@ -9,6 +9,8 @@ export default function NewTrip(): JSX.Element {
 
   console.log("IN NEW TRIP", params);
 
+  const oneWayRoundTrip =
+    params.oneWayRoundTrip == "roundTrip" ? "roundTrip" : "oneWay";
   const origin = params.origin || "";
   const originVal = params.originVal || "";
   const destination = params.destination || "";
@@ -21,6 +23,7 @@ export default function NewTrip(): JSX.Element {
   return (
     <div>
       <RouteMap
+        oneWayRoundTrip={oneWayRoundTrip}
         origin={origin}
         originVal={originVal}
         destination={destination}

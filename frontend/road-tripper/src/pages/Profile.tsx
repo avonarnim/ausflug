@@ -34,6 +34,7 @@ import {
 import { SpotInfoProps } from "../components/SpotInfo";
 import RandomTripButton from "../components/RandomTripButton";
 import FollowList from "../dialogs/FollowList";
+import { ProfileStatus } from "../components/ProfileStatus";
 
 const Img = styled("img")({
   margin: "auto",
@@ -261,6 +262,7 @@ export default function Profile(): JSX.Element {
           <Typography gutterBottom variant="body1" component="div">
             {user?.bio}
           </Typography>
+          {user && <ProfileStatus user={user} />}
           <Grid container direction="row" spacing={2}>
             <Grid item>
               <FollowList
@@ -285,72 +287,72 @@ export default function Profile(): JSX.Element {
           </Grid>
         </Grid>
         {isCurrentUser && (
-          <Grid item xs={12} md={6}>
-            <Typography variant="h5">Saved Trips</Typography>
-            <List>
-              {trips?.map((trip) => (
-                <ListItem
-                  key={trip.name + trip._id}
-                  secondaryAction={
-                    <IconButton edge="end" aria-label="edit">
-                      <Link href={`/trips/${trip._id}`}>
-                        <Edit />
-                      </Link>
-                    </IconButton>
-                  }
-                >
-                  {trip.image && (
-                    <ListItemAvatar>
-                      <Avatar alt={trip.name} src={trip.image} />
-                    </ListItemAvatar>
-                  )}
-                  <ListItemText
-                    primary={
-                      trip.name +
-                      (trip.description ? ": " + trip.description : "")
+          <>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h5">Saved Trips</Typography>
+              <List>
+                {trips?.map((trip) => (
+                  <ListItem
+                    key={trip.name + trip._id}
+                    secondaryAction={
+                      <IconButton edge="end" aria-label="edit">
+                        <Link href={`/trips/${trip._id}`}>
+                          <Edit />
+                        </Link>
+                      </IconButton>
                     }
-                    secondary={trip.originVal + " to " + trip.destinationVal}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
-        )}
-        {isCurrentUser && (
-          <Grid item xs={12} md={6}>
-            <Typography variant="h5">Saved Spots</Typography>
-            <List>
-              {spots?.map((spot) => (
-                <ListItem
-                  key={spot._id}
-                  onClick={() => {
-                    navigate(`/spots/${spot._id}`);
-                  }}
-                  secondaryAction={
-                    <IconButton
-                      edge="end"
-                      aria-label="edit"
-                      onClick={() => removeSpot(spot._id, currentUser.uid)}
-                    >
-                      <Delete />
-                    </IconButton>
-                  }
-                >
-                  {spot.images.length > 0 && (
-                    <ListItemAvatar>
-                      <Avatar alt={spot.title} src={spot.images[0]} />
-                    </ListItemAvatar>
-                  )}
-                  <ListItemText
-                    primary={spot.title}
-                    secondary={spot.description}
-                  />
-                </ListItem>
-              ))}
-            </List>
-            {/* TODO: go to NewTrip page with a random set of the saved spots pre-loaded and either the current location or first spot's location set as the beginning/end */}
-            {spots && spots.length > 0 && <RandomTripButton spots={spots} />}
-          </Grid>
+                  >
+                    {trip.image && (
+                      <ListItemAvatar>
+                        <Avatar alt={trip.name} src={trip.image} />
+                      </ListItemAvatar>
+                    )}
+                    <ListItemText
+                      primary={
+                        trip.name +
+                        (trip.description ? ": " + trip.description : "")
+                      }
+                      secondary={trip.originVal + " to " + trip.destinationVal}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h5">Saved Spots</Typography>
+              <List>
+                {spots?.map((spot) => (
+                  <ListItem
+                    key={spot._id}
+                    onClick={() => {
+                      navigate(`/spots/${spot._id}`);
+                    }}
+                    secondaryAction={
+                      <IconButton
+                        edge="end"
+                        aria-label="edit"
+                        onClick={() => removeSpot(spot._id, currentUser.uid)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    }
+                  >
+                    {spot.images.length > 0 && (
+                      <ListItemAvatar>
+                        <Avatar alt={spot.title} src={spot.images[0]} />
+                      </ListItemAvatar>
+                    )}
+                    <ListItemText
+                      primary={spot.title}
+                      secondary={spot.description}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+              {/* TODO: go to NewTrip page with a random set of the saved spots pre-loaded and either the current location or first spot's location set as the beginning/end */}
+              {spots && spots.length > 0 && <RandomTripButton spots={spots} />}
+            </Grid>
+          </>
         )}
       </Grid>
     </Grid>
@@ -373,5 +375,6 @@ export type ProfileProps = {
   facebook: string;
   twitter: string;
   youtube: string;
+  status: string;
   createdAt: number;
 };

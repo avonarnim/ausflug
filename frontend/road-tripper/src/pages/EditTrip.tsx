@@ -25,6 +25,7 @@ export default function EditTrip(): JSX.Element {
     setTripResult(trip);
   };
 
+  const oneWayRoundTrip = tripResult?.oneWayRoundTrip || "oneWay";
   const origin = tripResult?.originPlaceId || "";
   const originVal = tripResult?.originVal || "";
   const destination = tripResult?.destinationPlaceId || "";
@@ -35,6 +36,7 @@ export default function EditTrip(): JSX.Element {
   return tripResult ? (
     <div>
       <RouteMap
+        oneWayRoundTrip={oneWayRoundTrip}
         origin={origin}
         originVal={originVal}
         destination={destination}
@@ -78,4 +80,5 @@ export type TripProps = {
   completed: boolean;
   posted: boolean;
   image: string;
+  oneWayRoundTrip: "oneWay" | "roundTrip";
 };

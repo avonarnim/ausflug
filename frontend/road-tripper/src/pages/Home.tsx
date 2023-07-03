@@ -5,6 +5,8 @@ import {
   Divider,
   Grid,
   Input,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
@@ -22,6 +24,7 @@ import {
 } from "../components/assetSwipers/Block";
 import { SpotInfoProps } from "../components/SpotInfo";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
+import { GasPriceProps } from "./Gas";
 
 type Libraries = (
   | "drawing"
@@ -48,6 +51,11 @@ export default function Home(): JSX.Element {
   const [destinationPlace, setDestinationPlace] = useState<string>();
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
+  const [oneWayRoundTrip, setOneWayRoundTrip] = useState<
+    "oneWay" | "roundTrip"
+  >("oneWay");
+
+  const [avgGasPrices, setAvgGasPrices] = useState<GasPriceProps>();
 
   const [hikingHighlightedSpots, setHikingHighlightedSpots] =
     useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
@@ -114,6 +122,7 @@ export default function Home(): JSX.Element {
   const getSpotsByHighlightedGroup = useMutation("GetSpotsByHighlightedGroup");
   const getSpotsBySource = useMutation("GetSpotsBySource");
   const getSpotsByCenter = useMutation("GetSpotsByCenter");
+  const getGasPriceInBox = useMutation("GetGasPriceInBox");
 
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
@@ -230,6 +239,15 @@ export default function Home(): JSX.Element {
                 image: spot.images[0],
               })),
             });
+
+            setAvgGasPrices(
+              await getGasPriceInBox.commit({
+                longitude1: position.coords.longitude + 1,
+                latitude1: position.coords.latitude + 1,
+                longitude2: position.coords.longitude - 1,
+                latitude2: position.coords.latitude - 1,
+              })
+            );
           },
           () => {
             console.log("Unable to retrieve your location");
@@ -273,6 +291,22 @@ export default function Home(): JSX.Element {
             <Typography variant="h6" sx={{ pl: 4, pt: 2 }}>
               Start planning your next trip
             </Typography>
+            <ToggleButtonGroup
+              value={oneWayRoundTrip}
+              exclusive
+              onChange={(event, newOneWayRoundTrip: "oneWay" | "roundTrip") =>
+                setOneWayRoundTrip(newOneWayRoundTrip)
+              }
+              aria-label="outlined button group"
+              sx={{ pl: 4, pt: 2 }}
+            >
+              <ToggleButton value="oneWay" aria-label="one way">
+                One Way
+              </ToggleButton>
+              <ToggleButton value="roundTrip" aria-label="round trip">
+                Round Trip
+              </ToggleButton>
+            </ToggleButtonGroup>
             <Grid item container direction="row" alignItems="center">
               <Grid item xs={6} sx={{ pl: 4, pr: 4, pt: 4, pb: 2 }}>
                 <Autocomplete
@@ -340,13 +374,13 @@ export default function Home(): JSX.Element {
                   <Link
                     to={
                       originPlace && destinationPlace && startDate && endDate
-                        ? `/trips/${originPlace}/${
+                        ? `/trips/${oneWayRoundTrip}/${originPlace}/${
                             originRef.current!.value
                           }/${destinationPlace}/${
                             destinationRef.current!.value
                           }/${startDate.format()}/${endDate.format()}`
                         : originPlace && destinationPlace
-                        ? `/trips/${originPlace}/${
+                        ? `/trips/${oneWayRoundTrip}/${originPlace}/${
                             originRef.current!.value
                           }/${destinationPlace}/${
                             destinationRef.current!.value
@@ -377,6 +411,151 @@ export default function Home(): JSX.Element {
                 <SkeletonAssetBlockCardHorizontalSwipe />
               </>
             )}
+          </Grid>
+          <Divider style={{ marginTop: 2, marginBottom: 2 }} />
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Box
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  p: 2,
+                  background: "linear-gradient(45deg, #f6c0aa, #a4c7e7)",
+                }}
+              >
+                <Typography variant="h6">Find the best gas stations</Typography>
+                <Typography>
+                  Check the average price along your entire route
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  p: 2,
+                }}
+              >
+                <Typography variant="h6">
+                  Average gas price in your area
+                </Typography>
+                <Typography>Unleaded: {avgGasPrices?.unleaded}</Typography>
+                <Typography>Midgrade: {avgGasPrices?.midgrade}</Typography>
+                <Typography>Premium: {avgGasPrices?.premium}</Typography>
+                <Typography>Diesel: {avgGasPrices?.diesel}</Typography>
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} mt={2}>
+            <Grid item xs={8}>
+              <Box
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  p: 2,
+                  background: "linear-gradient(295deg, #f6c0aa, #a4c7e7)",
+                }}
+              >
+                <Typography variant="h6">
+                  Never miss a concert in that little town along the way
+                </Typography>
+                <Typography>
+                  Know what events are happening at thousands of venues
+                </Typography>
+                <Typography></Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={4}>
+              <Box
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  p: 2,
+                }}
+              >
+                <Typography>
+                  Search through curated, memorable detours
+                </Typography>
+                <Button
+                  variant="outlined"
+                  component={Link}
+                  to="/search"
+                  sx={{
+                    mt: "auto",
+                    mb: "auto",
+                    alignSelf: "center",
+                  }}
+                >
+                  Search
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} mt={2}>
+            <Grid item xs={7}>
+              <Box
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  p: 2,
+                  background: "linear-gradient(125deg, #f6c0aa, #a4c7e7)",
+                }}
+              >
+                <Typography variant="h6">
+                  Plan your road trip alongside your friends
+                </Typography>
+                <Typography>
+                  Know which friends are looking to join a trip or want you to
+                  tag along
+                </Typography>
+                <Typography>Save your plans and post later</Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={5}>
+              <Box
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  p: 2,
+                }}
+              >
+                <Typography>
+                  Promote your town's best stop or next event
+                </Typography>
+                <Button
+                  variant="contained"
+                  component={Link}
+                  to="/addSpot"
+                  sx={{
+                    color: "#efefef",
+                    mt: "auto",
+                    mb: 2,
+                    alignSelf: "center",
+                  }}
+                >
+                  Suggest a new stop
+                </Button>
+              </Box>
+            </Grid>
           </Grid>
           {featurettes.map(({ title, spots }, index) => (
             <Grid key={index} item xs={12} mt={2}>
