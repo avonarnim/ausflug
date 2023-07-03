@@ -46,8 +46,9 @@ export default function SpotReviewFormDialog(props: { spotId: string }) {
       const updateRes = await submitSpotReview.commit(reviewState);
       setSuccessfulEdit(updateRes != null);
       setSuccessfulEdit(true && uploadRes);
+    } else {
+      setOpen(false);
     }
-    setOpen(false);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -54,6 +54,7 @@ export default function TripPostDialog(props: { tripId: string }) {
     twitter: "",
     youtube: "",
     createdAt: 0,
+    status: "",
   });
 
   const createPost = useMutation("CreatePost");
@@ -80,8 +81,9 @@ export default function TripPostDialog(props: { tripId: string }) {
         authorImage: profile.image,
       });
       setSuccessfulEdit(true && createRes);
+    } else {
+      setOpen(false);
     }
-    setOpen(false);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

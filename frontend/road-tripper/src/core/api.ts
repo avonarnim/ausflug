@@ -8,6 +8,7 @@ import { EventProps } from "../pages/Event";
 import { AdminMetrics, FeedbackProps } from "../pages/Admin";
 import { SpotInteraction } from "../components/Upvote";
 import { PostProps } from "../pages/Feed";
+import { GasPriceProps, GasStationProps } from "../pages/Gas";
 
 // #region TypeScript Definitions
 
@@ -57,7 +58,12 @@ type Type =
   | "DeletePost"
   | "GetFeedPosts"
   | "CreateFeedback"
-  | "GetFeedback";
+  | "GetFeedback"
+  | "GetGasStationsInBox"
+  | "GetGasPriceInBox"
+  | "GetGasStation"
+  | "AddGasStation"
+  | "AddGasPrices";
 
 type State<T extends Type> = {
   loading: boolean;
@@ -182,6 +188,34 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? { userId: string }
   : T extends "CreateFeedback"
   ? FeedbackProps
+  : T extends "GetGasStationsInBox"
+  ? {
+      longitude1: number;
+      latitude1: number;
+      longitude2: number;
+      latitude2: number;
+    }
+  : T extends "GetGasPriceInBox"
+  ? {
+      longitude1: number;
+      latitude1: number;
+      longitude2: number;
+      latitude2: number;
+    }
+  : T extends "GetGasStation"
+  ? { stationId: string }
+  : T extends "AddGasStation"
+  ? GasStationProps
+  : T extends "AddGasPrices"
+  ? {
+      _id: string;
+      unleaded: number;
+      midgrade: number;
+      premium: number;
+      diesel: number;
+      rating: number;
+      userId: string;
+    }
   : null;
 
 export interface SiteData {
@@ -247,6 +281,12 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? PostProps[]
   : T extends "GetFeedback"
   ? FeedbackProps[]
+  : T extends "GetGasStationsInBox"
+  ? GasStationProps[]
+  : T extends "GetGasPriceInBox"
+  ? GasPriceProps
+  : T extends "GetGasStation"
+  ? GasStationProps
   : any;
 
 export type Mutation<T extends Type> = State<T> & {
@@ -747,6 +787,66 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             res = await fetch(`${apiBaseUrl}/api/feedback`, {
               method: "GET",
               headers,
+            });
+            break;
+          }
+          case "GetGasStationsInBox": {
+            const castedInput = input as {
+              longitude1: number;
+              latitude1: number;
+              longitude2: number;
+              latitude2: number;
+            };
+            res = await fetch(
+              `${apiBaseUrl}/api/gas/stations/box/${castedInput.latitude1}/${castedInput.longitude1}/${castedInput.latitude2}/${castedInput.longitude2}`,
+              {
+                method: "GET",
+                headers,
+              }
+            );
+            break;
+          }
+          case "GetGasPriceInBox": {
+            const castedInput = input as {
+              longitude1: number;
+              latitude1: number;
+              longitude2: number;
+              latitude2: number;
+            };
+            res = await fetch(
+              `${apiBaseUrl}/api/gas/avgPrice/box/${castedInput.latitude1}/${castedInput.longitude1}/${castedInput.latitude2}/${castedInput.longitude2}`,
+              {
+                method: "GET",
+                headers,
+              }
+            );
+            break;
+          }
+          case "GetGasStation": {
+            const gasStationId = (input as { gasStationId: string })
+              .gasStationId;
+            res = await fetch(
+              `${apiBaseUrl}/api/gas/stations/${gasStationId}`,
+              {
+                method: "GET",
+                headers,
+              }
+            );
+            break;
+          }
+          case "AddGasStation": {
+            res = await fetch(`${apiBaseUrl}/api/gas/stations`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...input }),
+            });
+            break;
+          }
+          case "AddGasPrices": {
+            res = await fetch(`${apiBaseUrl}/api/gas/prices`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...input }),
             });
             break;
           }

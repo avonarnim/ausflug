@@ -43,6 +43,10 @@ function a11yProps(index: number) {
 }
 
 export function groupDetoursByDay(
+  originValue: google.maps.LatLng,
+  originName: string,
+  destinationValue: google.maps.LatLng,
+  destinationName: string,
   chosenDetours: SpotInfoProps[],
   tempDaysDriving: number,
   results: google.maps.DirectionsResult,
@@ -55,10 +59,18 @@ export function groupDetoursByDay(
     detoursByDay.push(new Array<SpotInfoProps>());
   }
 
+  // we need to add the origin as the first detour
+  detoursByDay[0].push({
+    _id: "origin",
+    title: originName,
+    description: "Origin",
+    category: "Home",
+  } as SpotInfoProps);
+
   let runningDuration = 0;
   let day = 0;
 
-  for (let i = 0; i < results.routes[0].legs.length - 1; i++) {
+  for (let i = 0; i < results.routes[0].legs.length; i++) {
     // find detour with min distance from results.routes[0].legs[i].end_location
 
     let minDistDetour = chosenDetours[0];
@@ -81,7 +93,45 @@ export function groupDetoursByDay(
       }
     }
 
-    const correspondingDetour = minDistDetour;
+    // Any leg that ends at the origin or destination should replace the minDistDetour with the origin or destination
+    const distanceToOrigin =
+      Math.pow(
+        originValue.lng() - results.routes[0].legs[i].end_location.lng(),
+        2
+      ) +
+      Math.pow(
+        originValue.lat() - results.routes[0].legs[i].end_location.lat(),
+        2
+      );
+
+    const distanceToDestination =
+      Math.pow(
+        destinationValue.lng() - results.routes[0].legs[i].end_location.lng(),
+        2
+      ) +
+      Math.pow(
+        destinationValue.lat() - results.routes[0].legs[i].end_location.lat(),
+        2
+      );
+
+    if (distanceToOrigin < minDist) {
+      minDistDetour = {
+        _id: "origin",
+        title: originName,
+        description: "Origin",
+        category: "Home",
+      } as SpotInfoProps;
+      minDist = distanceToOrigin;
+    }
+    if (distanceToDestination < minDist) {
+      minDistDetour = {
+        _id: "destination",
+        title: destinationName,
+        description: "Destination",
+        category: "Home",
+      } as SpotInfoProps;
+      minDist = distanceToDestination;
+    }
 
     const legDuration = results.routes[0].legs[i].duration?.value ?? 0;
     runningDuration = runningDuration + legDuration;
@@ -89,8 +139,10 @@ export function groupDetoursByDay(
       day++;
       runningDuration = legDuration;
     }
-    detoursByDay[day].push(correspondingDetour);
+    detoursByDay[day].push(minDistDetour);
   }
+
+  console.log("detoursByDay: ", detoursByDay);
 
   return detoursByDay;
 }
@@ -100,6 +152,8 @@ export function DetourDayTabPanel(props: DetourDayTabPanelProps): JSX.Element {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
+
+  console.log(props.chosenDetoursByDay);
 
   return (
     <Box mt={4}>
@@ -131,8 +185,9 @@ export function DetourDayTabPanel(props: DetourDayTabPanelProps): JSX.Element {
               }}
             >
               {day.map((detour, index) => {
+                console.log(detour);
                 return (
-                  <ListItem key={detour._id + "_chosenDetourDay"}>
+                  <ListItem key={detour._id + "_chosenDetourDay" + index}>
                     <ListItemButton>
                       <ListItemIcon>
                         {categoryToIcon(detour.category)}

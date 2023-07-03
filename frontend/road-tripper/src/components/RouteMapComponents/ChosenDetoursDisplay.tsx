@@ -116,7 +116,7 @@ export function ChosenDetoursDisplay(props: {
                 console.log("mapping", index, detour.title);
                 return (
                   <ListItem
-                    key={detour._id + "_chosenDetour"}
+                    key={detour._id + "_chosenDetour" + index}
                     secondaryAction={
                       <IconButton
                         edge="end"

@@ -112,6 +112,15 @@ export function NavBar(props: AppBarProps): JSX.Element {
             >
               Spots
             </Link>
+            <Link
+              color="inherit"
+              underline="none"
+              to="/gas"
+              component={NavLink}
+              sx={{ pl: 2, pr: 2 }}
+            >
+              Gas
+            </Link>
             {currentUser && (
               <Link
                 color="inherit"

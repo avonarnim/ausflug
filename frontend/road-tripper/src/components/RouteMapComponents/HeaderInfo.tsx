@@ -29,6 +29,7 @@ export function HeaderInfo(props: {
   setTripId: (tripId: string) => void;
   completed: boolean;
   posted: boolean;
+  oneWayRoundTrip: "oneWay" | "roundTrip";
 }): JSX.Element {
   const [completed, setCompleted] = useState<boolean>(props.completed);
   const [tripCreatorId, setTripCreatorId] = useState<string>(
@@ -107,6 +108,7 @@ export function HeaderInfo(props: {
                     duration: props.cumulativeDuration,
                     distance: props.cumulativeDistance,
                     image: props.image,
+                    oneWayRoundTrip: props.oneWayRoundTrip,
                   };
                   if (tripCreatorId !== props.currentUser.uid) {
                     const tripResult = await createTrip.commit(tripDetails);
@@ -165,6 +167,7 @@ export function HeaderInfo(props: {
                       duration: props.cumulativeDuration,
                       distance: props.cumulativeDistance,
                       image: props.image,
+                      oneWayRoundTrip: props.oneWayRoundTrip,
                     };
                     const tripResult = await updateTrip.commit({
                       ...tripDetails,

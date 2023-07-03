@@ -13,6 +13,7 @@ import {
   // Donate,
   EditTrip,
   Feed,
+  Gas,
   Home,
   Login,
   NewTrip,
@@ -54,7 +55,7 @@ function App() {
             element={<React.Suspense children={<Trips />} />}
           />
           <Route
-            path="/trips/:origin/:originVal/:destination/:destinationVal/:startDate?/:endDate?"
+            path="/trips/:oneWayRoundTrip/:origin/:originVal/:destination/:destinationVal/:startDate?/:endDate?"
             element={<React.Suspense children={<NewTrip />} />}
           />
           <Route
@@ -109,6 +110,7 @@ function App() {
             path="/login"
             element={<React.Suspense children={<Login />} />}
           />
+          <Route path="/gas" element={<React.Suspense children={<Gas />} />} />
           {/* <Route
             path="/donate"
             element={<React.Suspense children={<Donate />} />}

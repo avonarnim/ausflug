@@ -6,7 +6,15 @@ import {
 } from "@react-google-maps/api";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import React, { useRef, useState, useEffect } from "react";
-import { Box, Button, Container, Grid, Input } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Input,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
 import { useMutation } from "../core/api";
 import { SpotInfoProps } from "./SpotInfo";
 import { Dayjs } from "dayjs";
@@ -23,6 +31,9 @@ import { BrowseEventsDisplay } from "./RouteMapComponents/BrowseEventsDisplay";
 import { BrowseSpotsDisplay } from "./RouteMapComponents/BrowseSpotsDisplay";
 import { RouteInfo } from "./RouteMapComponents/RouteInfo";
 import { HeaderInfo } from "./RouteMapComponents/HeaderInfo";
+import { GasStationProps } from "../pages/Gas";
+import { GasStationInfo } from "./RouteMapComponents/GasStationInfo";
+import { convertToLatLng } from "../core/util";
 
 type Libraries = (
   | "drawing"
@@ -44,6 +55,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
   const [directionsResponse, setDirectionsResponse] =
     useState<google.maps.DirectionsResult>();
 
+  const [oneWayRoundTrip, setOneWayRoundTrip] = useState(props.oneWayRoundTrip);
   const [center, setCenter] = useState({ lat: 38.8584, lng: -112.2945 });
   const [distance, setDistance] = useState("");
   const [cumulativeDistance, setCumulativeDistance] = useState(0);
@@ -58,12 +70,17 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
   const [tempChosenDetour, setTempChosenDetour] = useState<SpotInfoProps>();
   const [eventElements, setEventElements] = useState<JSX.Element[]>([]);
   const [routeCreated, setRouteCreated] = useState(false);
+
   const [startAutocomplete, setStartAutocomplete] =
     useState<google.maps.places.Autocomplete>();
   const [destinationAutocomplete, setDestinationAutocomplete] =
     useState<google.maps.places.Autocomplete>();
+
   const [savedSpots, setSavedSpots] = useState<SpotInfoProps[]>([]);
   const [savedEvents, setSavedEvents] = useState<EventProps[]>([]);
+  const [savedGasStations, setSavedGasStations] = useState<GasStationProps[]>(
+    []
+  );
   const [originPlace, setOriginPlace] =
     useState<google.maps.places.PlaceResult>();
   const [destinationPlace, setDestinationPlace] =
@@ -89,6 +106,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 
   const getSpotsInBox = useMutation("GetSpotsInBox");
   const getEventsInBoxTime = useMutation("GetEventsInBoxTime");
+  const getGasStationsInBox = useMutation("GetGasStationsInBox");
 
   const getSpot = useMutation("GetSpot");
 
@@ -141,12 +159,15 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       }
     );
 
+    // If this is a new trip, no far-away waypoints need to be retrieved.
+    // There is sufficient information to calculate the route
     if (!props.tripId) {
       calculateRoute({ placeId: props.origin }, { placeId: props.destination });
     }
   },
   []);
 
+  // If this is from a saved trip, then there may be some far-away waypoints that need to be retrieved
   useEffect(() => {
     if (
       map &&
@@ -166,7 +187,6 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     let aggregatedDetours = [];
     for (const waypoint of waypoints) {
       const spot = await getSpot.commit({ spotId: waypoint._id });
-      console.log("res", spot);
       aggregatedDetours.push(spot);
     }
     setChosenDetours(aggregatedDetours);
@@ -226,16 +246,29 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       | google.maps.Place
       | google.maps.LatLngLiteral
   ) {
+    const originLocation = await convertToLatLng(map!, originValue);
+    const destinationLocation = await convertToLatLng(map!, destinationValue);
+
     const directionsService = new google.maps.DirectionsService();
-    const wayPoints = chosenDetours.map((spot) => {
-      return {
-        location: {
-          lat: spot.location.lat,
-          lng: spot.location.lng,
-        },
+    const wayPoints: google.maps.DirectionsWaypoint[] = chosenDetours.map(
+      (spot) => {
+        return {
+          location: {
+            lat: spot.location.lat,
+            lng: spot.location.lng,
+          },
+          stopover: true,
+        };
+      }
+    );
+    if (oneWayRoundTrip == "roundTrip") {
+      wayPoints.push({
+        location: destinationValue,
         stopover: true,
-      };
-    });
+      });
+      destinationValue = originValue;
+    }
+
     const results = await directionsService.route({
       origin: originValue,
       destination: destinationValue,
@@ -264,8 +297,13 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     const tempDaysDriving = Math.ceil(rawDuration / 3600 / hoursDrivingPerDay);
     setDaysDriving(tempDaysDriving);
 
+    console.log("results", results.routes[0].legs);
     setChosenDetoursByDay(
       groupDetoursByDay(
+        originLocation,
+        originRef.current?.value || props.originVal,
+        destinationLocation,
+        destinationRef.current?.value || props.destinationVal,
         chosenDetours,
         tempDaysDriving,
         results,
@@ -327,6 +365,15 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     });
 
     setSavedEvents(eventResults);
+
+    const gasStationResults = await getGasStationsInBox.commit({
+      longitude1: originPlace!.geometry!.location!.lng(),
+      latitude1: originPlace!.geometry!.location!.lat(),
+      longitude2: destinationPlace!.geometry!.location!.lng(),
+      latitude2: destinationPlace!.geometry!.location!.lat(),
+    });
+
+    setSavedGasStations(gasStationResults);
 
     if (map) {
       const infoWindow = new google.maps.InfoWindow({ content: "" });
@@ -399,6 +446,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
         setTripId={props.setTripId}
         completed={props.tripResult?.completed || false}
         posted={props.tripResult?.posted || false}
+        oneWayRoundTrip={oneWayRoundTrip}
       />
       <GoogleMap
         mapContainerStyle={{ width: "100%", height: "500px" }}
@@ -413,6 +461,22 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
       </GoogleMap>
       <Box>
         <Box>
+          <ToggleButtonGroup
+            value={oneWayRoundTrip}
+            exclusive
+            onChange={(event, newOneWayRoundTrip: "oneWay" | "roundTrip") =>
+              setOneWayRoundTrip(newOneWayRoundTrip)
+            }
+            aria-label="outlined button group"
+            sx={{ pl: 4, pt: 2 }}
+          >
+            <ToggleButton value="oneWay" aria-label="one way">
+              One Way
+            </ToggleButton>
+            <ToggleButton value="roundTrip" aria-label="round trip">
+              Round Trip
+            </ToggleButton>
+          </ToggleButtonGroup>
           <Grid item container direction="row" alignItems="center">
             <Grid item xs={6} sx={{ p: 4 }}>
               <Autocomplete
@@ -463,34 +527,32 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
               </Autocomplete>
             </Grid>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <Container>
-                <Grid item container direction="row">
-                  <Grid item xs={6} sx={{ p: 2 }}>
-                    <DatePicker
-                      label="Start"
-                      value={
-                        startDate ||
-                        dayjs(props.startDate) ||
-                        dayjs(props.tripResult?.startDate) ||
-                        dayjs()
-                      }
-                      onChange={(newValue) => setStartDate(newValue)}
-                    />
-                  </Grid>
-                  <Grid item xs={6} sx={{ p: 2 }}>
-                    <DatePicker
-                      label="End"
-                      value={
-                        endDate ||
-                        dayjs(props.endDate) ||
-                        dayjs(props.tripResult?.endDate) ||
-                        dayjs()
-                      }
-                      onChange={(newValue) => setEndDate(newValue)}
-                    />
-                  </Grid>
+              <Grid item container direction="row" xs={12}>
+                <Grid item xs={6} sx={{ p: 4 }}>
+                  <DatePicker
+                    label="Start"
+                    value={
+                      startDate ||
+                      dayjs(props.startDate) ||
+                      dayjs(props.tripResult?.startDate) ||
+                      dayjs()
+                    }
+                    onChange={(newValue) => setStartDate(newValue)}
+                  />
                 </Grid>
-              </Container>
+                <Grid item xs={6} sx={{ p: 4 }}>
+                  <DatePicker
+                    label="End"
+                    value={
+                      endDate ||
+                      dayjs(props.endDate) ||
+                      dayjs(props.tripResult?.endDate) ||
+                      dayjs()
+                    }
+                    onChange={(newValue) => setEndDate(newValue)}
+                  />
+                </Grid>
+              </Grid>
             </LocalizationProvider>
             <br />
             <br />
@@ -520,12 +582,12 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                   type="submit"
                   onClick={() => {
                     if (
-                      originRef.current?.value &&
-                      destinationRef.current?.value
+                      originPlace?.geometry?.location &&
+                      destinationPlace?.geometry?.location
                     ) {
                       calculateRoute(
-                        originRef.current?.value,
-                        destinationRef.current?.value
+                        originPlace.geometry?.location,
+                        destinationPlace.geometry?.location
                       );
                     } else {
                       alert("Please enter an origin and destination");
@@ -545,6 +607,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
               daysDriving={daysDriving}
               chosenDetoursByDay={chosenDetoursByDay}
             />
+            <GasStationInfo stations={savedGasStations} />
           </Grid>
         </Box>
       </Box>
@@ -555,6 +618,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
 }
 
 export type RouteMapProps = {
+  oneWayRoundTrip: "oneWay" | "roundTrip";
   origin: string;
   originVal: string;
   destination: string;
