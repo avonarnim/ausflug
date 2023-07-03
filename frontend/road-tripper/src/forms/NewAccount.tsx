@@ -19,6 +19,7 @@ import { ProfileProps } from "../pages/Profile";
 import { useAuth } from "../core/AuthContext";
 import { PhotoCamera } from "@mui/icons-material";
 import profileIcon from "../assets/profileIcon.png";
+import { ProfileStatus } from "../components/ProfileStatus";
 
 export function NewAccountRegisterSection(props: {
   values: NewAccountFormState;
@@ -317,6 +318,8 @@ export function NewAccountFormDetailsSection(props: {
         fullWidth
       />
       <br />
+      <ProfileStatus handleChange={props.handleChange} />
+      <br />
       <TextField
         placeholder="Instagram"
         name="instagram"
@@ -386,6 +389,7 @@ export function NewAccountFormConfirm(props: {
         facebook: props.values.facebook,
         twitter: props.values.twitter,
         youtube: props.values.youtube,
+        status: props.values.status,
         createdAt: Date.now(),
       } as ProfileProps;
       const createProfileResponse = await createProfile.commit(profileInfo);
@@ -471,6 +475,7 @@ export function NewAccountForm(): JSX.Element {
     facebook: "",
     twitter: "",
     youtube: "",
+    status: "",
   });
   const [step, setStep] = useState(0);
 
@@ -550,4 +555,5 @@ export type NewAccountFormState = {
   facebook: string;
   twitter: string;
   youtube: string;
+  status: string;
 };
