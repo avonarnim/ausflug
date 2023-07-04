@@ -57,9 +57,7 @@ export default function AddGasPriceDialog(props: { station: GasStationProps }) {
 
   return (
     <div>
-      <Typography pl={4} pb={4} onClick={handleClickOpen}>
-        Add updated price
-      </Typography>
+      <Button onClick={handleClickOpen}>Add updated price</Button>
       <Dialog open={open} onClose={handleClose}>
         {successfulEdit ? (
           <>
