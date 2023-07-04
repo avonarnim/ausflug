@@ -191,76 +191,78 @@ export default function AddGasStationForm() {
           <Typography variant="h6">Add a gas station</Typography>
           <Grid item container xs={12} direction="row">
             {isLoaded && (
-              <Grid item xs={12} sm={5}>
-                <Autocomplete
-                  onLoad={onLoadAutocomplete}
-                  onPlaceChanged={onPlaceChanged}
-                  className="autocomplete"
-                >
-                  <Input
-                    type="text"
-                    name="name"
-                    placeholder="Name of gas station"
-                    inputRef={locationRef}
-                    onChange={handleChange}
+              <>
+                <Grid item xs={12} sm={5}>
+                  <Autocomplete
+                    onLoad={onLoadAutocomplete}
+                    onPlaceChanged={onPlaceChanged}
+                    className="autocomplete"
+                  >
+                    <Input
+                      type="text"
+                      name="name"
+                      placeholder="Name of gas station"
+                      inputRef={locationRef}
+                      onChange={handleChange}
+                    />
+                  </Autocomplete>
+                  <br />
+                  <TextField
+                    margin="dense"
+                    id="unleaded"
+                    label="Unleaded Price"
+                    type="number"
+                    fullWidth
+                    variant="standard"
+                    name="unleaded"
+                    defaultValue={pricesState.unleaded}
+                    onChange={handlePriceChange}
                   />
-                </Autocomplete>
-                <br />
-                <TextField
-                  margin="dense"
-                  id="unleaded"
-                  label="Unleaded Price"
-                  type="number"
-                  fullWidth
-                  variant="standard"
-                  name="unleaded"
-                  defaultValue={pricesState.unleaded}
-                  onChange={handlePriceChange}
-                />
-                <TextField
-                  margin="dense"
-                  id="midgrade"
-                  label="Midgrade Price"
-                  type="number"
-                  fullWidth
-                  variant="standard"
-                  name="midgrade"
-                  defaultValue={pricesState.midgrade}
-                  onChange={handlePriceChange}
-                />
-                <TextField
-                  margin="dense"
-                  id="premium"
-                  label="Premium Price"
-                  type="number"
-                  fullWidth
-                  variant="standard"
-                  name="premium"
-                  defaultValue={pricesState.premium}
-                  onChange={handlePriceChange}
-                />
-                <TextField
-                  margin="dense"
-                  id="diesel"
-                  label="Diesel Price"
-                  type="number"
-                  fullWidth
-                  variant="standard"
-                  name="diesel"
-                  defaultValue={pricesState.diesel}
-                  onChange={handlePriceChange}
-                />
-              </Grid>
+                  <TextField
+                    margin="dense"
+                    id="midgrade"
+                    label="Midgrade Price"
+                    type="number"
+                    fullWidth
+                    variant="standard"
+                    name="midgrade"
+                    defaultValue={pricesState.midgrade}
+                    onChange={handlePriceChange}
+                  />
+                  <TextField
+                    margin="dense"
+                    id="premium"
+                    label="Premium Price"
+                    type="number"
+                    fullWidth
+                    variant="standard"
+                    name="premium"
+                    defaultValue={pricesState.premium}
+                    onChange={handlePriceChange}
+                  />
+                  <TextField
+                    margin="dense"
+                    id="diesel"
+                    label="Diesel Price"
+                    type="number"
+                    fullWidth
+                    variant="standard"
+                    name="diesel"
+                    defaultValue={pricesState.diesel}
+                    onChange={handlePriceChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={7} pl={4}>
+                  <GoogleMap
+                    mapContainerStyle={{ width: "300px", height: "300px" }}
+                    center={center}
+                    zoom={3}
+                    onLoad={onLoad}
+                    onUnmount={onUnmount}
+                  ></GoogleMap>
+                </Grid>
+              </>
             )}
-            <Grid item xs={12} sm={7} pl={4}>
-              <GoogleMap
-                mapContainerStyle={{ width: "300px", height: "300px" }}
-                center={center}
-                zoom={3}
-                onLoad={onLoad}
-                onUnmount={onUnmount}
-              ></GoogleMap>
-            </Grid>
           </Grid>
           <Button onClick={() => handleSubmit()}>Submit</Button>
         </>

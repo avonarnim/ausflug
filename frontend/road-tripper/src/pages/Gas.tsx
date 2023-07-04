@@ -92,13 +92,17 @@ export default function Spot(): JSX.Element {
               m: 2,
             }}
           >
-            <Typography>Best gas stations in your area:</Typography>
+            <Typography variant="h6">
+              Best gas stations in your area:
+            </Typography>
             {gasStations?.map((station) => {
               return (
                 <>
                   <Card>
                     <CardContent>
-                      <Typography>{station.name}</Typography>
+                      <Typography variant="subtitle1">
+                        {station.name}
+                      </Typography>
                       <Typography>
                         Unleaded: {station.resolved_prices.unleaded}
                       </Typography>
@@ -120,7 +124,7 @@ export default function Spot(): JSX.Element {
           </Box>
         </Grid>
         <Grid item xs={12}>
-          {/* <AddGasStationForm /> */}
+          <AddGasStationForm />
         </Grid>
       </Grid>
     </Container>
