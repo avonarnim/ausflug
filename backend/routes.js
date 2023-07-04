@@ -114,7 +114,6 @@ router.route("/api/spots/review").post((req, res) => {
 router
   .route("/api/gas/stations/box/:latitude1/:longitude1/:latitude2/:longitude2")
   .get((req, res) => {
-    console.log("in here 1");
     gas.get_gas_stations_in_area(req, res);
   });
 router
@@ -126,6 +125,7 @@ router.route("/api/gas/prices").post((req, res) => {
   gas.add_gas_prices(req, res);
 });
 router.route("/api/gas/stations").post((req, res) => {
+  console.log("adding gas station");
   gas.add_gas_station(req, res);
 });
 router.route("/api/gas/stations/:id").get((req, res) => {

@@ -3,7 +3,6 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var GasSchema = new Schema({
-  _id: String,
   name: String,
   ratings: [{ userId: String, rating: Number }],
   rating: Number,

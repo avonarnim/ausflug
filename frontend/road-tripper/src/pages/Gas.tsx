@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useMutation } from "../core/api";
 import { SpotInfoProps } from "../components/SpotInfo";
 import {
+  Box,
   Button,
   Card,
   CardActionArea,
@@ -11,14 +12,13 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
 import AddGasPriceDialog from "../dialogs/AddGasPriceDialog";
+import AddGasStationForm from "../forms/AddGasStationForm";
 
 export default function Spot(): JSX.Element {
   const getGasPriceInBox = useMutation("GetGasPriceInBox");
   const getGasStation = useMutation("GetGasStation");
   const getGasStationsInBox = useMutation("GetGasStationsInBox");
-  const addGasStation = useMutation("AddGasStation");
 
   const [avgGasPrices, setAvgGasPrices] = useState<GasPriceProps>();
   const [gasStations, setGasStations] = useState<GasStationProps[]>();
@@ -62,40 +62,65 @@ export default function Spot(): JSX.Element {
   return (
     <Container sx={{ marginTop: 4 }}>
       <Typography variant="h4">Gas</Typography>
-      <Grid item container sx={{ marginBottom: 4 }}>
+      <Grid container sx={{ marginBottom: 4 }} direction="row">
         <Grid item xs={12} sm={6}>
-          <Typography>Average gas price in your area:</Typography>
-          <Typography>Unleaded: {avgGasPrices?.unleaded}</Typography>
-          <Typography>Midgrade: {avgGasPrices?.midgrade}</Typography>
-          <Typography>Premium: {avgGasPrices?.premium}</Typography>
-          <Typography>Diesel: {avgGasPrices?.diesel}</Typography>
+          <Box
+            sx={{
+              borderRadius: "5px",
+              border: "1px solid black",
+              backgroundColor: "white",
+              p: 2,
+              m: 2,
+            }}
+          >
+            <Typography variant="h6">
+              Average gas price in your area:
+            </Typography>
+            <Typography>Unleaded: {avgGasPrices?.unleaded}</Typography>
+            <Typography>Midgrade: {avgGasPrices?.midgrade}</Typography>
+            <Typography>Premium: {avgGasPrices?.premium}</Typography>
+            <Typography>Diesel: {avgGasPrices?.diesel}</Typography>
+          </Box>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography>Best gas stations in your area:</Typography>
-          {gasStations?.map((station) => {
-            return (
-              <>
-                <Card>
-                  <CardHeader>{station.name}</CardHeader>
-                  <CardContent>
-                    <Typography>
-                      Unleaded: {station.resolved_prices.unleaded}
-                    </Typography>
-                    <Typography>
-                      Midgrade: {station.resolved_prices.midgrade}
-                    </Typography>
-                    <Typography>
-                      Premium: {station.resolved_prices.premium}
-                    </Typography>
-                    <Typography>
-                      Diesel: {station.resolved_prices.diesel}
-                    </Typography>
-                    <AddGasPriceDialog station={station} />
-                  </CardContent>
-                </Card>
-              </>
-            );
-          })}
+          <Box
+            sx={{
+              borderRadius: "5px",
+              border: "1px solid black",
+              backgroundColor: "white",
+              p: 2,
+              m: 2,
+            }}
+          >
+            <Typography>Best gas stations in your area:</Typography>
+            {gasStations?.map((station) => {
+              return (
+                <>
+                  <Card>
+                    <CardContent>
+                      <Typography>{station.name}</Typography>
+                      <Typography>
+                        Unleaded: {station.resolved_prices.unleaded}
+                      </Typography>
+                      <Typography>
+                        Midgrade: {station.resolved_prices.midgrade}
+                      </Typography>
+                      <Typography>
+                        Premium: {station.resolved_prices.premium}
+                      </Typography>
+                      <Typography>
+                        Diesel: {station.resolved_prices.diesel}
+                      </Typography>
+                      <AddGasPriceDialog station={station} />
+                    </CardContent>
+                  </Card>
+                </>
+              );
+            })}
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          {/* <AddGasStationForm /> */}
         </Grid>
       </Grid>
     </Container>
@@ -131,7 +156,7 @@ export type GasStationProps = {
     midgrade: number;
     premium: number;
     diesel: number;
-    date: Date;
+    date: number;
     userId: string;
   }[];
   resolved_prices: {

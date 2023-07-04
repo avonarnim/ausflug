@@ -9,7 +9,6 @@ const Gas = require("../models/gasModel");
 
 // retrieve all gas stations in an area
 exports.get_gas_stations_in_area = async function (req, res) {
-  console.log("in here 2");
   Gas.find(
     {
       "mapLocation.geometry.location": {
@@ -21,9 +20,18 @@ exports.get_gas_stations_in_area = async function (req, res) {
         },
       },
     },
-    function (err, spot) {
+    function (err, stations) {
       if (err) res.send(err);
-      res.json(spot);
+      for (let i = 0; i < stations.length; i++) {
+        if (
+          stations[i].resolved_prices.unleaded == 0 &&
+          stations[i].prices.length > 0
+        ) {
+          stations[i].resolved_prices =
+            stations[i].prices[stations[i].prices.length - 1];
+        }
+      }
+      res.json(stations);
     }
   ).sort({ unleaded_prices: -1 });
 };
@@ -40,17 +48,21 @@ exports.avg_price_along_route = async function (req, res) {
       },
     },
   });
-  const avg_prices =
-    stations.reduce(
-      (acc, station) => {
-        acc.unleaded += station.prices[station.prices.length - 1].unleaded;
-        acc.midgrade += station.prices[station.prices.length - 1].midgrade;
-        acc.premium += station.prices[station.prices.length - 1].premium;
-        acc.diesel += station.prices[station.prices.length - 1].diesel;
-        return acc;
-      },
-      { unleaded: 0, midgrade: 0, premium: 0, diesel: 0 }
-    ) / stations.length;
+  let avg_prices = stations.reduce(
+    (acc, station) => {
+      acc.unleaded += station.prices[station.prices.length - 1].unleaded;
+      acc.midgrade += station.prices[station.prices.length - 1].midgrade;
+      acc.premium += station.prices[station.prices.length - 1].premium;
+      acc.diesel += station.prices[station.prices.length - 1].diesel;
+      return acc;
+    },
+    { unleaded: 0, midgrade: 0, premium: 0, diesel: 0 }
+  );
+
+  avg_prices.unleaded /= stations.length;
+  avg_prices.midgrade /= stations.length;
+  avg_prices.premium /= stations.length;
+  avg_prices.diesel /= stations.length;
 
   res.json(avg_prices);
 };
@@ -76,17 +88,14 @@ exports.add_gas_prices = async function (req, res) {
 };
 
 exports.add_gas_station = async function (req, res) {
-  const { name, rating, mapLocation, userId } = req.body;
+  delete req.body._id;
 
-  var new_station = new Gas({
-    ...req.body,
-    rating: 0,
-    number_of_ratings: 0,
-    ratings: [],
-  });
-  new_station.save(function (err, post) {
+  var new_station = new Gas(req.body);
+
+  new_station.save(function (err, station) {
+    console.log("err, station", err, station);
     if (err) res.send(err);
-    res.json(post);
+    res.json(station);
   });
 };
 
