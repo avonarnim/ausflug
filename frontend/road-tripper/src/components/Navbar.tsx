@@ -40,6 +40,9 @@ export function NavBar(props: AppBarProps): JSX.Element {
   );
   const open = Boolean(anchorEl);
   const loginOpen = Boolean(loginAnchorEl);
+  const [mobileMenuAnchorEl, setMobileMenuAnchorEl] =
+    React.useState<null | HTMLElement>(null);
+
   const handleAccountClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -67,6 +70,19 @@ export function NavBar(props: AppBarProps): JSX.Element {
   const handleProfile = () => {
     setAnchorEl(null);
     navigate(`/profile/${currentUser?.uid}`);
+  };
+
+  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setMobileMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMenuAnchorEl(null);
+  };
+
+  const handleMobileMenu = (newPage: string) => {
+    setMobileMenuAnchorEl(null);
+    navigate(newPage);
   };
 
   return (
@@ -161,6 +177,38 @@ export function NavBar(props: AppBarProps): JSX.Element {
             pl="auto"
             sx={{ right: 0 }}
           >
+            <Box sx={{ display: { xs: "block", sm: "none" } }}>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={handleMobileMenuOpen}
+                sx={{ display: { md: "none" } }}
+              >
+                <MenuIcon />
+              </IconButton>
+              {/* Add a dropdown menu for mobile */}
+              <Menu
+                anchorEl={mobileMenuAnchorEl}
+                keepMounted
+                open={Boolean(mobileMenuAnchorEl)}
+                onClose={handleMobileMenuClose}
+              >
+                <MenuItem onClick={() => handleMobileMenu("/trips")}>
+                  Trips
+                </MenuItem>
+                <MenuItem onClick={() => handleMobileMenu("/spots")}>
+                  Spots
+                </MenuItem>
+                <MenuItem onClick={() => handleMobileMenu("/gas")}>
+                  Gas
+                </MenuItem>
+                <MenuItem onClick={() => handleMobileMenu("/activity")}>
+                  Activity
+                </MenuItem>
+              </Menu>
+            </Box>
             <ThemeButton />
             {currentUser ? (
               <>
