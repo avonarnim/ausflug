@@ -25,6 +25,7 @@ import {
 import { SpotInfoProps } from "../components/SpotInfo";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { GasPriceProps } from "./Gas";
+import CarAnimation from "../components/CarAnimation";
 
 type Libraries = (
   | "drawing"
@@ -396,6 +397,7 @@ export default function Home(): JSX.Element {
             </Grid>
           </Box>
         )}
+        <CarAnimation />
         <Grid container spacing={1} p={1} alignItems="stretch">
           <Grid item xs={12} mt={2}>
             <Divider style={{ marginTop: 10, marginBottom: 10 }} />
