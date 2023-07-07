@@ -166,7 +166,7 @@ export function NewAccountFormDetailsSection(props: {
         const profileRes = await getProfileByUsername.commit({
           username: props.values.username,
         });
-        if (profileRes._id) {
+        if (profileRes != null && profileRes._id) {
           setUsernameErrorMsg("Username already exists");
         } else {
           props.handleNext();

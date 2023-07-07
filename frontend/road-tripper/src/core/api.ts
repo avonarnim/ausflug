@@ -36,6 +36,7 @@ type Type =
   | "GetProfile"
   | "GetProfileByUsername"
   | "GetProfiles"
+  | "GetStatuses"
   | "DeleteProfile"
   | "UpdateProfile"
   | "FollowProfile"
@@ -137,6 +138,8 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? { profileId: string }
   : T extends "GetProfileByUsername"
   ? { username: string }
+  : T extends "GetStatuses"
+  ? { profileId: string }
   : T extends "GetProfiles"
   ? {}
   : T extends "DeleteProfile"
@@ -231,6 +234,14 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? ProfileProps
   : T extends "GetProfileByUsername"
   ? ProfileProps
+  : T extends "GetStatuses"
+  ? {
+      _id: string;
+      name: string;
+      username: string;
+      status: string;
+      image: string;
+    }[]
   : T extends "GetSpot"
   ? SpotInfoProps
   : T extends "GetSpots"
@@ -548,10 +559,18 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
           }
           case "UpdateProfile": {
             const profileId = (input as ProfileProps)._id;
-            res = await fetch(`${apiBaseUrl}/api/users/${profileId}`, {
+            res = await fetch(`${apiBaseUrl}/api/users/update/${profileId}`, {
               method: "POST",
               headers,
               body: JSON.stringify({ ...input }),
+            });
+            break;
+          }
+          case "GetStatuses": {
+            const profileId = (input as { profileId: string }).profileId;
+            res = await fetch(`${apiBaseUrl}/api/users/statuses/${profileId}`, {
+              method: "GET",
+              headers,
             });
             break;
           }

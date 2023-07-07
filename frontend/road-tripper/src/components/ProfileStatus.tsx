@@ -12,7 +12,7 @@ const StyledButton = styled(Button)`
   background-color: #fff;
 `;
 
-const StyledIndicator = styled(FiberManualRecord)`
+export const StyledIndicator = styled(FiberManualRecord)`
   color: ${({ color }) => color};
   margin-right: 8px;
 `;
@@ -23,14 +23,14 @@ const StyledMenuItem = styled(MenuItem)`
   }
 `;
 
-type Status =
+export type Status =
   | "Planning a road trip"
   | "Looking to join a trip"
   | "Looking for trip partners"
   | "Inactive"
   | "On a trip";
 
-const statusMap: Record<
+export const statusMap: Record<
   Status,
   | "action"
   | "disabled"
@@ -50,6 +50,27 @@ const statusMap: Record<
 };
 
 export function ProfileStatus(props: {
+  user?: ProfileProps;
+  handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}): JSX.Element {
+  const [status, setStatus] = useState<string>(
+    props.user?.status || "Inactive"
+  );
+
+  return (
+    <div>
+      <StyledButton
+        aria-controls="dropdown-menu"
+        aria-haspopup="true"
+        endIcon={<StyledIndicator color={statusMap[status as Status]} />}
+      >
+        {status}
+      </StyledButton>
+    </div>
+  );
+}
+
+export function ProfileStatusSelector(props: {
   user?: ProfileProps;
   handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }): JSX.Element {
@@ -80,8 +101,9 @@ export function ProfileStatus(props: {
     } else if (props.user) {
       const updateRes = await updateProfile.commit({
         ...props.user,
-        status: status,
+        status: option,
       });
+      console.log(updateRes);
     }
     handleClose();
   };

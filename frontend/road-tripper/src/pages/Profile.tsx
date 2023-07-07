@@ -34,7 +34,13 @@ import {
 import { SpotInfoProps } from "../components/SpotInfo";
 import RandomTripButton from "../components/RandomTripButton";
 import FollowList from "../dialogs/FollowList";
-import { ProfileStatus } from "../components/ProfileStatus";
+import {
+  ProfileStatus,
+  ProfileStatusSelector,
+  Status,
+  statusMap,
+  StyledIndicator,
+} from "../components/ProfileStatus";
 
 const Img = styled("img")({
   margin: "auto",
@@ -125,6 +131,16 @@ export default function Profile(): JSX.Element {
   const [thisUser, setThisUser] = useState<ProfileProps | null>(null);
   const [trips, setTrips] = useState<TripProps[] | null>(null);
   const [spots, setSpots] = useState<SpotInfoProps[] | null>(null);
+  const [statuses, setStatuses] = useState<
+    | {
+        _id: string;
+        name: string;
+        username: string;
+        image: string;
+        status: string;
+      }[]
+    | null
+  >(null);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   const params = useParams();
@@ -135,6 +151,7 @@ export default function Profile(): JSX.Element {
   const getUserTrips = useMutation("GetUserTrips");
   const getSpotsList = useMutation("GetSpotsList");
   const unsaveSpot = useMutation("UnsaveSpotFromUser");
+  const getStatuses = useMutation("GetStatuses");
 
   useEffect(() => {
     console.log("params", params, currentUser?.uid);
@@ -144,6 +161,7 @@ export default function Profile(): JSX.Element {
       getProfileCallback(currentUser.uid, setUser);
       getTripsCallback(currentUser.uid);
       getSpotsCallback(currentUser.uid);
+      getStatusesCallback(currentUser.uid);
     } else if (params.userId) {
       console.log("getting profile");
       setUserId(params.userId);
@@ -183,6 +201,14 @@ export default function Profile(): JSX.Element {
     });
     setSpots(getSpotsResponse);
     console.log("spots set", getSpotsResponse);
+  };
+
+  const getStatusesCallback = async (userId: string) => {
+    const getStatusesResponse = await getStatuses.commit({
+      profileId: userId,
+    });
+    setStatuses(getStatusesResponse);
+    console.log("statuses set", getStatusesResponse);
   };
 
   const removeSpot = async (spotId: string, userId: string) => {
@@ -262,7 +288,9 @@ export default function Profile(): JSX.Element {
           <Typography gutterBottom variant="body1" component="div">
             {user?.bio}
           </Typography>
-          {user && <ProfileStatus user={user} />}
+          {isCurrentUser
+            ? user && <ProfileStatusSelector user={user} />
+            : user && <ProfileStatus user={user} />}
           <Grid container direction="row" spacing={2}>
             <Grid item>
               <FollowList
@@ -353,6 +381,28 @@ export default function Profile(): JSX.Element {
               {spots && spots.length > 0 && <RandomTripButton spots={spots} />}
             </Grid>
           </>
+        )}
+        {isCurrentUser && (
+          <Grid item xs={6}>
+            {/* Display statusResults with styled indicator as seen in ProfileStatus.tsx */}
+            <Typography variant="h5">Statuses</Typography>
+            <List>
+              {statuses?.map((status) => (
+                <ListItem key={status._id + "_status"}>
+                  {status.image && (
+                    <ListItemAvatar>
+                      <Avatar alt={status.username} src={status.image} />
+                    </ListItemAvatar>
+                  )}
+                  <ListItemText
+                    primary={status.username}
+                    secondary={status.status}
+                  />
+                  <StyledIndicator color={statusMap[status.status as Status]} />
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
         )}
       </Grid>
     </Grid>
