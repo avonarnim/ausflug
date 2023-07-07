@@ -13,6 +13,48 @@ exports.search_spots = function (req, res) {
   });
 };
 
+exports.search_spots_assemblage = async function (req, res) {
+  const { locations, subjects, sources } = req.body;
+  let results = {
+    locations: [],
+    subjects: [],
+    sources: [],
+  };
+
+  for (let i = 0; i < locations.length; i++) {
+    results.locations.push({
+      title: locations[i].title,
+      spots: await Spot.find({
+        location: {
+          $geoWithin: {
+            $center: [[locations[i].latitude, locations[i].longitude], 1.0],
+          },
+        },
+      }).limit(10),
+    });
+  }
+
+  for (let i = 0; i < subjects.length; i++) {
+    results.subjects.push({
+      title: subjects[i].title,
+      spots: await Spot.find({
+        highlightedIn: subjects[i].subject,
+      }).limit(10),
+    });
+  }
+
+  for (let i = 0; i < sources.length; i++) {
+    results.sources.push({
+      title: sources[i].title,
+      spots: await Spot.find({
+        featuredBy: sources[i].source,
+      }).limit(10),
+    });
+  }
+
+  res.json(results);
+};
+
 exports.search_saved_spots_list = function (req, res) {
   User.findOne(
     {

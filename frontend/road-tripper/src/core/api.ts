@@ -18,6 +18,7 @@ type Type =
   | "DeleteSpot"
   | "GetSpot"
   | "GetSpots"
+  | "GetSpotsAssemblage"
   | "GetSpotsQueue"
   | "GetSpotsList"
   | "GetSpotsByCenter"
@@ -83,6 +84,16 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? { spotId: string }
   : T extends "GetSpots"
   ? {}
+  : T extends "GetSpotsAssemblage"
+  ? {
+      locations: {
+        longitude: number;
+        latitude: number;
+        title: string;
+      }[];
+      sources: { source: string; title: string }[];
+      subjects: { subject: string; title: string }[];
+    }
   : T extends "GetSpotsQueue"
   ? {}
   : T extends "GetSpotsList"
@@ -246,6 +257,21 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? SpotInfoProps
   : T extends "GetSpots"
   ? SpotInfoProps[]
+  : T extends "GetSpotsAssemblage"
+  ? {
+      locations: {
+        title: string;
+        spots: SpotInfoProps[];
+      }[];
+      sources: {
+        title: string;
+        spots: SpotInfoProps[];
+      }[];
+      subjects: {
+        title: string;
+        spots: SpotInfoProps[];
+      }[];
+    }
   : T extends "GetSpotsQueue"
   ? SpotInfoProps[]
   : T extends "GetSpotsList"
@@ -379,6 +405,14 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             res = await fetch(`${apiBaseUrl}/api/spots/queue`, {
               method: "GET",
               headers,
+            });
+            break;
+          }
+          case "GetSpotsAssemblage": {
+            res = await fetch(`${apiBaseUrl}/api/spots/assemblage`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...input }),
             });
             break;
           }
