@@ -5,6 +5,8 @@ import {
   CardMedia,
   Grid,
   IconButton,
+  ImageList,
+  ImageListItem,
   Link,
   List,
   ListItem,
@@ -41,6 +43,7 @@ import {
   statusMap,
   StyledIndicator,
 } from "../components/ProfileStatus";
+import { PostProps } from "./Feed";
 
 const Img = styled("img")({
   margin: "auto",
@@ -141,6 +144,8 @@ export default function Profile(): JSX.Element {
       }[]
     | null
   >(null);
+  const [posts, setPosts] = useState<PostProps[]>([]);
+
   const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   const params = useParams();
@@ -152,6 +157,7 @@ export default function Profile(): JSX.Element {
   const getSpotsList = useMutation("GetSpotsList");
   const unsaveSpot = useMutation("UnsaveSpotFromUser");
   const getStatuses = useMutation("GetStatuses");
+  const getPosts = useMutation("GetUserPosts");
 
   useEffect(() => {
     console.log("params", params, currentUser?.uid);
@@ -162,11 +168,13 @@ export default function Profile(): JSX.Element {
       getTripsCallback(currentUser.uid);
       getSpotsCallback(currentUser.uid);
       getStatusesCallback(currentUser.uid);
+      getPostsCallback(currentUser.uid);
     } else if (params.userId) {
       console.log("getting profile");
       setUserId(params.userId);
       getProfileCallback(params.userId, setUser);
       getProfileCallback(currentUser.uid, setThisUser);
+      getPostsCallback(params.userId);
     } else {
       console.log("no user");
     }
@@ -209,6 +217,14 @@ export default function Profile(): JSX.Element {
     });
     setStatuses(getStatusesResponse);
     console.log("statuses set", getStatusesResponse);
+  };
+
+  const getPostsCallback = async (userId: string) => {
+    const getPostsResponse = await getPosts.commit({
+      userId: userId,
+    });
+    setPosts(getPostsResponse);
+    console.log("posts set", getPostsResponse);
   };
 
   const removeSpot = async (spotId: string, userId: string) => {
@@ -404,6 +420,28 @@ export default function Profile(): JSX.Element {
             </List>
           </Grid>
         )}
+        {
+          <Grid item xs={6}>
+            {/* Display statusResults with styled indicator as seen in ProfileStatus.tsx */}
+            <Typography variant="h5">Posts</Typography>
+            <ImageList
+              sx={{ width: 500, height: 450 }}
+              cols={3}
+              rowHeight={164}
+            >
+              {posts.map((post) => (
+                <ImageListItem key={post._id}>
+                  <img
+                    src={`${post.images[0]}?w=164&h=164&fit=crop&auto=format`}
+                    srcSet={`${post.images[0]}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                    alt={post.caption}
+                    loading="lazy"
+                  />
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </Grid>
+        }
       </Grid>
     </Grid>
   );

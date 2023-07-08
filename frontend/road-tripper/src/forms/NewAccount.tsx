@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState, useRef, ChangeEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "../core/api";
 import { ProfileProps } from "../pages/Profile";
 import { useAuth } from "../core/AuthContext";
@@ -370,6 +370,7 @@ export function NewAccountFormConfirm(props: {
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }): JSX.Element {
   const createProfile = useMutation("CreateProfile");
+  const navigate = useNavigate();
 
   const attemptContinue = async () => {
     try {
@@ -394,7 +395,7 @@ export function NewAccountFormConfirm(props: {
       } as ProfileProps;
       const createProfileResponse = await createProfile.commit(profileInfo);
 
-      props.handleNext();
+      navigate("/");
     } catch (err) {
       console.log("Sorry, but we were not able to create the profile.");
       console.log(err);
@@ -445,24 +446,24 @@ export function NewAccountFormConfirm(props: {
   );
 }
 
-export function NewAccountFormSuccess(props: {
-  values: NewAccountFormState;
-  handleNext: () => void;
-  handleBack: () => void;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}): JSX.Element {
-  return (
-    <Box>
-      <Typography variant="h5">
-        Success! Thanks for joining. We hope you enjoy your time here.
-      </Typography>
-      <br />
-      <Button>
-        <Link to="/">Return Home</Link>
-      </Button>
-    </Box>
-  );
-}
+// export function NewAccountFormSuccess(props: {
+//   values: NewAccountFormState;
+//   handleNext: () => void;
+//   handleBack: () => void;
+//   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+// }): JSX.Element {
+//   return (
+//     <Box>
+//       <Typography variant="h5">
+//         Success! Thanks for joining. We hope you enjoy your time here.
+//       </Typography>
+//       <br />
+//       <Button>
+//         <Link to="/">Return Home</Link>
+//       </Button>
+//     </Box>
+//   );
+// }
 
 export function NewAccountForm(): JSX.Element {
   const [newAccountState, setNewAccountState] = useState<NewAccountFormState>({
@@ -527,16 +528,15 @@ export function NewAccountForm(): JSX.Element {
             handleChange={handleChange}
           />
         );
-
-      case 3:
-        return (
-          <NewAccountFormSuccess
-            values={newAccountState}
-            handleNext={handleNext}
-            handleBack={handleBack}
-            handleChange={handleChange}
-          />
-        );
+      // case 3:
+      //   return (
+      //     <NewAccountFormSuccess
+      //       values={newAccountState}
+      //       handleNext={handleNext}
+      //       handleBack={handleBack}
+      //       handleChange={handleChange}
+      //     />
+      //   );
       default:
         return <></>;
     }

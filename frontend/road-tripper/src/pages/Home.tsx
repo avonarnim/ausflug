@@ -58,36 +58,8 @@ export default function Home(): JSX.Element {
 
   const [avgGasPrices, setAvgGasPrices] = useState<GasPriceProps>();
 
-  // const [hikingHighlightedSpots, setHikingHighlightedSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-  // const [beachesHighlightedSpots, setBeachesHighlightedSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-  // const [parksHighlightedSpots, setParksHighlightedSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-  // const [historyHighlightedSpots, setHistoryHighlightedSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-
-  // const [atlasObscuraSourceSpots, setAtlasObscuraSourceSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-  // const [michelinSourceSpots, setMichelinSourceSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-  // const [ticketMasterSourceSpots, setTicketMasterSourceSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-
   const [yourCenterSpots, setYourCenterSpots] =
     useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-  // const [nyCenterSpots, setNyCenterSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-  // const [laCenterSpots, setLaCenterSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-  // const [chiCenterSpots, setChiCenterSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-  // const [sfCenterSpots, setSfCenterSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-  // const [dcCenterSpots, setDcCenterSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
-  // const [seaCenterSpots, setSeaCenterSpots] =
-  //   useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
   const [spotAssemblage, setSpotAssemblage] = useState<{
     locations: {
       title: string;
@@ -107,37 +79,6 @@ export default function Home(): JSX.Element {
     subjects: [],
   });
 
-  // const sourceSpots = [
-  //   {
-  //     source: "AtlasObscura",
-  //     setter: setAtlasObscuraSourceSpots,
-  //   },
-  //   {
-  //     source: "MichelinRestaurants",
-  //     setter: setMichelinSourceSpots,
-  //   },
-  //   {
-  //     source: "TicketMaster",
-  //     setter: setTicketMasterSourceSpots,
-  //   },
-  // ];
-
-  // const centerCoordinates = [
-  //   { longitude: -73.935242, latitude: 40.73061, setter: setNyCenterSpots },
-  //   { longitude: -118.243683, latitude: 34.052235, setter: setLaCenterSpots },
-  //   { longitude: -87.6298, latitude: 41.8781, setter: setChiCenterSpots },
-  //   { longitude: -122.419416, latitude: 37.774929, setter: setSfCenterSpots },
-  //   { longitude: -77.03653, latitude: 38.907192, setter: setDcCenterSpots },
-  //   { longitude: -122.33207, latitude: 47.60621, setter: setSeaCenterSpots },
-  // ];
-
-  // const highlightedGroups = [
-  //   { subject: "Hiking", setter: setHikingHighlightedSpots },
-  //   { subject: "Beaches", setter: setBeachesHighlightedSpots },
-  //   { subject: "Parks", setter: setParksHighlightedSpots },
-  //   { subject: "History", setter: setHistoryHighlightedSpots },
-  // ];
-
   // const getSpotsByHighlightedGroup = useMutation("GetSpotsByHighlightedGroup");
   // const getSpotsBySource = useMutation("GetSpotsBySource");
   const getSpotsByCenter = useMutation("GetSpotsByCenter");
@@ -146,61 +87,6 @@ export default function Home(): JSX.Element {
 
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
-
-  // const featurettes = [
-  //   {
-  //     title: "New York",
-  //     spots: nyCenterSpots,
-  //   },
-  //   {
-  //     title: "Michelin Restaurants",
-  //     spots: michelinSourceSpots,
-  //   },
-  //   {
-  //     title: "Los Angeles",
-  //     spots: laCenterSpots,
-  //   },
-  //   {
-  //     title: "Hiking",
-  //     spots: hikingHighlightedSpots,
-  //   },
-  //   {
-  //     title: "Beaches",
-  //     spots: beachesHighlightedSpots,
-  //   },
-  //   {
-  //     title: "Atlas Obscura Locations",
-  //     spots: atlasObscuraSourceSpots,
-  //   },
-  //   {
-  //     title: "San Francisco",
-  //     spots: sfCenterSpots,
-  //   },
-  //   {
-  //     title: "Washington DC",
-  //     spots: dcCenterSpots,
-  //   },
-  //   {
-  //     title: "Parks",
-  //     spots: parksHighlightedSpots,
-  //   },
-  //   {
-  //     title: "Venues",
-  //     spots: ticketMasterSourceSpots,
-  //   },
-  //   {
-  //     title: "Chicago",
-  //     spots: chiCenterSpots,
-  //   },
-  //   {
-  //     title: "History",
-  //     spots: historyHighlightedSpots,
-  //   },
-  //   {
-  //     title: "Seattle",
-  //     spots: seaCenterSpots,
-  //   },
-  // ];
 
   useEffect(() => {
     const init = async () => {
@@ -240,38 +126,6 @@ export default function Home(): JSX.Element {
         })
       );
 
-      // for (const { source, setter } of sourceSpots) {
-      //   const spots: SpotInfoProps[] = await getSpotsBySource.commit({
-      //     source: source,
-      //   });
-      //   setter({
-      //     assetCards: spots.map((spot) => ({
-      //       title: spot.title,
-      //       type: "spots",
-      //       id: spot._id,
-      //       attribute: "description",
-      //       value: spot.description,
-      //       image: spot.images[0],
-      //     })),
-      //   });
-      // }
-
-      // for (const { subject, setter } of highlightedGroups) {
-      //   const spots = await getSpotsByHighlightedGroup.commit({
-      //     subject: subject,
-      //   });
-      //   setter({
-      //     assetCards: spots.map((spot) => ({
-      //       title: spot.title,
-      //       type: "spots",
-      //       id: spot._id,
-      //       attribute: "description",
-      //       value: spot.description,
-      //       image: spot.images[0],
-      //     })),
-      //   });
-      // }
-
       // TODO: remove auto-geolocation
       // this is considered untrustworthy by users
       if (navigator.geolocation) {
@@ -310,20 +164,6 @@ export default function Home(): JSX.Element {
           }
         );
       }
-
-      // for (const { longitude, latitude, setter } of centerCoordinates) {
-      //   const spots = await getSpotsByCenter.commit({ longitude, latitude });
-      //   setter({
-      //     assetCards: spots.map((spot) => ({
-      //       title: spot.title,
-      //       type: "spots",
-      //       id: spot._id,
-      //       attribute: "description",
-      //       value: spot.description,
-      //       image: spot.images[0],
-      //     })),
-      //   });
-      // }
     };
 
     init();
@@ -683,16 +523,6 @@ export default function Home(): JSX.Element {
               )}
             </Grid>
           ))}
-          {/* {featurettes.map(({ title, spots }, index) => (
-            <Grid key={index} item xs={12} mt={2}>
-              <Typography variant="h4">{title}</Typography>
-              {spots.assetCards.length != 0 ? (
-                <AssetBlockCardHorizontalSwipe assetCards={spots.assetCards} />
-              ) : (
-                <SkeletonAssetBlockCardHorizontalSwipe />
-              )}
-            </Grid>
-          ))} */}
         </Grid>
       </Container>
     </Container>
