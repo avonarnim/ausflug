@@ -1,10 +1,12 @@
 import { EventProps } from "../../pages/Event";
 import {
+  Avatar,
   Grid,
   Typography,
   Box,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -16,6 +18,18 @@ import {
 import { createRef, useState } from "react";
 import { SpotInfoProps } from "../SpotInfo";
 import FuzzySearch from "fuzzy-search";
+import { OpenInNew } from "@mui/icons-material";
+
+function statusBeautifier(status: string): string {
+  switch (status) {
+    case "onsale":
+      return "On Sale";
+    case "offsale":
+      return "Not on Sale";
+    default:
+      return status;
+  }
+}
 
 export function BrowseEventsDisplay(props: {
   events: EventProps[];
@@ -36,6 +50,8 @@ export function BrowseEventsDisplay(props: {
       ? filteredEvents.map((eventResult: EventProps) => {
           const eventRef = createRef<HTMLDivElement>();
 
+          console.log(eventResult, eventResult.externalLink);
+
           const element = (
             <ListItem
               key={
@@ -44,11 +60,18 @@ export function BrowseEventsDisplay(props: {
                 eventResult.endDate.toString() +
                 "_event"
               }
-              // secondaryAction={
-              //   <IconButton edge="end" onClick={() => addEventToRoute(eventResult)}>
-              //     <Add />
-              //   </IconButton>
-              // }
+              secondaryAction={
+                eventResult.externalLink && (
+                  <IconButton
+                    edge="end"
+                    onClick={() =>
+                      window.open(eventResult.externalLink, "_blank")
+                    }
+                  >
+                    <OpenInNew />
+                  </IconButton>
+                )
+              }
             >
               <ListItemButton
                 onClick={() => {
@@ -56,10 +79,17 @@ export function BrowseEventsDisplay(props: {
                   props.map!.setZoom(10);
                 }}
               >
+                <ListItemAvatar>
+                  <Avatar alt={eventResult.image} src={eventResult.image} />
+                </ListItemAvatar>
                 <ListItemText
                   ref={eventRef}
                   primary={eventResult.title}
-                  secondary={eventResult.description}
+                  secondary={
+                    eventResult.startDate +
+                    ", " +
+                    statusBeautifier(eventResult.status)
+                  }
                 ></ListItemText>
               </ListItemButton>
             </ListItem>

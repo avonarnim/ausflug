@@ -292,7 +292,7 @@ export default function Home(): JSX.Element {
             </Grid>
           </Box>
         )}
-        <CarAnimation />
+        {/* <CarAnimation /> */}
         <Grid container spacing={1} p={1} alignItems="stretch">
           <Grid item xs={12} mt={2}>
             <Divider style={{ marginTop: 10, marginBottom: 10 }} />
