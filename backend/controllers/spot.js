@@ -3,6 +3,7 @@
 var mongoose = require("mongoose");
 const Spot = require("../models/spotModel");
 const User = require("../models/userModel");
+const Trip = require("../models/tripModel");
 
 // retrieve list of spots with matching criteria
 // applies to any spots
@@ -14,11 +15,12 @@ exports.search_spots = function (req, res) {
 };
 
 exports.search_spots_assemblage = async function (req, res) {
-  const { locations, subjects, sources } = req.body;
+  const { locations, subjects, sources, trips } = req.body;
   let results = {
     locations: [],
     subjects: [],
     sources: [],
+    trips: [],
   };
 
   for (let i = 0; i < locations.length; i++) {
@@ -51,6 +53,12 @@ exports.search_spots_assemblage = async function (req, res) {
       }).limit(10),
     });
   }
+
+  results.trips = await Trip.find({
+    _id: {
+      $in: trips,
+    },
+  });
 
   res.json(results);
 };

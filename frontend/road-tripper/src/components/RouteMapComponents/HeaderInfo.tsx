@@ -60,7 +60,7 @@ export function HeaderInfo(props: {
               />
             ) : (
               <PhotoUploader
-                id={`${props.currentUser.uid} ${Date.now()}`}
+                id={`${props.currentUser.uid}_${Date.now()}`}
                 setImageString={props.handleImageChange}
                 prevImageString={props.image}
               />

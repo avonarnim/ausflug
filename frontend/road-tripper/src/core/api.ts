@@ -93,6 +93,7 @@ type Input<T extends Type> = T extends "CreateSpot"
       }[];
       sources: { source: string; title: string }[];
       subjects: { subject: string; title: string }[];
+      trips: string[];
     }
   : T extends "GetSpotsQueue"
   ? {}
@@ -271,6 +272,7 @@ type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
         title: string;
         spots: SpotInfoProps[];
       }[];
+      trips: TripProps[];
     }
   : T extends "GetSpotsQueue"
   ? SpotInfoProps[]

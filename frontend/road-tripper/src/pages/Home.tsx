@@ -26,6 +26,7 @@ import { SpotInfoProps } from "../components/SpotInfo";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { GasPriceProps } from "./Gas";
 import CarAnimation from "../components/CarAnimation";
+import { TripProps } from "./EditTrip";
 
 type Libraries = (
   | "drawing"
@@ -73,10 +74,12 @@ export default function Home(): JSX.Element {
       title: string;
       spots: SpotInfoProps[];
     }[];
+    trips: TripProps[];
   }>({
     locations: [],
     sources: [],
     subjects: [],
+    trips: [],
   });
 
   // const getSpotsByHighlightedGroup = useMutation("GetSpotsByHighlightedGroup");
@@ -123,6 +126,7 @@ export default function Home(): JSX.Element {
             { subject: "Parks", title: "Parks" },
             { subject: "History", title: "History" },
           ],
+          trips: ["644464402150a291d0075173", "64994b152a19f8d82dd9f90c"],
         })
       );
 
@@ -523,6 +527,22 @@ export default function Home(): JSX.Element {
               )}
             </Grid>
           ))}
+          <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+          <Typography variant="h4">Featured Trips</Typography>
+          <Grid item xs={12} mt={2}>
+            <AssetBlockCardHorizontalSwipe
+              assetCards={spotAssemblage.trips.map((trip, index) => {
+                return {
+                  title: trip.name,
+                  type: "trips",
+                  id: trip._id,
+                  attribute: "description",
+                  value: trip.description,
+                  image: trip.image,
+                };
+              })}
+            />
+          </Grid>
         </Grid>
       </Container>
     </Container>

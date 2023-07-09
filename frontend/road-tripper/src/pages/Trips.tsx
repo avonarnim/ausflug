@@ -166,7 +166,9 @@ export default function Trips(): JSX.Element {
                     <ListItemText
                       primary={
                         trip.name +
-                        (trip.description ? ": " + trip.description : "")
+                        (trip.description !== "Description"
+                          ? ": " + trip.description
+                          : "")
                       }
                       secondary={trip.originVal + " to " + trip.destinationVal}
                     />
@@ -223,7 +225,9 @@ export default function Trips(): JSX.Element {
                     <ListItemText
                       primary={
                         trip.name +
-                        (trip.description ? ": " + trip.description : "")
+                        (trip.description !== "Description"
+                          ? ": " + trip.description
+                          : "")
                       }
                       secondary={trip.originVal + " to " + trip.destinationVal}
                     />
