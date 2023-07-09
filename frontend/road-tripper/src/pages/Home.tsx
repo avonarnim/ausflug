@@ -152,10 +152,10 @@ export default function Home(): JSX.Element {
 
             setAvgGasPrices(
               await getGasPriceInBox.commit({
-                longitude1: position.coords.longitude + 1,
-                latitude1: position.coords.latitude + 1,
-                longitude2: position.coords.longitude - 1,
-                latitude2: position.coords.latitude - 1,
+                longitude1: position.coords.longitude + 2,
+                latitude1: position.coords.latitude + 2,
+                longitude2: position.coords.longitude - 2,
+                latitude2: position.coords.latitude - 2,
               })
             );
           },

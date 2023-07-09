@@ -4,7 +4,7 @@ require("dotenv").config({ path: "../.env" });
 const Gas = require("../../../models/gasModel");
 const mongoose = require("mongoose");
 
-async function scrapeGasStations() {
+async function scrapeGasStations(startIdx, endIdx) {
   let gasStations = [];
 
   try {
@@ -32,7 +32,8 @@ async function scrapeGasStations() {
 
       const gasStationLinks = $$('a[href^="/station/"]');
 
-      for (let j = 0; j < gasStationLinks.length; j++) {
+      // for (let j = 0; j < gasStationLinks.length; j++) {
+      for (let j = startIdx; j < endIdx; j++) {
         const gasStationLink = gasStationLinks[j];
         const gasStationUrl = `${baseUrl}${$$(gasStationLink).attr("href")}`;
 
@@ -47,7 +48,7 @@ async function scrapeGasStations() {
             console.log("can't continue");
             return "error";
           });
-        if (gasStationHtml === "error") continue;
+        if (gasStationHtml === "error") break;
 
         const $$$ = cheerio.load(gasStationHtml);
 
@@ -65,8 +66,6 @@ async function scrapeGasStations() {
           premium: 0,
           diesel: 0,
         };
-
-        console.log("name", name);
 
         // const fuelTypes = ["Regular", "Midgrade", "Premium", "Diesel"];
 
@@ -108,7 +107,8 @@ async function scrapeGasStations() {
           "%2C" +
           longitude +
           "&fields=formatted_address%2Cgeometry%2Cplace_id&key=" +
-          process.env.GOOGLE_PLACES_API_KEY;
+          // process.env.GOOGLE_PLACES_API_KEY;
+          "AIzaSyDPKLXmZyUAW3cUcHnlKVGCSgV8G-9bp8w";
 
         // Make a request to the Google Places API
         const googlePlacesResponse = await rp(googlePlacesUrl);
@@ -136,55 +136,55 @@ async function scrapeGasStations() {
   return gasStations;
 }
 
-scrapeGasStations().then((gasStations) => {
-  const uri = process.env.ATLAS_URI;
-  mongoose.connect(uri);
-  const connection = mongoose.connection;
-  connection.once("open", async () => {
-    console.log("Connection established w MongoDB");
+exports.runGasScraper = async function (req, res) {
+  scrapeGasStations(req.params.startIndex, req.params.stopIndex).then(
+    (gasStations) => {
+      console.log("Connection established w MongoDB");
 
-    for (let i = 0; i < gasStations.length; i++) {
-      const station = gasStations[i];
+      for (let i = 0; i < gasStations.length; i++) {
+        const station = gasStations[i];
 
-      const new_gas = new Gas({
-        name: station.name,
-        mapLocation: {
-          formatted_address: station.formattedAddress,
-          formatted_phone_number: "",
-          geometry: {
-            location: {
-              lat: station.location.lat,
-              lng: station.location.lng,
+        const new_gas = new Gas({
+          name: station.name,
+          mapLocation: {
+            formatted_address: station.formattedAddress,
+            formatted_phone_number: "",
+            geometry: {
+              location: {
+                lat: station.location.lat,
+                lng: station.location.lng,
+              },
             },
+            place_id: station.placeId,
           },
-          place_id: station.placeId,
-        },
-        ratings: [],
-        rating: 0,
-        number_of_ratings: 0,
-        prices: [
-          {
-            unleaded: station.gasPrices.regular,
-            midgrade: station.gasPrices.midgrade,
-            premium: station.gasPrices.premium,
-            diesel: station.gasPrices.diesel,
-            date: new Date().getTime(),
-            userId: "gasBuddy",
+          ratings: [],
+          rating: 0,
+          number_of_ratings: 0,
+          prices: [
+            {
+              unleaded: station.gasPrices.regular,
+              midgrade: station.gasPrices.midgrade,
+              premium: station.gasPrices.premium,
+              diesel: station.gasPrices.diesel,
+              date: new Date().getTime(),
+              userId: "gasBuddy",
+            },
+          ],
+          resolved_prices: {
+            unleaded: 0,
+            midgrade: 0,
+            premium: 0,
+            diesel: 0,
           },
-        ],
-        resolved_prices: {
-          unleaded: 0,
-          midgrade: 0,
-          premium: 0,
-          diesel: 0,
-        },
-      });
+        });
 
-      new_gas.save(function (err, gas) {
-        if (err) console.log("had an error", err);
-      });
+        new_gas.save(function (err, gas) {
+          if (err) console.log("had an error", err);
+        });
+      }
+
+      console.log("Inserted gas stations into DB");
+      res.send("Inserted gas stations into DB");
     }
-
-    console.log("Inserted gas stations into DB");
-  });
-});
+  );
+};

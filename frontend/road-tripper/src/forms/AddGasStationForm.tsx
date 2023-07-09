@@ -202,6 +202,7 @@ export default function AddGasStationForm() {
                       type="text"
                       name="name"
                       placeholder="Name of gas station"
+                      fullWidth
                       inputRef={locationRef}
                       onChange={handleChange}
                     />

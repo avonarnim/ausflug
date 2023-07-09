@@ -16,8 +16,8 @@ export function GasStationInfo(props: {
   stations: GasStationProps[];
 }): JSX.Element {
   return (
-    <Grid item container direction="row" xs={12} sx={{ p: 4 }}>
-      <Typography>Gas stations along the way</Typography>
+    <Grid item container direction="row" xs={12} md={6} sx={{ p: 4 }}>
+      <Typography variant="h6">Gas stations along the way</Typography>
 
       <List
         dense
@@ -32,15 +32,22 @@ export function GasStationInfo(props: {
           .map((station, index) => {
             return (
               <ListItem key={station._id + "_" + index}>
-                <ListItemText primary={station.name}></ListItemText>
+                <ListItemText
+                  primary={station.name}
+                  secondary={station.mapLocation.formatted_address}
+                ></ListItemText>
                 {Object.keys(station.resolved_prices).map((key) => {
                   const resolved_prices = station.resolved_prices as {
                     [key: string]: number;
                   };
                   return (
-                    <Box>
-                      <Typography>{key}</Typography>
-                      <Typography>{resolved_prices[key]}</Typography>
+                    <Box pl={2} pr={2} sx={{ borderRight: "1px solid black" }}>
+                      <Typography variant="body1">
+                        {key[0].toUpperCase() + key.slice(1)}
+                      </Typography>
+                      <Typography variant="body2">
+                        {resolved_prices[key]}
+                      </Typography>
                     </Box>
                   );
                 })}

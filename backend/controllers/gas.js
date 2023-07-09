@@ -6,6 +6,7 @@
 const { auth } = require("../config/firebase");
 var mongoose = require("mongoose");
 const Gas = require("../models/gasModel");
+const User = require("../models/userModel");
 
 // retrieve all gas stations in an area
 exports.get_gas_stations_in_area = async function (req, res) {
@@ -50,21 +51,52 @@ exports.avg_price_along_route = async function (req, res) {
   });
   let avg_prices = stations.reduce(
     (acc, station) => {
-      acc.unleaded += station.prices[station.prices.length - 1].unleaded;
-      acc.midgrade += station.prices[station.prices.length - 1].midgrade;
-      acc.premium += station.prices[station.prices.length - 1].premium;
-      acc.diesel += station.prices[station.prices.length - 1].diesel;
+      acc.unleaded += station.prices[station.prices.length - 1].unleaded ?? 0;
+      acc.unleaded_count +=
+        station.prices[station.prices.length - 1].unleaded > 0 ? 1 : 0;
+      acc.midgrade += station.prices[station.prices.length - 1].midgrade ?? 0;
+      acc.midgrade_count +=
+        station.prices[station.prices.length - 1].midgrade > 0 ? 1 : 0;
+      acc.premium += station.prices[station.prices.length - 1].premium ?? 0;
+      acc.premium_count +=
+        station.prices[station.prices.length - 1].premium > 0 ? 1 : 0;
+      acc.diesel += station.prices[station.prices.length - 1].diesel ?? 0;
+      acc.diesel_count +=
+        station.prices[station.prices.length - 1].diesel > 0 ? 1 : 0;
       return acc;
     },
-    { unleaded: 0, midgrade: 0, premium: 0, diesel: 0 }
+    {
+      unleaded: 0,
+      midgrade: 0,
+      premium: 0,
+      diesel: 0,
+      unleaded_count: 0,
+      midgrade_count: 0,
+      premium_count: 0,
+      diesel_count: 0,
+    }
   );
 
-  avg_prices.unleaded /= stations.length;
-  avg_prices.midgrade /= stations.length;
-  avg_prices.premium /= stations.length;
-  avg_prices.diesel /= stations.length;
+  avg_prices.unleaded_count =
+    avg_prices.unleaded_count === 0 ? 1 : avg_prices.unleaded_count;
+  avg_prices.midgrade_count =
+    avg_prices.midgrade_count === 0 ? 1 : avg_prices.midgrade_count;
+  avg_prices.premium_count =
+    avg_prices.premium_count === 0 ? 1 : avg_prices.premium_count;
+  avg_prices.diesel_count =
+    avg_prices.diesel_count === 0 ? 1 : avg_prices.diesel_count;
 
-  res.json(avg_prices);
+  avg_prices.unleaded /= avg_prices.unleaded_count;
+  avg_prices.midgrade /= avg_prices.midgrade_count;
+  avg_prices.premium /= avg_prices.premium_count;
+  avg_prices.diesel /= avg_prices.diesel_count;
+
+  res.json({
+    unleaded: Math.round(avg_prices.unleaded * 100) / 100,
+    midgrade: Math.round(avg_prices.midgrade * 100) / 100,
+    premium: Math.round(avg_prices.premium * 100) / 100,
+    diesel: Math.round(avg_prices.diesel * 100) / 100,
+  });
 };
 
 exports.add_gas_prices = async function (req, res) {
@@ -84,6 +116,13 @@ exports.add_gas_prices = async function (req, res) {
     (gas.rating * gas.number_of_ratings + rating) / (gas.number_of_ratings + 1);
   gas.number_of_ratings += 1;
   gas.save();
+
+  try {
+    await User.findOneAndUpdate({ _id: userId }, { $inc: { points: 1 } });
+  } catch (err) {
+    res.send(err);
+  }
+
   res.json(gas);
 };
 
@@ -93,7 +132,6 @@ exports.add_gas_station = async function (req, res) {
   var new_station = new Gas(req.body);
 
   new_station.save(function (err, station) {
-    console.log("err, station", err, station);
     if (err) res.send(err);
     res.json(station);
   });

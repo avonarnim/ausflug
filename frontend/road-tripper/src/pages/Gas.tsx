@@ -40,10 +40,10 @@ export default function Spot(): JSX.Element {
   const getGasPricesCallback = async (position: GeolocationPosition) => {
     setAvgGasPrices(
       await getGasPriceInBox.commit({
-        longitude1: position.coords.longitude + 1,
-        latitude1: position.coords.latitude + 1,
-        longitude2: position.coords.longitude - 1,
-        latitude2: position.coords.latitude - 1,
+        longitude1: position.coords.longitude + 2,
+        latitude1: position.coords.latitude + 2,
+        longitude2: position.coords.longitude - 2,
+        latitude2: position.coords.latitude - 2,
       })
     );
   };
@@ -51,10 +51,10 @@ export default function Spot(): JSX.Element {
   const getGasStationsCallback = async (position: GeolocationPosition) => {
     setGasStations(
       await getGasStationsInBox.commit({
-        longitude1: position.coords.longitude + 1,
-        latitude1: position.coords.latitude + 1,
-        longitude2: position.coords.longitude - 1,
-        latitude2: position.coords.latitude - 1,
+        longitude1: position.coords.longitude + 2,
+        latitude1: position.coords.latitude + 2,
+        longitude2: position.coords.longitude - 2,
+        latitude2: position.coords.latitude - 2,
       })
     );
   };

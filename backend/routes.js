@@ -12,7 +12,7 @@ const gas = require("./controllers/gas");
 const spotInteraction = require("./controllers/spotInteraction");
 const feedback = require("./controllers/feedback");
 const { VerifyToken, VerifyAdminToken } = require("./middleware/VerifyToken");
-
+const scraper = require("./controllers/scrapers/gasBuddy/gasScraper");
 // Health Test
 router.route("/").get((req, res) => {
   res.send("Success");
@@ -128,7 +128,6 @@ router.route("/api/gas/prices").post((req, res) => {
   gas.add_gas_prices(req, res);
 });
 router.route("/api/gas/stations").post((req, res) => {
-  console.log("adding gas station");
   gas.add_gas_station(req, res);
 });
 router.route("/api/gas/stations/:id").get((req, res) => {
@@ -273,9 +272,10 @@ router.route("/api/feedback").get((req, res) => {
 });
 // #endregion
 
-// // scraper Routes
-// router.route("/api/scrapers/michelin").get((req, res) => {
-//   scraper.runMichelinScraper();
+// #region Scraper
+// router.route("/api/scrapers/gas/:startIndex/:stopIndex").get((req, res) => {
+//   scraper.runGasScraper(req, res);
 // });
+// #endregion
 
 module.exports = router;

@@ -21,6 +21,7 @@ var UserSchema = new Schema({
   twitter: String,
   youtube: String,
   status: String,
+  points: Number,
   createdAt: { type: Date, default: Date.now },
 });
 

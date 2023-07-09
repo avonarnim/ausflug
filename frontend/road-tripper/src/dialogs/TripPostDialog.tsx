@@ -54,6 +54,7 @@ export default function TripPostDialog(props: { tripId: string }) {
     twitter: "",
     youtube: "",
     createdAt: 0,
+    points: 0,
     status: "",
   });
 

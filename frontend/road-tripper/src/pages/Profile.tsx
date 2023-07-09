@@ -464,5 +464,6 @@ export type ProfileProps = {
   twitter: string;
   youtube: string;
   status: string;
+  points: number;
   createdAt: number;
 };

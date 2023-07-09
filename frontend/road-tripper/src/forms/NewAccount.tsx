@@ -391,6 +391,7 @@ export function NewAccountFormConfirm(props: {
         twitter: props.values.twitter,
         youtube: props.values.youtube,
         status: props.values.status,
+        points: 0,
         createdAt: Date.now(),
       } as ProfileProps;
       const createProfileResponse = await createProfile.commit(profileInfo);
