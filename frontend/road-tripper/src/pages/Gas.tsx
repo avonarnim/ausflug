@@ -95,10 +95,11 @@ export default function Spot(): JSX.Element {
             <Typography variant="h6">
               Best gas stations in your area:
             </Typography>
+            <Typography>Add prices to help others & earn points!</Typography>
             {gasStations?.map((station) => {
               return (
                 <>
-                  <Card>
+                  <Card sx={{ mb: 1 }}>
                     <CardContent>
                       <Typography variant="subtitle1">
                         {station.name}

@@ -304,6 +304,9 @@ export default function Profile(): JSX.Element {
           <Typography gutterBottom variant="body1" component="div">
             {user?.bio}
           </Typography>
+          <Typography gutterBottom variant="body1" component="div">
+            {user?.points} points
+          </Typography>
           {isCurrentUser
             ? user && <ProfileStatusSelector user={user} />
             : user && <ProfileStatus user={user} />}
