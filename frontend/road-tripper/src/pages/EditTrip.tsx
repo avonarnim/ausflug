@@ -81,4 +81,9 @@ export type TripProps = {
   posted: boolean;
   image: string;
   oneWayRoundTrip: "oneWay" | "roundTrip";
+  gear: {
+    name: string;
+    description: string;
+    quantity: number;
+  }[];
 };

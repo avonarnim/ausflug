@@ -38,6 +38,7 @@ var TripSchema = new Schema({
   completed: Boolean,
   posted: Boolean,
   image: String,
+  gear: [{ name: String, description: String, quantity: Number }],
   oneWayRoundTrip: "oneWay" | "roundTrip",
 });
 

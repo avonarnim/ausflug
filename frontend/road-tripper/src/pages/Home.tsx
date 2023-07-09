@@ -527,7 +527,7 @@ export default function Home(): JSX.Element {
               )}
             </Grid>
           ))}
-          {spotAssemblage.trips && (
+          {spotAssemblage.trips.length > 0 && (
             <>
               <Divider style={{ marginTop: 10, marginBottom: 10 }} />
               <Typography variant="h4">Featured Trips</Typography>

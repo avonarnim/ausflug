@@ -393,6 +393,7 @@ export function NewAccountFormConfirm(props: {
         status: props.values.status,
         points: 0,
         createdAt: Date.now(),
+        gear: [],
       } as ProfileProps;
       const createProfileResponse = await createProfile.commit(profileInfo);
 

@@ -109,6 +109,7 @@ export function HeaderInfo(props: {
                     distance: props.cumulativeDistance,
                     image: props.image,
                     oneWayRoundTrip: props.oneWayRoundTrip,
+                    gear: [],
                   };
                   if (tripCreatorId !== props.currentUser.uid) {
                     const tripResult = await createTrip.commit(tripDetails);
@@ -168,6 +169,7 @@ export function HeaderInfo(props: {
                       distance: props.cumulativeDistance,
                       image: props.image,
                       oneWayRoundTrip: props.oneWayRoundTrip,
+                      gear: [],
                     };
                     const tripResult = await updateTrip.commit({
                       ...tripDetails,

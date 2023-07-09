@@ -44,6 +44,7 @@ import {
   StyledIndicator,
 } from "../components/ProfileStatus";
 import { PostProps } from "./Feed";
+import { EditGear, GearList } from "../components/EditGear";
 
 const Img = styled("img")({
   margin: "auto",
@@ -423,6 +424,19 @@ export default function Profile(): JSX.Element {
             </List>
           </Grid>
         )}
+        {isCurrentUser
+          ? user && (
+              <Grid item xs={6}>
+                <Typography variant="h5">Gear</Typography>
+                <EditGear {...user} />
+              </Grid>
+            )
+          : user && (
+              <Grid item xs={6}>
+                <Typography variant="h5">Gear</Typography>
+                <GearList gear={user.gear} />
+              </Grid>
+            )}
         {
           <Grid item xs={6}>
             {/* Display statusResults with styled indicator as seen in ProfileStatus.tsx */}
@@ -468,5 +482,11 @@ export type ProfileProps = {
   youtube: string;
   status: string;
   points: number;
+  gear: {
+    name: string;
+    description: string;
+    quantity: number;
+    borrowable: boolean;
+  }[];
   createdAt: number;
 };

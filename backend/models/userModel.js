@@ -22,6 +22,14 @@ var UserSchema = new Schema({
   youtube: String,
   status: String,
   points: Number,
+  gear: [
+    {
+      name: String,
+      description: String,
+      quantity: Number,
+      borrowable: Boolean,
+    },
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 

@@ -56,6 +56,7 @@ export default function TripPostDialog(props: { tripId: string }) {
     createdAt: 0,
     points: 0,
     status: "",
+    gear: [],
   });
 
   const createPost = useMutation("CreatePost");

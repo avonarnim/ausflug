@@ -1,9 +1,11 @@
 import {
+  Avatar,
   Container,
   IconButton,
   Grid,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemText,
   TextField,
   Typography,
@@ -40,6 +42,9 @@ export function QueuedSpots(props: QueueSpotsProps): JSX.Element {
                 </IconButton>
               }
             >
+              <ListItemAvatar>
+                <Avatar alt={spot.title} src={spot.images[0]} />
+              </ListItemAvatar>
               <ListItemText primary={spot.title} secondary={spot.description} />
               <Typography>{spot.mapLocation.formatted_address}</Typography>
               <Typography>
