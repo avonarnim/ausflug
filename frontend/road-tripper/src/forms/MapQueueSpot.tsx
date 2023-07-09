@@ -54,8 +54,8 @@ export function QueueSpotFormDetailsSection(props: {
   }>({
     selectedFile: null,
     loaded: 0,
-    message: "Choose a profile photo...",
-    defaultMessage: "Choose a profile photo...",
+    message: "Choose a photo...",
+    defaultMessage: "Choose a photo...",
     uploading: false,
   });
   const uploadFile = useMutation("UploadFile");
@@ -80,7 +80,7 @@ export function QueueSpotFormDetailsSection(props: {
     // define upload
     const res = await uploadFile.commit({
       file: imageFile.selectedFile,
-      title: currentUser.uid,
+      title: currentUser.uid + "_" + new Date().toISOString(),
       prevImage: "",
       onUploadProgress: (ProgressEvent) => {
         setImageFile({
