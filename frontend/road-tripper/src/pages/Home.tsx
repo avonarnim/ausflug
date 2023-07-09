@@ -527,22 +527,26 @@ export default function Home(): JSX.Element {
               )}
             </Grid>
           ))}
-          <Divider style={{ marginTop: 10, marginBottom: 10 }} />
-          <Typography variant="h4">Featured Trips</Typography>
-          <Grid item xs={12} mt={2}>
-            <AssetBlockCardHorizontalSwipe
-              assetCards={spotAssemblage.trips.map((trip, index) => {
-                return {
-                  title: trip.name,
-                  type: "trips",
-                  id: trip._id,
-                  attribute: "description",
-                  value: trip.description,
-                  image: trip.image,
-                };
-              })}
-            />
-          </Grid>
+          {spotAssemblage.trips && (
+            <>
+              <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+              <Typography variant="h4">Featured Trips</Typography>
+              <Grid item xs={12} mt={2}>
+                <AssetBlockCardHorizontalSwipe
+                  assetCards={spotAssemblage.trips.map((trip, index) => {
+                    return {
+                      title: trip.name,
+                      type: "trips",
+                      id: trip._id,
+                      attribute: "description",
+                      value: trip.description,
+                      image: trip.image,
+                    };
+                  })}
+                />
+              </Grid>
+            </>
+          )}
         </Grid>
       </Container>
     </Container>

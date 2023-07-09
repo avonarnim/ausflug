@@ -135,9 +135,9 @@ export function groupDetoursByDay(
 
     const legDuration = results.routes[0].legs[i].duration?.value ?? 0;
     runningDuration = runningDuration + legDuration;
-    if (runningDuration > hoursDrivingPerDay * 3600) {
+    while (runningDuration > hoursDrivingPerDay * 3600) {
       day++;
-      runningDuration = legDuration;
+      runningDuration -= hoursDrivingPerDay * 3600;
     }
     detoursByDay[day].push(minDistDetour);
   }
