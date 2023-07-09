@@ -18,15 +18,17 @@ import { auth } from "../core/firebase";
 
 export function QueuedSpots(props: QueueSpotsProps): JSX.Element {
   const approveSpot = useMutation("UpdateSpot");
+  const [spots, setSpots] = useState<SpotInfoProps[]>(props.spots);
 
   const approveSpotCallback = async (spot: SpotInfoProps) => {
     await approveSpot.commit({ ...spot, status: "Approved" });
+    setSpots(spots.filter((s) => s._id !== spot._id));
   };
 
   return (
     <Container sx={{ borderRadius: "5px", backgroundColor: "white" }}>
       <List>
-        {props.spots.map((spot) => {
+        {spots.map((spot) => {
           return (
             <ListItem
               secondaryAction={
@@ -39,6 +41,7 @@ export function QueuedSpots(props: QueueSpotsProps): JSX.Element {
               }
             >
               <ListItemText primary={spot.title} secondary={spot.description} />
+              <Typography>{spot.mapLocation.formatted_address}</Typography>
               <Typography>
                 {spot.location.lat} {spot.location.lng}
               </Typography>

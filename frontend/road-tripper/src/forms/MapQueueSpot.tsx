@@ -80,7 +80,7 @@ export function QueueSpotFormDetailsSection(props: {
     // define upload
     const res = await uploadFile.commit({
       file: imageFile.selectedFile,
-      title: currentUser.uid + "_" + new Date().toISOString(),
+      title: currentUser.uid + "_" + new Date().getTime(),
       prevImage: "",
       onUploadProgress: (ProgressEvent) => {
         setImageFile({
