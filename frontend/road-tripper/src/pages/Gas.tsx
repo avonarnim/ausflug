@@ -101,8 +101,9 @@ export default function Spot(): JSX.Element {
                 <>
                   <Card sx={{ mb: 1 }}>
                     <CardContent>
-                      <Typography variant="subtitle1">
-                        {station.name}
+                      <Typography variant="body1">{station.name}</Typography>
+                      <Typography variant="subtitle2">
+                        {station.mapLocation.formatted_address}
                       </Typography>
                       <Typography>
                         Unleaded: {station.resolved_prices.unleaded}
