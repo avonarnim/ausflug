@@ -5,7 +5,6 @@ exports.VerifyToken = async (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
 
     auth.verifyIdToken(token).then((decodeValue) => {
-      console.log(decodeValue.uid);
       requser = decodeValue;
       return next();
     });

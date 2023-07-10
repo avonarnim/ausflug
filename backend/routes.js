@@ -47,7 +47,6 @@ router.route("/api/trips/:tripId").get((req, res) => {
 
 // #region Spots
 router.route("/api/spots").get((req, res) => {
-  console.log("all");
   spot.search_spots(req, res);
 });
 router.route("/api/spots/assemblage").post((req, res) => {
@@ -60,28 +59,23 @@ router.route("/api/spots/similar").post((req, res) => {
   spot.spots_like_this(req, res);
 });
 router.route("/api/spots/center/:latitude/:longitude").get((req, res) => {
-  console.log("lat lng");
   spot.search_spots_in_area(req, res);
 });
 router
   .route("/api/spots/box/:latitude1/:longitude1/:latitude2/:longitude2")
   .get((req, res) => {
-    console.log("box");
     spot.search_spots_by_bounding_box(req, res);
   });
 // route for the search_spots_highlighted function
 router.route("/api/spots/highlighted").get((req, res) => {
-  console.log("highlighted");
   spot.search_spots_highlighted(req, res);
 });
 // route for the search_spots_highlighted_for_subject function
 router.route("/api/spots/highlighted/:subject").get((req, res) => {
-  console.log("highlighted subject");
   spot.search_spots_highlighted_for_subject(req, res);
 });
 // route for the search_spots_by_source function
 router.route("/api/spots/source/:source").get((req, res) => {
-  console.log("searching spots by source");
   spot.search_spots_by_source(req, res);
 });
 router.route("/api/spots").post((req, res) => {
@@ -89,7 +83,6 @@ router.route("/api/spots").post((req, res) => {
 });
 router.use("/api/spots/queue", VerifyAdminToken);
 router.route("/api/spots/queue").get((req, res) => {
-  console.log("queue");
   spot.search_spots_queue(req, res);
 });
 router.use("/api/spots/saved/:userId", VerifyToken);

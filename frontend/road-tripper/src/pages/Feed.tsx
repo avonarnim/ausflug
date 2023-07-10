@@ -11,13 +11,21 @@ import {
   CardMedia,
   Container,
   Grid,
+  Menu,
+  MenuItem,
   TextField,
   Typography,
   CircularProgress,
   IconButton,
+  ListItemIcon,
 } from "@mui/material";
 import { useAuth } from "../core/AuthContext";
-import { FavoriteOutlined, FavoriteBorderOutlined } from "@mui/icons-material";
+import {
+  FavoriteOutlined,
+  FavoriteBorderOutlined,
+  MoreVert,
+  Delete,
+} from "@mui/icons-material";
 
 export default function Feed(): JSX.Element {
   const [comments, setComments] = useState<Record<string, string>>({});
@@ -28,6 +36,7 @@ export default function Feed(): JSX.Element {
 
   const getPosts = useMutation("GetFeedPosts");
   const updatePost = useMutation("UpdatePost");
+  const deletePost = useMutation("DeletePost");
 
   useEffect(() => {
     if (currentUser.uid) {
@@ -75,6 +84,20 @@ export default function Feed(): JSX.Element {
     ));
   };
 
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleEditClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleEditClose = () => {
+    setAnchorEl(null);
+  };
+  const handleDeleteClick = async (post: PostProps) => {
+    await deletePost.commit({ postId: post._id });
+    setPosts(posts.filter((p) => p._id !== post._id));
+    setAnchorEl(null);
+  };
+
   return currentUser.uid && posts.length > 0 ? (
     <Container sx={{ marginTop: 4 }}>
       <Box>
@@ -82,7 +105,68 @@ export default function Feed(): JSX.Element {
           {posts.map((post) => (
             <Grid item xs={12} sm={6} md={4} key={post._id}>
               <Card>
-                <CardHeader title={post.authorUsername} />
+                <CardHeader
+                  title={post.authorUsername}
+                  action={
+                    post.authorId === currentUser.uid && (
+                      <IconButton
+                        aria-label="settings"
+                        onClick={handleEditClick}
+                      >
+                        <MoreVert />
+                        <Menu
+                          anchorEl={anchorEl}
+                          id="account-menu"
+                          open={open}
+                          onClose={handleEditClose}
+                          onClick={handleEditClose}
+                          PaperProps={{
+                            elevation: 0,
+                            sx: {
+                              overflow: "visible",
+                              filter:
+                                "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                              mt: 1.5,
+                              "& .MuiAvatar-root": {
+                                width: 32,
+                                height: 32,
+                                ml: -0.5,
+                                mr: 1,
+                              },
+                              "&:before": {
+                                content: '""',
+                                display: "block",
+                                position: "absolute",
+                                top: 0,
+                                right: 14,
+                                width: 10,
+                                height: 10,
+                                bgcolor: "background.paper",
+                                transform: "translateY(-50%) rotate(45deg)",
+                                zIndex: 0,
+                              },
+                            },
+                          }}
+                          transformOrigin={{
+                            horizontal: "right",
+                            vertical: "top",
+                          }}
+                          anchorOrigin={{
+                            horizontal: "right",
+                            vertical: "bottom",
+                          }}
+                        >
+                          <MenuItem onClick={() => handleDeleteClick(post)}>
+                            <ListItemIcon>
+                              <Delete fontSize="small" />
+                            </ListItemIcon>
+                            Delete
+                          </MenuItem>
+                        </Menu>
+                      </IconButton>
+                    )
+                  }
+                />
                 <CardMedia
                   component="img"
                   src={post.images[0]}
