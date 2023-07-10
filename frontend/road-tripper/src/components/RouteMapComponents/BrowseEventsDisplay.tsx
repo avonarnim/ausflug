@@ -96,7 +96,12 @@ export function BrowseEventsDisplay(props: {
           );
           return element;
         })
-      : [<ListItem>No events are available during this time</ListItem>];
+      : [
+          <ListItem>
+            No events are available during this time. Try expanding your search
+            range
+          </ListItem>,
+        ];
 
   return (
     <Grid item container direction="column" xs={12} sm={6} md={4} sx={{ p: 4 }}>

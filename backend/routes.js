@@ -223,8 +223,8 @@ router.use("/api/posts/:postId", VerifyToken);
 router.route("/api/posts/:postId").put((req, res) => {
   post.update_post(req, res);
 });
-router.use("/api/posts/:postId", VerifyToken);
-router.route("/api/posts/:postId").delete((req, res) => {
+router.use("/api/posts/:postId/:userId", VerifyToken);
+router.route("/api/posts/:postId/:userId").delete((req, res) => {
   post.delete_post(req, res);
 });
 router.use("/api/posts/user/:userId", VerifyToken);

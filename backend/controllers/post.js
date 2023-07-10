@@ -11,8 +11,9 @@ const Trip = require("../models/tripModel");
 exports.create_post = async function (req, res) {
   var new_post = new Post(req.body);
   new_post.save(function (err, post) {
-    if (err) res.send(err);
-    res.json(post);
+    if (err) {
+      res.send(err);
+    }
   });
 
   // Validate that this works
@@ -61,22 +62,24 @@ exports.create_post = async function (req, res) {
       res.send("User not found");
     }
   });
+
+  res.send("Post created successfully");
 };
 
 // remove post from database
 exports.delete_post = function (req, res) {
   Post.deleteOne(
     {
-      _id: req.body.postId,
+      _id: req.params.postId,
     },
     function (err, post) {
       if (err) res.send(err);
-      res.json({ message: "Post successfully deleted" });
     }
   );
 
-  Trip.findOneAndUpdate({ _id: req.body.tripId }, { posted: false }).then(
+  Trip.findOneAndUpdate({ _id: req.params.postId }, { posted: false }).then(
     (trip) => {
+      console.log("updating trip", trip);
       if (!trip) {
         res.send("Trip not found");
       }
@@ -84,13 +87,15 @@ exports.delete_post = function (req, res) {
   );
 
   // remove post from followers' feeds
-  User.findOne({ _id: req.body.authorId }).then((user) => {
+  User.findOne({ _id: req.params.userId }).then((user) => {
+    console.log("updating user", user);
     if (user) {
       user.followers.forEach((follower) => {
         Feed.findOneAndUpdate(
           { _id: follower },
-          { $pull: { postIds: req.body.postId } }
+          { $pull: { postIds: req.params.postId } }
         ).then((feed) => {
+          console.log("updating feeds (others')", feed);
           if (!feed) {
             res.send("Feed not found");
           }
@@ -104,16 +109,19 @@ exports.delete_post = function (req, res) {
   // remove post from user's feed
   Feed.findOneAndUpdate(
     {
-      _id: req.body.authorId,
+      _id: req.params.userId,
     },
     {
-      $pull: { postIds: req.body.postId },
+      $pull: { postIds: req.params.postId },
     }
   ).then((feed) => {
+    console.log("updating feeds (personal)", feed);
     if (!feed) {
       res.send("Feed not found");
     }
   });
+
+  res.send("Post deleted successfully");
 };
 
 exports.update_post = async function (req, res) {

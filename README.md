@@ -31,6 +31,8 @@ put/get/update/delete requests.
 Keys should be placed both in `env.yaml` (for GCP to recognize process.env.\_\_\_)
 as well as `.env` for local development.
 
+Dependencies are handled by npm
+
 ## Scripts:
 
 `nodemon server`

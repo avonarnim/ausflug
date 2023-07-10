@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { useMutation } from "../core/api";
 import { SpotInfoProps } from "../components/SpotInfo";
@@ -37,6 +37,8 @@ export default function Feed(): JSX.Element {
   const getPosts = useMutation("GetFeedPosts");
   const updatePost = useMutation("UpdatePost");
   const deletePost = useMutation("DeletePost");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (currentUser.uid) {
@@ -93,7 +95,7 @@ export default function Feed(): JSX.Element {
     setAnchorEl(null);
   };
   const handleDeleteClick = async (post: PostProps) => {
-    await deletePost.commit({ postId: post._id });
+    await deletePost.commit({ postId: post._id, userId: currentUser.uid });
     setPosts(posts.filter((p) => p._id !== post._id));
     setAnchorEl(null);
   };
@@ -223,8 +225,20 @@ export default function Feed(): JSX.Element {
     </Container>
   ) : (
     <Container>
-      <Box>
-        <CircularProgress />
+      <Box sx={{ p: 4 }}>
+        <Box sx={{ pb: 2 }}>
+          <CircularProgress />
+          <Typography variant="h5">Loading...</Typography>
+        </Box>
+
+        <Typography>Follow more users to see their posts</Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate("/search")}
+        >
+          Find Users
+        </Button>
       </Box>
     </Container>
   );

@@ -1,20 +1,19 @@
 import {
+  Avatar,
   Grid,
-  Typography,
-  Box,
   Input,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   IconButton,
   Paper,
-  Button,
+  Typography,
 } from "@mui/material";
-import { Delete, Add } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import { categoryToIcon } from "../../core/util";
-import { createRef, useEffect, useState } from "react";
+import { createRef, useState } from "react";
 import { SpotInfoProps } from "../SpotInfo";
 import FuzzySearch from "fuzzy-search";
 
@@ -79,7 +78,14 @@ export function BrowseSpotsDisplay(props: {
             props.map!.setZoom(10);
           }}
         >
-          <ListItemIcon>{categoryToIcon(spotResult.category)}</ListItemIcon>
+          <ListItemAvatar>
+            <Avatar
+              alt={spotResult.title}
+              src={spotResult.images[0]}
+              variant="square"
+              sizes="large"
+            />
+          </ListItemAvatar>
           <ListItemText
             ref={waypointRef}
             primary={spotResult.title}
@@ -99,6 +105,7 @@ export function BrowseSpotsDisplay(props: {
         <Input
           type="text"
           fullWidth
+          placeholder="Search..."
           onChange={(event) => {
             setSpotQuery(event.target.value);
           }}

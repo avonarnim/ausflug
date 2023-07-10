@@ -52,7 +52,7 @@ export default function FeedbackDialog() {
       <Typography pl={4} pb={4} onClick={handleClickOpen}>
         Give Feedback
       </Typography>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={() => handleClose(false)}>
         {successfulEdit ? (
           <>
             <DialogContent>

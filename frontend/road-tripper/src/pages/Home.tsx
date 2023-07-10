@@ -458,6 +458,47 @@ export default function Home(): JSX.Element {
               </Box>
             </Grid>
           </Grid>
+          <Grid container spacing={2} mt={2}>
+            <Grid item xs={6}>
+              <Box
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  p: 2,
+                  background: "linear-gradient(25deg, #f6c0aa, #a4c7e7)",
+                }}
+              >
+                <Typography variant="h6">Keep track of your gear</Typography>
+                <Typography>
+                  List items you have and want to bring on your trip
+                </Typography>
+                <Typography>
+                  Need something else? Check your friends' gear
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  p: 2,
+                  background: "linear-gradient(225deg, #f6c0aa, #a4c7e7)",
+                }}
+              >
+                <Typography variant="h6">
+                  Help keep the list curated by reviewing and up- or down-voting
+                  spots
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
           {spotAssemblage.locations.map((location, index) => {
             console.log(location);
             return (
