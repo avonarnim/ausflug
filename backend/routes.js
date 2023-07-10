@@ -170,8 +170,8 @@ router.use("/api/users/:userId", VerifyToken);
 router.route("/api/users/:userId").get((req, res) => {
   user.get_profile(req, res);
 });
-router.use("/api/users/username/:userId", VerifyToken);
-router.route("/api/users/username/:userId").get((req, res) => {
+router.use("/api/users/username/:username", VerifyToken);
+router.route("/api/users/username/:username").get((req, res) => {
   user.get_profile_by_username(req, res);
 });
 // TODO: deprecate follow/unfollow.. maybe also save_trip_to_user

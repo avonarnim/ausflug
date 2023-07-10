@@ -119,17 +119,10 @@ export function FollowingButton(props: {
   );
 }
 
-export default function Profile(): JSX.Element {
+export default function Profile(props: {
+  indicator: "none" | "id" | "username";
+}): JSX.Element {
   const { currentUser, updateUserProfile, setError } = useAuth();
-  const props = {
-    name: currentUser?.displayName,
-    email: currentUser?.email,
-    instagram: "https://www.instagram.com/",
-    facebook: "https://www.facebook.com/",
-    twitter: "https://twitter.com/",
-    youtube: "https://www.youtube.com/",
-    avatar: logo250,
-  };
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState<ProfileProps | null>(null);
   const [thisUser, setThisUser] = useState<ProfileProps | null>(null);
@@ -153,7 +146,7 @@ export default function Profile(): JSX.Element {
   const navigate = useNavigate();
 
   const getProfile = useMutation("GetProfile");
-  const updateProfile = useMutation("UpdateProfile");
+  const getProfileByUsername = useMutation("GetProfileByUsername");
   const getUserTrips = useMutation("GetUserTrips");
   const getSpotsList = useMutation("GetSpotsList");
   const unsaveSpot = useMutation("UnsaveSpotFromUser");
@@ -161,21 +154,31 @@ export default function Profile(): JSX.Element {
   const getPosts = useMutation("GetUserPosts");
 
   useEffect(() => {
-    console.log("params", params, currentUser?.uid);
-    if ((!params.userId && currentUser) || params.userId === currentUser?.uid) {
-      console.log("getting own profile");
+    if (props.indicator === "none") {
       setUserId(currentUser.uid);
       getProfileCallback(currentUser.uid, setUser);
       getTripsCallback(currentUser.uid);
       getSpotsCallback(currentUser.uid);
       getStatusesCallback(currentUser.uid);
       getPostsCallback(currentUser.uid);
-    } else if (params.userId) {
-      console.log("getting profile");
-      setUserId(params.userId);
-      getProfileCallback(params.userId, setUser);
-      getProfileCallback(currentUser.uid, setThisUser);
-      getPostsCallback(params.userId);
+    } else if (props.indicator === "id") {
+      if (params.userId === currentUser?.uid) {
+        setUserId(currentUser.uid);
+        getProfileCallback(currentUser.uid, setUser);
+        getTripsCallback(currentUser.uid);
+        getSpotsCallback(currentUser.uid);
+        getStatusesCallback(currentUser.uid);
+        getPostsCallback(currentUser.uid);
+      } else if (params.userId) {
+        setUserId(params.userId);
+        getProfileCallback(params.userId, setUser);
+        getProfileCallback(currentUser.uid, setThisUser);
+        getPostsCallback(params.userId);
+      }
+    } else if (props.indicator === "username") {
+      if (params.username) {
+        usernameProfileSetup(params.username);
+      }
     } else {
       console.log("no user");
     }
@@ -226,6 +229,28 @@ export default function Profile(): JSX.Element {
     });
     setPosts(getPostsResponse);
     console.log("posts set", getPostsResponse);
+  };
+
+  const usernameProfileSetup = async (username: string) => {
+    const getUserResponse = await getProfileByUsername.commit({
+      username: username,
+    });
+
+    if (getUserResponse) {
+      setUserId(getUserResponse._id);
+      setUser(getUserResponse);
+      getPostsCallback(getUserResponse._id);
+
+      if (currentUser.uid === getUserResponse._id) {
+        setIsCurrentUser(true);
+        getTripsCallback(getUserResponse._id);
+        getSpotsCallback(getUserResponse._id);
+        getStatusesCallback(getUserResponse._id);
+      } else {
+        setIsCurrentUser(false);
+        getProfileCallback(currentUser.uid, setThisUser);
+      }
+    }
   };
 
   const removeSpot = async (spotId: string, userId: string) => {

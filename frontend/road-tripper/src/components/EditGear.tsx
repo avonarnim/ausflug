@@ -27,7 +27,7 @@ export function GearList(props: { gear: GearItem[] }): JSX.Element {
 
   return (
     <div>
-      <Typography variant="h5">Available Gear</Typography>
+      <Typography variant="h6">Available Gear</Typography>
       <List>
         {available.map((item: GearItem, index) => (
           <ListItem key={index}>
@@ -38,7 +38,7 @@ export function GearList(props: { gear: GearItem[] }): JSX.Element {
           </ListItem>
         ))}
       </List>
-      <Typography variant="h5">Unvailable Gear</Typography>
+      <Typography variant="h6">Unvailable Gear</Typography>
       <List>
         {unavailable.map((item: GearItem, index) => (
           <ListItem key={index}>

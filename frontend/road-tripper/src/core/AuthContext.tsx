@@ -8,6 +8,7 @@ import {
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
   signOut,
   updateProfile,
   User,
@@ -27,6 +28,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   function register(email: string, password: string) {
     return createUserWithEmailAndPassword(auth, email, password);
+  }
+
+  function resetPassword(email: string) {
+    return sendPasswordResetEmail(auth, email);
   }
 
   function login(email: string, password: string) {

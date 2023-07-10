@@ -84,11 +84,19 @@ function App() {
           />
           <Route
             path="/profile"
-            element={<React.Suspense children={<Profile />} />}
+            element={
+              <React.Suspense children={<Profile indicator={"none"} />} />
+            }
           />
           <Route
             path="/profile/:userId"
-            element={<React.Suspense children={<Profile />} />}
+            element={<React.Suspense children={<Profile indicator={"id"} />} />}
+          />
+          <Route
+            path="/profile/u/:username"
+            element={
+              <React.Suspense children={<Profile indicator={"username"} />} />
+            }
           />
           <Route
             path="/terms"
