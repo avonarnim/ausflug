@@ -54,6 +54,21 @@ exports.get_statuses = async function (req, res) {
   });
 };
 
+exports.get_follow_list = async function (req, res) {
+  const { profileList } = req.body;
+  User.find(
+    { _id: { $in: profileList } },
+    { _id: 1, name: 1, username: 1, image: 1 },
+    function (err, users) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.json(users);
+      }
+    }
+  );
+};
+
 exports.create_profile = async function (req, res) {
   console.log("creating profile", req.body);
   var new_user = new User(req.body);

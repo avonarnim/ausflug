@@ -191,6 +191,10 @@ router.use("/api/users/unfollow/:userId/:followingId", VerifyToken);
 router.route("/api/users/unfollow/:userId/:followingId").put((req, res) => {
   user.remove_user_from_following(req, res);
 });
+router.use("/api/users/list", VerifyToken);
+router.route("/api/users/list").post((req, res) => {
+  user.get_follow_list(req, res);
+});
 router.use("/api/users/saveSpot/:userId/:spotId", VerifyToken);
 router.route("/api/users/saveSpot/:userId/:spotId").put((req, res) => {
   user.save_spot_to_user(req, res);

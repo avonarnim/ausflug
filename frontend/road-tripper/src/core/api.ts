@@ -43,6 +43,7 @@ type Type =
   | "FollowProfile"
   | "UnfollowProfile"
   | "SearchProfiles"
+  | "GetProfileList"
   | "CreateTrip"
   | "SaveTrip"
   | "DeleteTrip"
@@ -165,6 +166,8 @@ type Input<T extends Type> = T extends "CreateSpot"
   ? { profileId: string; followingId: string }
   : T extends "SearchProfiles"
   ? { query: string }
+  : T extends "GetProfileList"
+  ? { profileList: string[] }
   : T extends "CreateTrip"
   ? Omit<TripProps, "_id">
   : T extends "SaveTrip"
@@ -244,6 +247,8 @@ export interface SiteData {
 type FunctionResponseTypes<T extends Type> = T extends "GetTrip"
   ? TripProps
   : T extends "GetProfiles"
+  ? ProfileProps[]
+  : T extends "GetProfileList"
   ? ProfileProps[]
   : T extends "GetProfile"
   ? ProfileProps
@@ -595,6 +600,15 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             res = await fetch(`${apiBaseUrl}/api/users`, {
               method: "GET",
               headers,
+            });
+            break;
+          }
+          case "GetProfileList": {
+            const inputCast = input as { profileList: string[] };
+            res = await fetch(`${apiBaseUrl}/api/users/list`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...inputCast }),
             });
             break;
           }

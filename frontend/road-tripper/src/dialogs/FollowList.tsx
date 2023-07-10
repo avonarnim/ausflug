@@ -1,11 +1,7 @@
 import * as React from "react";
 import {
+  Avatar,
   Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,11 +9,12 @@ import {
   DialogTitle,
   List,
   ListItem,
+  ListItemAvatar,
   Typography,
 } from "@mui/material";
 import { ProfileProps } from "../pages/Profile";
 import { useMutation } from "../core/api";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../core/AuthContext";
 import profileIcon from "../assets/profileIcon.png";
 import { useRecoilSnapshot } from "recoil";
@@ -28,8 +25,20 @@ export default function FollowList(props: {
   following: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
+  const [userProfiles, setUserProfiles] = React.useState<ProfileProps[]>([]);
 
   const updateProfile = useMutation("UpdateProfile");
+  const getProfileList = useMutation("GetProfileList");
+
+  useEffect(() => {
+    const getProfile = async () => {
+      const profiles = await getProfileList.commit({
+        profileList: props.users,
+      });
+      setUserProfiles(profiles);
+    };
+    getProfile();
+  }, [props.users]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -44,14 +53,17 @@ export default function FollowList(props: {
       <Button variant="outlined" onClick={handleClickOpen}>
         {props.users.length} {props.following ? "Following" : "Followers"}
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle>{props.following ? "Following" : "Followers"}</DialogTitle>
         <DialogContent>
           <List>
-            {props.users.map((user) => {
+            {userProfiles.map((user) => {
               return (
                 <ListItem>
-                  <Typography>{user}</Typography>
+                  <ListItemAvatar>
+                    <Avatar src={user.image} />
+                  </ListItemAvatar>
+                  <Typography>{user.username}</Typography>
                 </ListItem>
               );
             })}
