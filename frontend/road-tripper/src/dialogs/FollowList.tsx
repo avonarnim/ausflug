@@ -10,6 +10,7 @@ import {
   List,
   ListItem,
   ListItemAvatar,
+  ListItemButton,
   Typography,
 } from "@mui/material";
 import { ProfileProps } from "../pages/Profile";
@@ -18,6 +19,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../core/AuthContext";
 import profileIcon from "../assets/profileIcon.png";
 import { useRecoilSnapshot } from "recoil";
+import { useNavigate } from "react-router-dom";
 
 export default function FollowList(props: {
   userId: string;
@@ -29,6 +31,8 @@ export default function FollowList(props: {
 
   const updateProfile = useMutation("UpdateProfile");
   const getProfileList = useMutation("GetProfileList");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getProfile = async () => {
@@ -60,9 +64,13 @@ export default function FollowList(props: {
             {userProfiles.map((user) => {
               return (
                 <ListItem>
-                  <ListItemAvatar>
-                    <Avatar src={user.image} />
-                  </ListItemAvatar>
+                  <ListItemButton
+                    onClick={() => navigate(`/profile/${user._id}`)}
+                  >
+                    <ListItemAvatar>
+                      <Avatar src={user.image} />
+                    </ListItemAvatar>
+                  </ListItemButton>
                   <Typography>{user.username}</Typography>
                 </ListItem>
               );

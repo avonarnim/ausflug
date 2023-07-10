@@ -34,7 +34,7 @@ export function GearList(props: { gear: GearItem[] }): JSX.Element {
             <ListItemText
               primary={item.name + " (" + item.quantity + ")"}
               secondary={item.description}
-            />{" "}
+            />
           </ListItem>
         ))}
       </List>
