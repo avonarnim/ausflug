@@ -313,3 +313,42 @@ exports.remove_user_from_following = async function (req, res) {
     res.send(err);
   }
 };
+
+exports.query_users = function (req, res) {
+  User.aggregate(
+    [
+      {
+        $search: {
+          index: "users",
+          text: {
+            query: req.body.query,
+            path: { wildcard: "*" },
+            fuzzy: {
+              maxEdits: 2,
+              prefixLength: 3,
+            },
+          },
+        },
+      },
+      {
+        $limit: 10,
+      },
+      {
+        $project: {
+          _id: 1,
+          username: 1,
+          bio: 1,
+          name: 1,
+          image: 1,
+          points: 1,
+          gear: 1,
+        },
+      },
+    ],
+    function (err, users) {
+      console.log(users);
+      if (err) res.send(err);
+      res.json(users);
+    }
+  );
+};

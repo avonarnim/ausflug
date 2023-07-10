@@ -1,91 +1,61 @@
 import { Grid } from "@mui/material";
-import algoliasearch from "algoliasearch";
-import {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  Configure,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  InstantSearch,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  SearchBox,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  useHits,
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  UseHitsProps,
-} from "react-instantsearch-hooks-web";
 import { AssetCardProps } from "./AssetCard";
 import { AssetGrid } from "./AssetGrid";
-import { IconButton, TextField } from "@mui/material";
+import {
+  IconButton,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
 import { Search } from "@mui/icons-material";
 import { useState } from "react";
 import { useMutation } from "../core/api";
 
 import "../styles/searchbar.css";
 import { SpotInfoProps } from "./SpotInfo";
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const searchClient = algoliasearch(
-  "S2P17HUIXR",
-  "f4deaa69b52860a576dc005a219738c9"
-);
-
-function CustomHits(props: UseHitsProps) {
-  const { hits } = useHits(props);
-
-  console.log("hits", hits);
-
-  const assetCardValues: AssetCardProps[] = hits as unknown as AssetCardProps[];
-
-  return (
-    <section className="grid gap-4">
-      {hits.length === 0 && (
-        <div className="toast toast-center">
-          <div className="alert alert-error shadow-lg">
-            <div>
-              <span>Loading...</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {hits.length > 0 && <AssetGrid assetCards={assetCardValues} />}
-    </section>
-  );
-}
-
-export function SearchBar() {
-  return (
-    <InstantSearch searchClient={searchClient} indexName={`spots`}>
-      <Configure hitsPerPage={16} />
-      <Grid item container direction="column" pb={2}>
-        <Grid item pb={2}>
-          <SearchBox />
-        </Grid>
-        <Grid item>
-          <CustomHits />
-        </Grid>
-      </Grid>
-    </InstantSearch>
-  );
-}
+import { ProfileProps } from "../pages/Profile";
 
 export function CustomSearchBar() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<SpotInfoProps[]>([]);
+  const [searchType, setSearchType] = useState<"spots" | "users">("spots");
+  const [spotSearchResults, setSpotSearchResults] = useState<SpotInfoProps[]>(
+    []
+  );
+  const [profileSearchResults, setProfileSearchResults] = useState<
+    ProfileProps[]
+  >([]);
   const searchSpots = useMutation("SearchSpots");
+  const searchProfiles = useMutation("SearchProfiles");
 
   const search = async () => {
-    setSearchResults(await searchSpots.commit({ query: searchQuery }));
+    if (searchType == "spots") {
+      setSpotSearchResults(await searchSpots.commit({ query: searchQuery }));
+    } else {
+      setProfileSearchResults(
+        await searchProfiles.commit({ query: searchQuery })
+      );
+    }
   };
 
   return (
     <Grid item container direction="column" pb={2}>
-      <Grid item pb={2}>
+      <Grid item container direction="row" alignItems="center">
+        <ToggleButtonGroup
+          value={searchType}
+          exclusive
+          onChange={(event, newSearchType: "spots" | "users") =>
+            setSearchType(newSearchType)
+          }
+          aria-label="outlined button group"
+          sx={{ p: 2 }}
+        >
+          <ToggleButton value="spots" aria-label="spots">
+            Spots
+          </ToggleButton>
+          <ToggleButton value="users" aria-label="users">
+            Users
+          </ToggleButton>
+        </ToggleButtonGroup>
         <TextField
           autoFocus
           margin="dense"
@@ -95,10 +65,10 @@ export function CustomSearchBar() {
           onKeyDown={(e) => {
             if (e.key === "Enter") search();
           }}
-          label="Search for spots"
+          label={"Search for " + searchType}
           variant="outlined"
           placeholder="Search..."
-          size="small"
+          size="medium"
           type="text"
           name="query"
           InputProps={{
@@ -111,15 +81,28 @@ export function CustomSearchBar() {
         />
       </Grid>
       <Grid item>
-        {searchResults.length > 0 && (
+        {searchType === "spots" && spotSearchResults.length > 0 && (
           <AssetGrid
-            assetCards={searchResults.map((spot) => {
+            assetCards={spotSearchResults.map((spot) => {
               return {
                 id: spot._id,
                 title: spot.title,
                 description: spot.description,
                 image: spot.images[0],
                 type: "spots",
+              };
+            })}
+          />
+        )}
+        {searchType === "users" && profileSearchResults.length > 0 && (
+          <AssetGrid
+            assetCards={profileSearchResults.map((profile) => {
+              return {
+                id: profile._id,
+                title: profile.username,
+                description: profile.bio,
+                image: profile.image,
+                type: "profile",
               };
             })}
           />

@@ -126,7 +126,7 @@ export function NavBar(props: AppBarProps): JSX.Element {
               component={NavLink}
               sx={{ pl: 2, pr: 2 }}
             >
-              Spots
+              Search
             </Link>
             <Link
               color="inherit"
@@ -148,27 +148,6 @@ export function NavBar(props: AppBarProps): JSX.Element {
                 Activity
               </Link>
             )}
-            {/* {currentUser && (
-              <>
-                <button
-                  className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5"
-                  onClick={() => setModal(true)}
-                >
-                  <LogoutIcon className="h-8 w-8" aria-hidden="true" />
-                </button>
-
-                <NavLink
-                  to={`/profile/${currentUser.uid}`}
-                  className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-full text-sm p-2.5"
-                >
-                  <img
-                    className="h-8 w-8 rounded-full"
-                    src={currentUser.photoURL}
-                    alt=""
-                  />
-                </NavLink>
-              </>
-            )} */}
           </Box>
           <Box
             display="flex"
@@ -198,8 +177,8 @@ export function NavBar(props: AppBarProps): JSX.Element {
                 <MenuItem onClick={() => handleMobileMenu("/trips")}>
                   Trips
                 </MenuItem>
-                <MenuItem onClick={() => handleMobileMenu("/spots")}>
-                  Spots
+                <MenuItem onClick={() => handleMobileMenu("/search")}>
+                  Search
                 </MenuItem>
                 <MenuItem onClick={() => handleMobileMenu("/gas")}>
                   Gas

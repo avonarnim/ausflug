@@ -213,7 +213,6 @@ exports.search_spots_by_n_sources = function (req, res) {
 };
 
 exports.query_spots = function (req, res) {
-  console.log;
   Spot.aggregate(
     [
       {

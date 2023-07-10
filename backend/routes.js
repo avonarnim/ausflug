@@ -207,6 +207,10 @@ router.use("/api/users/:userId", VerifyAdminToken);
 router.route("/api/users/:userId").delete((req, res) => {
   user.delete_profile(req, res);
 });
+router.use("/api/users/query", VerifyToken);
+router.route("/api/users/query").post((req, res) => {
+  user.query_users(req, res);
+});
 // #endregion
 
 // #region Posts
