@@ -76,7 +76,7 @@ export default function Spot(): JSX.Element {
       getSpotCallback(params.spotId);
       if (currentUser) getProfileCallback();
     }
-  }, [map]);
+  }, [map, params.spotId]);
 
   useEffect(() => {
     if (spot) {

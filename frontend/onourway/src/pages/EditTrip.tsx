@@ -18,7 +18,7 @@ export default function EditTrip(): JSX.Element {
     } else {
       console.log("no trip id");
     }
-  }, []);
+  }, [params.tripId]);
 
   const getTripResult = async () => {
     const trip = await getTrip.commit({ tripId: params.tripId! });
