@@ -7,9 +7,9 @@ import * as React from "react";
 import { useLocation } from "react-router-dom";
 
 // const appName = APP_NAME;
-const appName = "Ausflug";
+const appName = "OnOurWay";
 // const appOrigin = `https://${APP_HOSTNAME}`;
-const appOrigin = `https://ausflug.vercel.app`;
+const appOrigin = `https://onourway.vercel.app`;
 
 export function usePageEffect(options?: Options, deps?: React.DependencyList) {
   const location = useLocation();
