@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
 import { EventProps } from "./Event";
-import { AddCircleOutline } from "@mui/icons-material";
+import { Bookmark, BookmarkBorder } from "@mui/icons-material";
 import { useAuth } from "../core/AuthContext";
 import SpotReviewFormDialog from "../dialogs/SpotReviewDialog";
 import {
@@ -27,6 +27,7 @@ import {
   SkeletonAssetBlockCardHorizontalSwipe,
 } from "../components/assetSwipers/Block";
 import { Upvote } from "../components/Upvote";
+import { ProfileProps } from "./Profile";
 
 type Libraries = (
   | "drawing"
@@ -54,11 +55,14 @@ export default function Spot(): JSX.Element {
   const [similarSpots, setSimilarSpots] = useState<SpotInfoProps[]>();
   const [assetCards, setAssetCards] =
     useState<AssetImageCardHorizontalSwipeProps>({ assetCards: [] });
+  const [profile, setProfile] = useState<ProfileProps>();
+  const [spotSaved, setSpotSaved] = useState(false);
 
   const getSpot = useMutation("GetSpot");
   const getEvents = useMutation("GetEventsByVenue");
   const saveSpot = useMutation("SaveSpotToUser");
   const getSimilarSpots = useMutation("GetSimilarSpots");
+  const getProfile = useMutation("GetProfile");
 
   useEffect(() => {
     console.log("params", params);
@@ -68,6 +72,7 @@ export default function Spot(): JSX.Element {
       console.log("getting spot");
       setSpotId(params.spotId);
       getSpotCallback(params.spotId);
+      if (currentUser) getProfileCallback();
     }
   }, [map]);
 
@@ -110,6 +115,14 @@ export default function Spot(): JSX.Element {
     });
   };
 
+  const getProfileCallback = async () => {
+    const getProfileResponse = await getProfile.commit({
+      profileId: currentUser.uid,
+    });
+    setProfile(getProfileResponse);
+    setSpotSaved(getProfileResponse.savedSpots.includes(spotId));
+  };
+
   const getEventsCallback = async (ticketMasterIdString: string) => {
     const getEventsResponse = await getEvents.commit({
       venueId: ticketMasterIdString,
@@ -144,11 +157,15 @@ export default function Spot(): JSX.Element {
           <Grid item xs={1} sm={1} alignItems="center" justifyContent="center">
             <Upvote spot={spot} userId={currentUser.uid} />
           </Grid>
-          <Grid item xs={11} sm={6}>
-            <AssetImageCardHorizontalSwipe assetCards={assetCards.assetCards} />
-          </Grid>
-          <Grid item xs={12} sm={5}>
-            <Typography>{spot.title}</Typography>
+          {assetCards.assetCards.length > 0 && (
+            <Grid item xs={11} sm={6}>
+              <AssetImageCardHorizontalSwipe
+                assetCards={assetCards.assetCards}
+              />
+            </Grid>
+          )}
+          <Grid item xs={6} sm={5}>
+            <Typography variant="h6">{spot.title}</Typography>
             <Typography>{spot.description}</Typography>
             <Typography>Category: {spot.category}</Typography>
             {spot.featuredBy.length > 0 ? (
@@ -156,27 +173,26 @@ export default function Spot(): JSX.Element {
             ) : (
               <></>
             )}
-            {spot.highlightedIn.length > 0 ? (
-              <Typography>Highlighted in {spot.highlightedIn}</Typography>
-            ) : (
-              <></>
-            )}
             <Typography>Specialty: {spot.specialty}</Typography>
             <Typography>Quality: {spot.quality}</Typography>
             <Typography>Ratings: {spot.numberOfRatings}</Typography>
             <Typography>
-              Average time spent here: {spot.avgTimeSpent}
+              Average time spent here: {spot.avgTimeSpent} hr
             </Typography>
             <Typography>Cost: {swapToDollarSigns(spot.cost)}</Typography>
             {currentUser && spotId ? (
               <>
                 <IconButton
                   edge="end"
-                  onClick={() =>
-                    saveSpot.commit({ userId: currentUser.uid, spotId: spotId })
-                  }
+                  onClick={() => {
+                    saveSpot.commit({
+                      userId: currentUser.uid,
+                      spotId: spotId,
+                    });
+                    setSpotSaved(true);
+                  }}
                 >
-                  <AddCircleOutline />
+                  {spotSaved ? <Bookmark /> : <BookmarkBorder />}
                 </IconButton>
                 <SpotReviewFormDialog spotId={spotId} />
               </>
@@ -187,20 +203,22 @@ export default function Spot(): JSX.Element {
         </Grid>
 
         {isLoaded ? (
-          <GoogleMap
-            mapContainerStyle={{ width: "100%", height: "500px" }}
-            center={spot.location}
-            zoom={4}
-            onLoad={(map) => setMap(map)}
-            onUnmount={() => setMap(undefined)}
-          ></GoogleMap>
+          <Grid item xs={6}>
+            <GoogleMap
+              mapContainerStyle={{ width: "100%", height: "40%" }}
+              center={spot.location}
+              zoom={4}
+              onLoad={(map) => setMap(map)}
+              onUnmount={() => setMap(undefined)}
+            ></GoogleMap>
+          </Grid>
         ) : (
           <></>
         )}
 
         {spot.reviews.length > 0 ? (
           <>
-            <Typography>Reviews</Typography>{" "}
+            <Typography>Reviews</Typography>
             <Grid item container>
               {spot.reviews.map((review) => (
                 <Grid item xs={12} sm={6} md={4}>
