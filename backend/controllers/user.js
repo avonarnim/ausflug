@@ -34,14 +34,14 @@ exports.get_profile_by_username = async function (req, res) {
   });
 };
 
-exports.get_statuses = async function (req, res) {
+exports.get_statuses_and_gear = async function (req, res) {
   User.findOne({ _id: req.params.userId }, function (err, user) {
     if (err) {
       res.send(err);
     } else {
       User.find(
         { _id: { $in: user.following } },
-        { _id: 1, name: 1, status: 1, username: 1, image: 1 },
+        { _id: 1, name: 1, status: 1, username: 1, image: 1, gear: 1 },
         function (err, users) {
           if (err) {
             res.send(err);

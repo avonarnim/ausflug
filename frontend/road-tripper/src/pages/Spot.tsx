@@ -45,6 +45,8 @@ export default function Spot(): JSX.Element {
     libraries: libraries,
   });
 
+  console.log("isLoaded", isLoaded);
+
   const params = useParams();
   const { currentUser } = useAuth();
 
@@ -178,10 +180,11 @@ export default function Spot(): JSX.Element {
             <Typography>Ratings: {spot.numberOfRatings}</Typography>
             <Typography>
               Average time spent here: {spot.avgTimeSpent} hr
+              {spot.avgTimeSpent === 1 ? "" : "s"}
             </Typography>
             <Typography>Cost: {swapToDollarSigns(spot.cost)}</Typography>
             {currentUser && spotId ? (
-              <>
+              <Grid container direction="row">
                 <IconButton
                   edge="end"
                   onClick={() => {
@@ -195,7 +198,7 @@ export default function Spot(): JSX.Element {
                   {spotSaved ? <Bookmark /> : <BookmarkBorder />}
                 </IconButton>
                 <SpotReviewFormDialog spotId={spotId} />
-              </>
+              </Grid>
             ) : (
               <></>
             )}
@@ -205,7 +208,7 @@ export default function Spot(): JSX.Element {
         {isLoaded ? (
           <Grid item xs={6}>
             <GoogleMap
-              mapContainerStyle={{ width: "100%", height: "40%" }}
+              mapContainerStyle={{ width: "100%", height: "40vh" }}
               center={spot.location}
               zoom={4}
               onLoad={(map) => setMap(map)}

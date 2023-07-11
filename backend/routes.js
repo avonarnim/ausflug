@@ -174,7 +174,7 @@ router.route("/api/users/update/:userId").post((req, res) => {
 });
 router.use("/api/users/statuses/:userId", VerifyToken);
 router.route("/api/users/statuses/:userId").get((req, res) => {
-  user.get_statuses(req, res);
+  user.get_statuses_and_gear(req, res);
 });
 router.use("/api/users/follow/:userId/:followingId", VerifyToken);
 router.route("/api/users/follow/:userId/:followingId").put((req, res) => {

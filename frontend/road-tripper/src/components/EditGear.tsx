@@ -7,12 +7,16 @@ import {
   FormControlLabel,
   Checkbox,
   Button,
+  Input,
   List,
   ListItem,
   ListItemText,
 } from "@mui/material";
 import { ProfileProps } from "../pages/Profile";
 import { useMutation } from "../core/api";
+import FuzzySearch from "fuzzy-search";
+import { FiberManualRecord } from "@mui/icons-material";
+import { styled } from "@mui/system";
 
 interface GearItem {
   name: string;
@@ -50,6 +54,82 @@ export function GearList(props: { gear: GearItem[] }): JSX.Element {
         ))}
       </List>
     </div>
+  );
+}
+
+const StyledIndicator = styled(FiberManualRecord)`
+  color: ${({ color }) => color};
+  margin-right: 8px;
+`;
+
+export function FindGear(props: {
+  usersGear: {
+    _id: string;
+    name: string;
+    username: string;
+    image: string;
+    status: string;
+    gear: {
+      name: string;
+      description: string;
+      quantity: number;
+      borrowable: boolean;
+    }[];
+  }[];
+}): JSX.Element {
+  // unpack props.gear into a single array of GearItems along with the owner's name, username, id, and image
+  const gearItems = props.usersGear.map((user) => {
+    return user.gear.map((item) => {
+      return {
+        name: item.name,
+        description: item.description,
+        quantity: item.quantity,
+        borrowable: item.borrowable,
+        ownerName: user.name,
+        ownerUsername: user.username,
+        ownerId: user._id,
+        ownerImage: user.image,
+      };
+    });
+  });
+  // flatten the array
+  const flattenedGearItems = gearItems.flat();
+
+  const [gearQuery, setGearQuery] = useState("");
+  const gearSearch = new FuzzySearch(
+    flattenedGearItems,
+    ["name", "description", "username"],
+    {}
+  );
+  const filteredGear = gearSearch.search(gearQuery);
+
+  return (
+    <>
+      <Typography variant="h6">Search followers' gear</Typography>
+      <Input
+        type="text"
+        fullWidth
+        placeholder="Search..."
+        onChange={(event) => {
+          setGearQuery(event.target.value);
+        }}
+      />
+      <List>
+        {filteredGear.map((item) => {
+          return (
+            <ListItem>
+              <StyledIndicator color={item.borrowable ? "success" : "error"} />
+              <ListItemText
+                primary={
+                  item.name + " (" + item.quantity + ") - " + item.ownerUsername
+                }
+                secondary={item.description}
+              />
+            </ListItem>
+          );
+        })}
+      </List>
+    </>
   );
 }
 

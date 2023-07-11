@@ -44,7 +44,7 @@ import {
   StyledIndicator,
 } from "../components/ProfileStatus";
 import { PostProps } from "./Feed";
-import { EditGear, GearList } from "../components/EditGear";
+import { EditGear, FindGear, GearList } from "../components/EditGear";
 
 const Img = styled("img")({
   margin: "auto",
@@ -128,13 +128,19 @@ export default function Profile(props: {
   const [thisUser, setThisUser] = useState<ProfileProps | null>(null);
   const [trips, setTrips] = useState<TripProps[] | null>(null);
   const [spots, setSpots] = useState<SpotInfoProps[] | null>(null);
-  const [statuses, setStatuses] = useState<
+  const [statusesAndGear, setStatusesAndGear] = useState<
     | {
         _id: string;
         name: string;
         username: string;
         image: string;
         status: string;
+        gear: {
+          name: string;
+          description: string;
+          quantity: number;
+          borrowable: boolean;
+        }[];
       }[]
     | null
   >(null);
@@ -150,7 +156,7 @@ export default function Profile(props: {
   const getUserTrips = useMutation("GetUserTrips");
   const getSpotsList = useMutation("GetSpotsList");
   const unsaveSpot = useMutation("UnsaveSpotFromUser");
-  const getStatuses = useMutation("GetStatuses");
+  const getStatusesAndGear = useMutation("GetStatusesAndGear");
   const getPosts = useMutation("GetUserPosts");
 
   useEffect(() => {
@@ -159,7 +165,7 @@ export default function Profile(props: {
       getProfileCallback(currentUser.uid, setUser);
       getTripsCallback(currentUser.uid);
       getSpotsCallback(currentUser.uid);
-      getStatusesCallback(currentUser.uid);
+      getStatusesAndGearCallback(currentUser.uid);
       getPostsCallback(currentUser.uid);
     } else if (props.indicator === "id") {
       if (params.userId === currentUser?.uid) {
@@ -167,7 +173,7 @@ export default function Profile(props: {
         getProfileCallback(currentUser.uid, setUser);
         getTripsCallback(currentUser.uid);
         getSpotsCallback(currentUser.uid);
-        getStatusesCallback(currentUser.uid);
+        getStatusesAndGearCallback(currentUser.uid);
         getPostsCallback(currentUser.uid);
       } else if (params.userId) {
         setUserId(params.userId);
@@ -215,12 +221,12 @@ export default function Profile(props: {
     console.log("spots set", getSpotsResponse);
   };
 
-  const getStatusesCallback = async (userId: string) => {
-    const getStatusesResponse = await getStatuses.commit({
+  const getStatusesAndGearCallback = async (userId: string) => {
+    const getStatusesAndGearResponse = await getStatusesAndGear.commit({
       profileId: userId,
     });
-    setStatuses(getStatusesResponse);
-    console.log("statuses set", getStatusesResponse);
+    setStatusesAndGear(getStatusesAndGearResponse);
+    console.log("statuses set", getStatusesAndGearResponse);
   };
 
   const getPostsCallback = async (userId: string) => {
@@ -245,7 +251,7 @@ export default function Profile(props: {
         setIsCurrentUser(true);
         getTripsCallback(getUserResponse._id);
         getSpotsCallback(getUserResponse._id);
-        getStatusesCallback(getUserResponse._id);
+        getStatusesAndGearCallback(getUserResponse._id);
       } else {
         setIsCurrentUser(false);
         getProfileCallback(currentUser.uid, setThisUser);
@@ -432,7 +438,7 @@ export default function Profile(props: {
             {/* Display statusResults with styled indicator as seen in ProfileStatus.tsx */}
             <Typography variant="h5">Statuses</Typography>
             <List>
-              {statuses?.map((status) => (
+              {statusesAndGear?.map((status) => (
                 <ListItem key={status._id + "_status"}>
                   {status.image && (
                     <ListItemAvatar>
@@ -462,6 +468,11 @@ export default function Profile(props: {
                 <GearList gear={user.gear} />
               </Grid>
             )}
+        {isCurrentUser && statusesAndGear && (
+          <Grid item xs={6}>
+            {<FindGear usersGear={statusesAndGear} />}
+          </Grid>
+        )}
         {
           <Grid item xs={6}>
             {/* Display statusResults with styled indicator as seen in ProfileStatus.tsx */}
