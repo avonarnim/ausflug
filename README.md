@@ -1,8 +1,8 @@
-# Road Tripper
+# Ausflug
 
 #### Overview
 
-Road-Tripper is a full-stack app designed to help users plan a route through
+Ausflug is a full-stack app designed to help users plan a route through
 multiple intermediary stops. Users can:
 
 1. Create an account, log-in to the account, and log-out of the account
@@ -55,7 +55,7 @@ done using bcrypt, which has a compareSync method. Password hashing is done by
 bcrypt's hashSync method, which automatically generates a salt before hashing.
 
 Note that the important typings that are copied from the backend are found in the following files:
-`frontend/road-tripper/src/components/SpotInfo.tsx`
+`frontend/ausflug/src/components/SpotInfo.tsx`
 `pages/EditTrip.tsx`
 `pages/Profile.tsx`
 

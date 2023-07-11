@@ -84,7 +84,7 @@ export default function Admin(): JSX.Element {
   const [metricsWindow, setMetricsWindow] = useState(7);
   const [adminContent, setAdminContent] = useState<JSX.Element>(
     <Typography>
-      Please login as Road Tripper team member to view this page
+      Please login as an Ausflug team member to view this page
     </Typography>
   );
   const [feedback, setFeedback] = useState<FeedbackProps[]>([]);
@@ -248,7 +248,7 @@ export default function Admin(): JSX.Element {
     </Box>
   ) : (
     <Typography>
-      Please login as Road Tripper team member to view this page
+      Please login as an Ausflug team member to view this page
     </Typography>
   );
 }

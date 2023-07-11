@@ -62,7 +62,7 @@ export function Footer(): JSX.Element {
           </Box>
         </Box>
 
-        <Typography p={4}>Copyright Road Tripper</Typography>
+        <Typography p={4}>Copyright Ausflug</Typography>
         <FeedbackDialog />
       </Box>
     </footer>

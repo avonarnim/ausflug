@@ -13,27 +13,27 @@ export default function About(): JSX.Element {
       sx={{ marginTop: (x) => x.spacing(3), marginBottom: (x) => x.spacing(3) }}
     >
       <Typography variant="h1" gutterBottom>
-        About Road Tripper
+        About Ausflug
       </Typography>
       <Typography>
-        Road Tripper was created with the intention to help people enjoy the
-        journey, not just the destination. Most travel sites aim to get you from
-        city to city, ignoring everything in between. Road Tripper hopes to
-        dispel with the idea of fly-over states.
+        Ausflug was created with the intention to help people enjoy the journey,
+        not just the destination. Most travel sites aim to get you from city to
+        city, ignoring everything in between. Ausflug hopes to dispel with the
+        idea of fly-over states.
       </Typography>
       <Typography>
         If there's a place in your area that you want everyone to know about,
         add it to our database!
       </Typography>
       <Typography>
-        Road Tripper is meant to be a tool to help you plan your next road trip.
-        It is not meant to be a replacement for a GPS or a map. It is meant to
-        help you find interesting places to visit along the way.
+        Ausflug is meant to be a tool to help you plan your next road trip. It
+        is not meant to be a replacement for a GPS or a map. It is meant to help
+        you find interesting places to visit along the way.
       </Typography>
       <Typography>
-        Road Tripper is a work in progress. If you have any suggestions, please
-        feel free to send-in feedback. We will be adding more features as
-        quickly as possible.
+        Ausflug is a work in progress. If you have any suggestions, please feel
+        free to send-in feedback. We will be adding more features as quickly as
+        possible.
       </Typography>
     </Container>
   );
