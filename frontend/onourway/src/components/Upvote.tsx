@@ -31,7 +31,8 @@ export function Upvote(props: { spot: SpotInfoProps; userId: string }) {
   }, []);
 
   const toggleIncrement = async () => {
-    if (props.userId === "") return;
+    console.log(props.userId);
+    if (props.userId === "" || props.userId === undefined) return;
 
     setAdded(added === 1 ? 0 : 1);
 
@@ -47,7 +48,7 @@ export function Upvote(props: { spot: SpotInfoProps; userId: string }) {
   };
 
   const toggleDecrement = async () => {
-    if (props.userId === "") return;
+    if (props.userId === "" || props.userId === undefined) return;
 
     setAdded(added === -1 ? 0 : -1);
     await updateSpot.commit({
@@ -64,11 +65,11 @@ export function Upvote(props: { spot: SpotInfoProps; userId: string }) {
   return (
     <Grid container alignItems="center" direction="column">
       <IconButton onClick={toggleIncrement}>
-        <ArrowUpwardOutlined />
+        <ArrowUpwardOutlined color={added === 1 ? "success" : "inherit"} />
       </IconButton>
       <Typography>{initialCount + added}</Typography>
       <IconButton onClick={toggleDecrement}>
-        <ArrowDownwardOutlined />
+        <ArrowDownwardOutlined color={added === -1 ? "error" : "inherit"} />
       </IconButton>
     </Grid>
   );

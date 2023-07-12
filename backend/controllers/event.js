@@ -91,22 +91,24 @@ exports.search_events_venue = async function (req, res) {
   }
 
   let events = [];
-  jsonRes._embedded.events.map((event) => {
-    events.push({
-      title: event.name,
-      description: event.description ?? "",
-      externalLink: event.url,
-      image: event.images[0].url ?? "",
-      // spot_id: venue._id,
-      // place_id: venue.place_id,
-      // location: venue.location,
-      externalIds: [{ source: "ticketmaster", id: event.id }],
-      sponsored: false,
-      status: event.dates.status.code,
-      startDate: event.dates.start.localDate,
-      endDate: event.dates.end?.localDate ?? "",
+  if (jsonRes._embedded.events.length > 0) {
+    jsonRes._embedded.events.map((event) => {
+      events.push({
+        title: event.name,
+        description: event.description ?? "",
+        externalLink: event.url,
+        image: event.images[0].url ?? "",
+        // spot_id: venue._id,
+        // place_id: venue.place_id,
+        // location: venue.location,
+        externalIds: [{ source: "ticketmaster", id: event.id }],
+        sponsored: false,
+        status: event.dates.status.code,
+        startDate: event.dates.start.localDate,
+        endDate: event.dates.end?.localDate ?? "",
+      });
     });
-  });
+  }
 
   res.json(events);
 };

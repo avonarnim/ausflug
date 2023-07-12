@@ -221,7 +221,7 @@ export default function Spot(): JSX.Element {
 
         {spot.reviews.length > 0 ? (
           <>
-            <Typography>Reviews</Typography>
+            <Typography variant="h6">Reviews</Typography>
             <Grid item container>
               {spot.reviews.map((review) => (
                 <Grid item xs={12} sm={6} md={4}>
@@ -239,7 +239,7 @@ export default function Spot(): JSX.Element {
 
         {events ? (
           <>
-            <Typography>Events</Typography>
+            <Typography variant="h6">Events</Typography>
             <Grid item container>
               {events.map((event) => (
                 <Grid item xs={12} sm={6} md={4}>
