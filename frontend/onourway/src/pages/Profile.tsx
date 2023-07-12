@@ -188,13 +188,13 @@ export default function Profile(props: {
     } else {
       console.log("no user");
     }
-  }, []);
+  }, [params.userId, params.username]);
 
   useEffect(() => {
     setIsCurrentUser(
       (!params.userId && currentUser) || params.userId === currentUser?.uid
     );
-  }, [params.userId, currentUser]);
+  }, [params.userId, params.username, currentUser]);
 
   const getProfileCallback = async (
     userId: string,
