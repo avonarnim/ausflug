@@ -71,6 +71,7 @@ export default function Spot(): JSX.Element {
               backgroundColor: "white",
               p: 2,
               m: 2,
+              color: "black",
             }}
           >
             <Typography variant="h6">
@@ -88,6 +89,7 @@ export default function Spot(): JSX.Element {
               borderRadius: "5px",
               border: "1px solid black",
               backgroundColor: "white",
+              color: "black",
               p: 2,
               m: 2,
             }}

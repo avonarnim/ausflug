@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
 import { EventProps } from "./Event";
-import { Bookmark, BookmarkBorder } from "@mui/icons-material";
+import { Bookmark, BookmarkBorder, OpenInNew } from "@mui/icons-material";
 import { useAuth } from "../core/AuthContext";
 import SpotReviewFormDialog from "../dialogs/SpotReviewDialog";
 import {
@@ -157,7 +157,7 @@ export default function Spot(): JSX.Element {
       <Box>
         <Grid item container sx={{ marginBottom: 4 }}>
           <Grid item xs={1} sm={1} alignItems="center" justifyContent="center">
-            <Upvote spot={spot} userId={currentUser.uid} />
+            <Upvote spot={spot} userId={currentUser?.uid} />
           </Grid>
           {assetCards.assetCards.length > 0 && (
             <Grid item xs={11} sm={6}>
@@ -257,6 +257,14 @@ export default function Spot(): JSX.Element {
                   <Typography>{event.status}</Typography>
                   <Typography>{event.startDate}</Typography>
                   <Typography>{event.endDate}</Typography>
+                  {event.externalLink && (
+                    <IconButton
+                      edge="end"
+                      onClick={() => window.open(event.externalLink, "_blank")}
+                    >
+                      <OpenInNew />
+                    </IconButton>
+                  )}
                 </Grid>
               ))}
             </Grid>

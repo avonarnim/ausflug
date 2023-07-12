@@ -27,11 +27,14 @@ export function Upvote(props: { spot: SpotInfoProps; userId: string }) {
       setAdded(userVote.value ? 1 : -1);
     };
 
-    getVote();
+    if (props.userId) getVote();
   }, []);
 
   const toggleIncrement = async () => {
+    if (props.userId === "") return;
+
     setAdded(added === 1 ? 0 : 1);
+
     await updateSpot.commit({
       ...props.spot,
       popularity: initialCount + added,
@@ -44,6 +47,8 @@ export function Upvote(props: { spot: SpotInfoProps; userId: string }) {
   };
 
   const toggleDecrement = async () => {
+    if (props.userId === "") return;
+
     setAdded(added === -1 ? 0 : -1);
     await updateSpot.commit({
       ...props.spot,
