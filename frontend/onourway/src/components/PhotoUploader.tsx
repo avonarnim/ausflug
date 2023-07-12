@@ -35,25 +35,20 @@ export function PhotoUploader(props: {
   );
 
   const handleFileChange = async (files: FileList) => {
-    console.log("handling change", files[0]);
-    setFile({
-      ...file,
-      selectedFile: files[0],
-      loaded: 0,
-      message: files[0] ? files[0].name : file.defaultMessage,
-    });
-
-    //   await handleUpload();
-    // };
-
-    // const handleUpload = async () => {
-    console.log(file.uploading, !files[0]);
     if (file.uploading) return;
     if (!files[0]) {
       setFile({ ...file, message: "Select a file first" });
       return;
     }
-    setFile({ ...file, uploading: true });
+
+    setFile({
+      ...file,
+      selectedFile: files[0],
+      loaded: 0,
+      message: files[0] ? files[0].name : file.defaultMessage,
+      uploading: true,
+    });
+
     // define upload
     const res = await uploadFile.commit({
       file: files[0],
@@ -62,15 +57,19 @@ export function PhotoUploader(props: {
       onUploadProgress: (ProgressEvent) => {
         setFile({
           ...file,
+          selectedFile: files[0],
           loaded: Math.round(
             (ProgressEvent.loaded / ProgressEvent.total) * 100
           ),
+          message: files[0] ? files[0].name : file.defaultMessage,
+          uploading: true,
         });
       },
     });
 
     setFile({
       ...file,
+      selectedFile: files[0],
       message: "Uploaded successfully",
       uploading: false,
     });
@@ -106,6 +105,8 @@ export function PhotoUploader(props: {
           image={
             file.selectedFile
               ? URL.createObjectURL(file.selectedFile)
+              : prevImage
+              ? prevImage
               : props.prevImageString
               ? props.prevImageString
               : props.defaultImage
@@ -125,15 +126,6 @@ export function PhotoUploader(props: {
               Select Image
             </Button>
           </label>
-          {/* <Button
-            size="small"
-            // className="submit"
-            variant="contained"
-            onClick={handleUpload}
-            sx={{ ml: 2 }}
-          >
-            Upload
-          </Button> */}
         </CardActions>
       </Card>
     </form>
