@@ -8,7 +8,7 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "../core/api";
 
 import "../styles/searchbar.css";
@@ -26,6 +26,15 @@ export function CustomSearchBar() {
   >([]);
   const searchSpots = useMutation("SearchSpots");
   const searchProfiles = useMutation("SearchProfiles");
+
+  useEffect(() => {
+    handleInitialSearch();
+  }, []);
+
+  const handleInitialSearch = async () => {
+    setSpotSearchResults(await searchSpots.commit({ query: "a" }));
+    setProfileSearchResults(await searchProfiles.commit({ query: "a" }));
+  };
 
   const search = async () => {
     if (searchType == "spots") {
