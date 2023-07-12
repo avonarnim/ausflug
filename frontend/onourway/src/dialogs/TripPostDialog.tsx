@@ -114,8 +114,7 @@ export default function TripPostDialog(props: { tripId: string }) {
               <DialogContentText>We've got your post!</DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => handleClose(false)}>Cancel</Button>
-              <Button onClick={() => handleClose(true)}>Submit</Button>
+              <Button onClick={() => handleClose(false)}>Close</Button>
             </DialogActions>
           </>
         ) : (
