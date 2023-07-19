@@ -73,7 +73,7 @@ export function BrowseEventsDisplay(props: {
               <ListItemButton
                 onClick={() => {
                   props.map!.setCenter(eventResult.location);
-                  props.map!.setZoom(10);
+                  props.map!.setZoom(14);
                 }}
               >
                 <ListItemAvatar>

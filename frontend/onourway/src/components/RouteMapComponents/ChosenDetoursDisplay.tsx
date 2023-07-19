@@ -130,7 +130,7 @@ export function ChosenDetoursDisplay(props: {
                     <ListItemButton
                       onClick={() => {
                         props.map?.setCenter(detour.location);
-                        props.map?.setZoom(10);
+                        props.map?.setZoom(14);
                       }}
                     >
                       <ListItemIcon>

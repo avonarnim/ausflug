@@ -75,7 +75,7 @@ export function BrowseSpotsDisplay(props: {
         <ListItemButton
           onClick={() => {
             props.map!.setCenter(spotResult.location);
-            props.map!.setZoom(10);
+            props.map!.setZoom(14);
           }}
         >
           <ListItemAvatar>
