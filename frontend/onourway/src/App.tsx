@@ -25,6 +25,7 @@ import {
   Spot,
   Settings,
   Terms,
+  TripGuide,
   Trips,
 } from "./pages/index";
 import { AuthProvider } from "./core/AuthContext";
@@ -119,6 +120,10 @@ function App() {
             element={<React.Suspense children={<Login />} />}
           />
           <Route path="/gas" element={<React.Suspense children={<Gas />} />} />
+          <Route
+            path="/guide/:name"
+            element={<React.Suspense children={<TripGuide />} />}
+          />
           {/* <Route
             path="/donate"
             element={<React.Suspense children={<Donate />} />}

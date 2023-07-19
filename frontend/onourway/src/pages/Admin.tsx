@@ -20,7 +20,11 @@ import { auth } from "../core/firebase";
 
 export function QueuedSpots(props: QueueSpotsProps): JSX.Element {
   const approveSpot = useMutation("UpdateSpot");
-  const [spots, setSpots] = useState<SpotInfoProps[]>(props.spots);
+  const [spots, setSpots] = useState<SpotInfoProps[]>([]);
+
+  useEffect(() => {
+    setSpots(props.spots);
+  }, [props.spots]);
 
   const approveSpotCallback = async (spot: SpotInfoProps) => {
     await approveSpot.commit({ ...spot, status: "Approved" });
