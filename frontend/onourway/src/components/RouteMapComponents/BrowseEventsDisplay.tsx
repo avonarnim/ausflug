@@ -49,9 +49,6 @@ export function BrowseEventsDisplay(props: {
     props.events.length > 0
       ? filteredEvents.map((eventResult: EventProps) => {
           const eventRef = createRef<HTMLDivElement>();
-
-          console.log(eventResult, eventResult.externalLink);
-
           const element = (
             <ListItem
               key={

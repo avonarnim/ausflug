@@ -1,6 +1,7 @@
 import { Grid, Typography } from "@mui/material";
 import { SpotInfoProps } from "../SpotInfo";
 import { DetourDayTabPanel } from "../DetourDayTabPanel";
+import { Dayjs } from "dayjs";
 
 export function RouteInfo(props: {
   routeCreated: boolean;
@@ -8,6 +9,8 @@ export function RouteInfo(props: {
   duration: string;
   daysDriving: number;
   chosenDetoursByDay: SpotInfoProps[][];
+  startDate: Dayjs | null;
+  endDate: Dayjs | null;
 }): JSX.Element {
   return (
     <>
@@ -23,6 +26,8 @@ export function RouteInfo(props: {
             <DetourDayTabPanel
               daysDriving={props.daysDriving}
               chosenDetoursByDay={props.chosenDetoursByDay}
+              startDate={props.startDate}
+              endDate={props.endDate}
             />
           </Grid>
         </>

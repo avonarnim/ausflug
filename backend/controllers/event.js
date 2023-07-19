@@ -46,7 +46,6 @@ exports.search_events_box_time = function (req, res) {
         const jsonRes = JSON.parse(res);
 
         if (!jsonRes._embedded) {
-          console.log("no events", venue.title);
           continue;
         }
 
@@ -86,7 +85,6 @@ exports.search_events_venue = async function (req, res) {
   const jsonRes = JSON.parse(ticketMasterRes);
 
   if (!jsonRes._embedded) {
-    console.log("no events");
     res.send("no events");
   }
 

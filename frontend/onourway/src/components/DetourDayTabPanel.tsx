@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Box,
+  Button,
   List,
   ListItem,
   ListItemButton,
@@ -12,6 +13,7 @@ import {
 } from "@mui/material";
 import { SpotInfoProps } from "./SpotInfo";
 import { categoryToIcon } from "../core/util";
+import { Dayjs } from "dayjs";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -45,8 +47,10 @@ function a11yProps(index: number) {
 export function groupDetoursByDay(
   originValue: google.maps.LatLng,
   originName: string,
+  originId: string,
   destinationValue: google.maps.LatLng,
   destinationName: string,
+  destinationId: string,
   chosenDetours: SpotInfoProps[],
   tempDaysDriving: number,
   results: google.maps.DirectionsResult,
@@ -65,6 +69,7 @@ export function groupDetoursByDay(
     title: originName,
     description: "Origin",
     category: "Home",
+    place_id: originId,
   } as SpotInfoProps);
 
   let runningDuration = 0;
@@ -120,6 +125,7 @@ export function groupDetoursByDay(
         title: originName,
         description: "Origin",
         category: "Home",
+        place_id: originId,
       } as SpotInfoProps;
       minDist = distanceToOrigin;
     }
@@ -129,6 +135,7 @@ export function groupDetoursByDay(
         title: destinationName,
         description: "Destination",
         category: "Home",
+        place_id: destinationId,
       } as SpotInfoProps;
       minDist = distanceToDestination;
     }
@@ -152,8 +159,6 @@ export function DetourDayTabPanel(props: DetourDayTabPanelProps): JSX.Element {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
-
-  console.log(props.chosenDetoursByDay);
 
   return (
     <Box mt={4}>
@@ -200,6 +205,22 @@ export function DetourDayTabPanel(props: DetourDayTabPanelProps): JSX.Element {
                   </ListItem>
                 );
               })}
+              {day.length > 0 && (
+                <Button
+                  href={
+                    "https://www.airbnb.com/s/United-States/homes?tab_id=home_tab&refinement_paths%5B%5D=%2Fhomes&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2023-08-01&monthly_length=3&price_filter_input_type=0&price_filter_num_nights=1&channel=EXPLORE&place_id=" +
+                    day[day.length - 1].place_id +
+                    "&date_picker_type=calendar&checkin=" +
+                    props.startDate?.format("YYYY-MM-DD") +
+                    "&checkout=" +
+                    props.endDate?.format("YYYY-MM-DD") +
+                    "&adults=1&query=United%20States"
+                  }
+                  target="_blank"
+                >
+                  Find places on Airbnb
+                </Button>
+              )}
             </List>
           </TabPanel>
         );
@@ -211,4 +232,6 @@ export function DetourDayTabPanel(props: DetourDayTabPanelProps): JSX.Element {
 export type DetourDayTabPanelProps = {
   daysDriving: number;
   chosenDetoursByDay: SpotInfoProps[][];
+  startDate: Dayjs | null;
+  endDate: Dayjs | null;
 };

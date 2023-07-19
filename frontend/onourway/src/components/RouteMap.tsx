@@ -297,13 +297,14 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     const tempDaysDriving = Math.ceil(rawDuration / 3600 / hoursDrivingPerDay);
     setDaysDriving(tempDaysDriving);
 
-    console.log("results", results.routes[0].legs);
     setChosenDetoursByDay(
       groupDetoursByDay(
         originLocation,
         originRef.current?.value || props.originVal,
+        originPlace?.place_id ?? props.origin,
         destinationLocation,
         destinationRef.current?.value || props.destinationVal,
+        destinationPlace?.place_id ?? props.destination,
         chosenDetours,
         tempDaysDriving,
         results,
@@ -488,7 +489,10 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                     return;
                   } else {
                     setOriginPlace(place);
-                    map?.setCenter(place.geometry.location);
+                    map?.setCenter({
+                      lat: place.geometry.location.lat(),
+                      lng: place.geometry.location.lng(),
+                    });
                     map?.setZoom(10);
                   }
                 }}
@@ -513,7 +517,10 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
                     return;
                   } else {
                     setDestinationPlace(place);
-                    map?.setCenter(place.geometry.location);
+                    map?.setCenter({
+                      lat: place.geometry.location.lat(),
+                      lng: place.geometry.location.lng(),
+                    });
                     map?.setZoom(10);
                   }
                 }}
@@ -606,6 +613,8 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
               duration={duration}
               daysDriving={daysDriving}
               chosenDetoursByDay={chosenDetoursByDay}
+              startDate={startDate}
+              endDate={endDate}
             />
             <GasStationInfo stations={savedGasStations} />
           </Grid>
