@@ -346,7 +346,10 @@ exports.query_users = function (req, res) {
         },
       },
       {
-        $limit: 10,
+        $skip: req.body.page * 50,
+      },
+      {
+        $limit: 50,
       },
       {
         $project: {

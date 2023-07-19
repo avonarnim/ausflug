@@ -2,6 +2,7 @@ import { Grid } from "@mui/material";
 import { AssetCardProps } from "./AssetCard";
 import { AssetGrid } from "./AssetGrid";
 import {
+  Button,
   IconButton,
   TextField,
   ToggleButton,
@@ -18,6 +19,8 @@ import { ProfileProps } from "../pages/Profile";
 export function CustomSearchBar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState<"spots" | "users">("spots");
+  const [spotPage, setSpotPage] = useState(0);
+  const [profilePage, setProfilePage] = useState(0);
   const [spotSearchResults, setSpotSearchResults] = useState<SpotInfoProps[]>(
     []
   );
@@ -32,17 +35,29 @@ export function CustomSearchBar() {
   }, []);
 
   const handleInitialSearch = async () => {
-    setSpotSearchResults(await searchSpots.commit({ query: "a" }));
-    setProfileSearchResults(await searchProfiles.commit({ query: "a" }));
+    setSpotSearchResults(
+      await searchSpots.commit({ query: "a", page: spotPage })
+    );
+    setProfileSearchResults(
+      await searchProfiles.commit({ query: "a", page: profilePage })
+    );
   };
 
-  const search = async () => {
+  const search = async (props: { isNewQuery: boolean; page: number }) => {
     if (searchType == "spots") {
-      setSpotSearchResults(await searchSpots.commit({ query: searchQuery }));
+      const results = await searchSpots.commit({
+        query: searchQuery,
+        page: props.page,
+      });
+      if (props.isNewQuery) setSpotSearchResults(results);
+      else setSpotSearchResults(spotSearchResults.concat(results));
     } else {
-      setProfileSearchResults(
-        await searchProfiles.commit({ query: searchQuery })
-      );
+      const results = await searchProfiles.commit({
+        query: searchQuery,
+        page: props.page,
+      });
+      if (props.isNewQuery) setProfileSearchResults(results);
+      else setProfileSearchResults(profileSearchResults.concat(results));
     }
   };
 
@@ -72,7 +87,7 @@ export function CustomSearchBar() {
           className="text"
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") search();
+            if (e.key === "Enter") search({ isNewQuery: true, page: 0 });
           }}
           label={"Search for " + searchType}
           variant="outlined"
@@ -82,7 +97,11 @@ export function CustomSearchBar() {
           name="query"
           InputProps={{
             endAdornment: (
-              <IconButton type="submit" aria-label="search" onClick={search}>
+              <IconButton
+                type="submit"
+                aria-label="search"
+                onClick={() => search({ isNewQuery: true, page: 0 })}
+              >
                 <Search style={{ fill: "blue" }} />
               </IconButton>
             ),
@@ -117,6 +136,28 @@ export function CustomSearchBar() {
           />
         )}
       </Grid>
+      {/* Button with text "load more results" that increases the "page" variable's value by 1 & re-runs the search function & appends the results to the existing results  */}
+
+      {((searchType === "spots" && spotSearchResults.length === 50) ||
+        (searchType === "users" && profileSearchResults.length > 0)) &&
+        searchQuery.length > 0 && (
+          <Grid item>
+            <Button
+              variant="contained"
+              onClick={() => {
+                if (searchType === "spots") {
+                  setSpotPage(spotPage + 1);
+                  search({ isNewQuery: false, page: spotPage + 1 });
+                } else {
+                  setProfilePage(profilePage + 1);
+                  search({ isNewQuery: false, page: profilePage + 1 });
+                }
+              }}
+            >
+              Load More Results
+            </Button>
+          </Grid>
+        )}
     </Grid>
   );
 }

@@ -229,7 +229,10 @@ exports.query_spots = function (req, res) {
         },
       },
       {
-        $limit: 200,
+        $skip: req.body.page * 50,
+      },
+      {
+        $limit: 50,
       },
       {
         $project: {

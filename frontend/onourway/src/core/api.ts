@@ -117,7 +117,7 @@ type Input<T extends Type> = T extends "CreateSpot"
   : T extends "GetSpotsBySource"
   ? { source: string }
   : T extends "SearchSpots"
-  ? { query: string }
+  ? { query: string; page: number }
   : T extends "GetSimilarSpots"
   ? {
       title: string;
@@ -165,7 +165,7 @@ type Input<T extends Type> = T extends "CreateSpot"
   : T extends "UnfollowProfile"
   ? { profileId: string; followingId: string }
   : T extends "SearchProfiles"
-  ? { query: string }
+  ? { query: string; page: number }
   : T extends "GetProfileList"
   ? { profileList: string[] }
   : T extends "CreateTrip"
