@@ -205,6 +205,7 @@ export default function AddGasStationForm() {
                       fullWidth
                       inputRef={locationRef}
                       onChange={handleChange}
+                      sx={{ color: "black" }}
                     />
                   </Autocomplete>
                   <br />
@@ -218,6 +219,7 @@ export default function AddGasStationForm() {
                     name="unleaded"
                     defaultValue={pricesState.unleaded}
                     onChange={handlePriceChange}
+                    sx={{ color: "black" }}
                   />
                   <TextField
                     margin="dense"
@@ -229,6 +231,7 @@ export default function AddGasStationForm() {
                     name="midgrade"
                     defaultValue={pricesState.midgrade}
                     onChange={handlePriceChange}
+                    sx={{ color: "black" }}
                   />
                   <TextField
                     margin="dense"
@@ -240,6 +243,7 @@ export default function AddGasStationForm() {
                     name="premium"
                     defaultValue={pricesState.premium}
                     onChange={handlePriceChange}
+                    sx={{ color: "black" }}
                   />
                   <TextField
                     margin="dense"
@@ -251,6 +255,7 @@ export default function AddGasStationForm() {
                     name="diesel"
                     defaultValue={pricesState.diesel}
                     onChange={handlePriceChange}
+                    sx={{ color: "black" }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={7} pl={4}>

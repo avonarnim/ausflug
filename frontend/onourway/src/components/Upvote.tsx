@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Grid, IconButton, Typography } from "@mui/material";
+import { Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import {
   ArrowUpwardOutlined,
   ArrowDownwardOutlined,
@@ -64,13 +64,29 @@ export function Upvote(props: { spot: SpotInfoProps; userId: string }) {
 
   return (
     <Grid container alignItems="center" direction="column">
-      <IconButton onClick={toggleIncrement}>
-        <ArrowUpwardOutlined color={added === 1 ? "success" : "inherit"} />
-      </IconButton>
+      {props.userId.length > 0 ? (
+        <IconButton onClick={toggleIncrement}>
+          <ArrowUpwardOutlined color={added === 1 ? "success" : "inherit"} />
+        </IconButton>
+      ) : (
+        <Tooltip title="Sign in to vote">
+          <IconButton onClick={toggleIncrement}>
+            <ArrowUpwardOutlined color={added === 1 ? "success" : "inherit"} />
+          </IconButton>
+        </Tooltip>
+      )}
       <Typography>{initialCount + added}</Typography>
-      <IconButton onClick={toggleDecrement}>
-        <ArrowDownwardOutlined color={added === -1 ? "error" : "inherit"} />
-      </IconButton>
+      {props.userId.length > 0 ? (
+        <IconButton onClick={toggleDecrement}>
+          <ArrowDownwardOutlined color={added === -1 ? "error" : "inherit"} />
+        </IconButton>
+      ) : (
+        <Tooltip title="Sign in to vote">
+          <IconButton onClick={toggleDecrement}>
+            <ArrowDownwardOutlined color={added === -1 ? "error" : "inherit"} />
+          </IconButton>
+        </Tooltip>
+      )}
     </Grid>
   );
 }
