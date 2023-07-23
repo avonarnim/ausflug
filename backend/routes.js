@@ -160,23 +160,23 @@ router.route("/api/users/:userId").get((req, res) => {
 router.route("/api/users/username/:username").get((req, res) => {
   user.get_profile_by_username(req, res);
 });
-router.use("/api/users", VerifyToken);
-router.route("/api/users").post((req, res) => {
-  user.create_profile(req, res);
-});
 router.route("/api/users/list").post((req, res) => {
   user.get_follow_list(req, res);
 });
 router.route("/api/users/query").post((req, res) => {
   user.query_users(req, res);
 });
+router.use("/api/users", VerifyToken);
+router.route("/api/users").post((req, res) => {
+  user.create_profile(req, res);
+});
+router.route("/api/users/statuses/:userId").get((req, res) => {
+  user.get_statuses_and_gear(req, res);
+});
 // TODO: deprecate follow/unfollow.. maybe also save_trip_to_user
 router.use("/api/users/update/:userId", VerifyToken);
 router.route("/api/users/update/:userId").post((req, res) => {
   user.update_user(req, res);
-});
-router.route("/api/users/statuses/:userId").get((req, res) => {
-  user.get_statuses_and_gear(req, res);
 });
 router.use("/api/users/follow/:userId/:followingId", VerifyToken);
 router.route("/api/users/follow/:userId/:followingId").put((req, res) => {
@@ -205,13 +205,15 @@ router.route("/api/users/:userId").delete((req, res) => {
 // #endregion
 
 // #region Posts
+router.route("/api/posts/:postId").get((req, res) => {
+  post.get_post(req, res);
+});
+router.route("/api/posts/user/:userId").get((req, res) => {
+  post.get_user_posts(req, res);
+});
 router.use("/api/posts", VerifyToken);
 router.route("/api/posts").post((req, res) => {
   post.create_post(req, res);
-});
-router.use("/api/posts/:postId", VerifyToken);
-router.route("/api/posts/:postId").get((req, res) => {
-  post.get_post(req, res);
 });
 router.use("/api/posts/:postId", VerifyToken);
 router.route("/api/posts/:postId").put((req, res) => {
@@ -220,10 +222,6 @@ router.route("/api/posts/:postId").put((req, res) => {
 router.use("/api/posts/:postId/:userId", VerifyToken);
 router.route("/api/posts/:postId/:userId").delete((req, res) => {
   post.delete_post(req, res);
-});
-router.use("/api/posts/user/:userId", VerifyToken);
-router.route("/api/posts/user/:userId").get((req, res) => {
-  post.get_user_posts(req, res);
 });
 // #endregion
 

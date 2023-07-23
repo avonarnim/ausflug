@@ -179,7 +179,8 @@ export default function Profile(props: {
         setUserId(params.userId);
         getProfileCallback(params.userId, setUser);
         getPostsCallback(params.userId);
-        if (currentUser.uid) getProfileCallback(currentUser.uid, setThisUser);
+        console.log("UID", currentUser?.uid);
+        if (currentUser?.uid) getProfileCallback(currentUser.uid, setThisUser);
       }
     } else if (props.indicator === "username") {
       if (params.username) {
