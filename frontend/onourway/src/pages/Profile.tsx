@@ -178,8 +178,8 @@ export default function Profile(props: {
       } else if (params.userId) {
         setUserId(params.userId);
         getProfileCallback(params.userId, setUser);
-        getProfileCallback(currentUser.uid, setThisUser);
         getPostsCallback(params.userId);
+        if (currentUser.uid) getProfileCallback(currentUser.uid, setThisUser);
       }
     } else if (props.indicator === "username") {
       if (params.username) {
@@ -254,7 +254,7 @@ export default function Profile(props: {
         getStatusesAndGearCallback(getUserResponse._id);
       } else {
         setIsCurrentUser(false);
-        getProfileCallback(currentUser.uid, setThisUser);
+        if (currentUser.uid) getProfileCallback(currentUser.uid, setThisUser);
       }
     }
   };
