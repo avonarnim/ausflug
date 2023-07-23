@@ -64,7 +64,7 @@ export function Upvote(props: { spot: SpotInfoProps; userId: string }) {
 
   return (
     <Grid container alignItems="center" direction="column">
-      {props.userId.length > 0 ? (
+      {props.userId?.length > 0 ? (
         <IconButton onClick={toggleIncrement}>
           <ArrowUpwardOutlined color={added === 1 ? "success" : "inherit"} />
         </IconButton>
@@ -76,7 +76,7 @@ export function Upvote(props: { spot: SpotInfoProps; userId: string }) {
         </Tooltip>
       )}
       <Typography>{initialCount + added}</Typography>
-      {props.userId.length > 0 ? (
+      {props.userId?.length > 0 ? (
         <IconButton onClick={toggleDecrement}>
           <ArrowDownwardOutlined color={added === -1 ? "error" : "inherit"} />
         </IconButton>
