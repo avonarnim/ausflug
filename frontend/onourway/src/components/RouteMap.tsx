@@ -56,7 +56,7 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     useState<google.maps.DirectionsResult>();
 
   const [oneWayRoundTrip, setOneWayRoundTrip] = useState(props.oneWayRoundTrip);
-  const [center, setCenter] = useState({ lat: 38.8584, lng: -112.2945 });
+  const [center, setCenter] = useState({ lat: 37.8584, lng: -95.2945 });
   const [distance, setDistance] = useState("");
   const [cumulativeDistance, setCumulativeDistance] = useState(0);
   const [duration, setDuration] = useState("");
@@ -129,7 +129,13 @@ export function RouteMap(props: RouteMapProps): JSX.Element {
     };
     map.setOptions(options);
 
-    if (navigator.geolocation && !props.origin && !props.destination) {
+    if (
+      navigator.geolocation &&
+      !props.origin &&
+      !props.destination &&
+      !props.tripResult &&
+      !props.tripId
+    ) {
       navigator.geolocation.getCurrentPosition(success, error);
     }
 

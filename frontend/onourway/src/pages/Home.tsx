@@ -64,6 +64,7 @@ export default function Home(): JSX.Element {
         {isLoaded && (
           <Box
             mt={4}
+            mb={2}
             sx={{ borderRadius: "5px", borderColor: "black", border: 1 }}
           >
             <Typography variant="h6" sx={{ pl: 4, pt: 2 }}>
@@ -174,7 +175,6 @@ export default function Home(): JSX.Element {
             </Grid>
           </Box>
         )}
-        {/* <CarAnimation /> */}
         <Grid container spacing={1} p={1} alignItems="stretch">
           <Divider style={{ marginTop: 2, marginBottom: 2 }} />
           <Grid container spacing={2}>
