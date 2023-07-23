@@ -10,6 +10,7 @@ import {
   CardHeader,
   Container,
   Grid,
+  Paper,
   Typography,
 } from "@mui/material";
 import AddGasPriceDialog from "../dialogs/AddGasPriceDialog";
@@ -98,33 +99,35 @@ export default function Spot(): JSX.Element {
               Best gas stations in your area:
             </Typography>
             <Typography>Add prices to help others & earn points!</Typography>
-            {gasStations?.map((station) => {
-              return (
-                <>
-                  <Card sx={{ mb: 1 }}>
-                    <CardContent>
-                      <Typography variant="body1">{station.name}</Typography>
-                      <Typography variant="subtitle2">
-                        {station.mapLocation.formatted_address}
-                      </Typography>
-                      <Typography>
-                        Unleaded: {station.resolved_prices.unleaded}
-                      </Typography>
-                      <Typography>
-                        Midgrade: {station.resolved_prices.midgrade}
-                      </Typography>
-                      <Typography>
-                        Premium: {station.resolved_prices.premium}
-                      </Typography>
-                      <Typography>
-                        Diesel: {station.resolved_prices.diesel}
-                      </Typography>
-                      <AddGasPriceDialog station={station} />
-                    </CardContent>
-                  </Card>
-                </>
-              );
-            })}
+            <Paper style={{ height: 300, overflow: "auto" }}>
+              {gasStations?.map((station) => {
+                return (
+                  <>
+                    <Card sx={{ mb: 1 }}>
+                      <CardContent>
+                        <Typography variant="body1">{station.name}</Typography>
+                        <Typography variant="subtitle2">
+                          {station.mapLocation.formatted_address}
+                        </Typography>
+                        <Typography>
+                          Unleaded: {station.resolved_prices.unleaded}
+                        </Typography>
+                        <Typography>
+                          Midgrade: {station.resolved_prices.midgrade}
+                        </Typography>
+                        <Typography>
+                          Premium: {station.resolved_prices.premium}
+                        </Typography>
+                        <Typography>
+                          Diesel: {station.resolved_prices.diesel}
+                        </Typography>
+                        <AddGasPriceDialog station={station} />
+                      </CardContent>
+                    </Card>
+                  </>
+                );
+              })}
+            </Paper>
           </Box>
         </Grid>
         <Grid item xs={12}>
