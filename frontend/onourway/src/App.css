@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.routes-wrapper {
+  flex: 1;
+}
