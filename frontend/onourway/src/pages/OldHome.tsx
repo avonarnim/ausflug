@@ -13,11 +13,20 @@ import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { HeroCarousel } from "../components/HeroCarousel";
 import { useMutation } from "../core/api";
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  AssetBlockCardHorizontalSwipe,
+  AssetBlockCardHorizontalSwipeProps,
+  SkeletonAssetBlockCardHorizontalSwipe,
+} from "../components/assetSwipers/Block";
+import { SpotInfoProps } from "../components/SpotInfo";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { GasPriceProps } from "./Gas";
+import CarAnimation from "../components/CarAnimation";
+import { TripProps } from "./EditTrip";
 
 type Libraries = (
   | "drawing"
@@ -48,8 +57,121 @@ export default function Home(): JSX.Element {
     "oneWay" | "roundTrip"
   >("oneWay");
 
+  const [avgGasPrices, setAvgGasPrices] = useState<GasPriceProps>();
+
+  const [yourCenterSpots, setYourCenterSpots] =
+    useState<AssetBlockCardHorizontalSwipeProps>({ assetCards: [] });
+  const [spotAssemblage, setSpotAssemblage] = useState<{
+    locations: {
+      title: string;
+      spots: SpotInfoProps[];
+    }[];
+    sources: {
+      title: string;
+      spots: SpotInfoProps[];
+    }[];
+    subjects: {
+      title: string;
+      spots: SpotInfoProps[];
+    }[];
+    trips: TripProps[];
+  }>({
+    locations: [],
+    sources: [],
+    subjects: [],
+    trips: [],
+  });
+
+  const getSpotsByHighlightedGroup = useMutation("GetSpotsByHighlightedGroup");
+  const getSpotsBySource = useMutation("GetSpotsBySource");
+  const getSpotsByCenter = useMutation("GetSpotsByCenter");
+  const getGasPriceInBox = useMutation("GetGasPriceInBox");
+  const getSpotsAssemblage = useMutation("GetSpotsAssemblage");
+
   const originRef = useRef<HTMLInputElement>();
   const destinationRef = useRef<HTMLInputElement>();
+
+  useEffect(() => {
+    const init = async () => {
+      setSpotAssemblage(
+        await getSpotsAssemblage.commit({
+          locations: [
+            { longitude: -73.935242, latitude: 40.73061, title: "New York" },
+            {
+              longitude: -118.243683,
+              latitude: 34.052235,
+              title: "Los Angeles",
+            },
+            { longitude: -87.6298, latitude: 41.8781, title: "Chicago" },
+            {
+              longitude: -122.419416,
+              latitude: 37.774929,
+              title: "San Francisco",
+            },
+            {
+              longitude: -77.03653,
+              latitude: 38.907192,
+              title: "Washington D.C.",
+            },
+            { longitude: -122.33207, latitude: 47.60621, title: "Seattle" },
+          ],
+          sources: [
+            { source: "AtlasObscura", title: "Atlas Obscura" },
+            { source: "MichelinRestaurants", title: "Michelin Restaurants" },
+            { source: "TicketMaster", title: "Venues" },
+          ],
+          subjects: [
+            { subject: "Hiking", title: "Hikes" },
+            { subject: "Beaches", title: "Beaches" },
+            { subject: "Parks", title: "Parks" },
+            { subject: "History", title: "History" },
+          ],
+          trips: ["644464402150a291d0075173", "64994b152a19f8d82dd9f90c"],
+        })
+      );
+
+      // TODO: remove auto-geolocation
+      // this is considered untrustworthy by users
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position: GeolocationPosition) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            setCenter({ lat: latitude, lng: longitude });
+            const spots = await getSpotsByCenter.commit({
+              longitude,
+              latitude,
+            });
+            setYourCenterSpots({
+              assetCards: spots.map((spot) => ({
+                title: spot.title,
+                type: "spots",
+                id: spot._id,
+                attribute: "description",
+                value: spot.description,
+                image: spot.images[0],
+              })),
+            });
+
+            setAvgGasPrices(
+              await getGasPriceInBox.commit({
+                longitude1: position.coords.longitude + 2,
+                latitude1: position.coords.latitude + 2,
+                longitude2: position.coords.longitude - 2,
+                latitude2: position.coords.latitude - 2,
+              })
+            );
+          },
+          () => {
+            console.log("Unable to retrieve your location");
+          }
+        );
+      }
+    };
+
+    init();
+  }, []);
 
   return (
     <Container
@@ -176,6 +298,21 @@ export default function Home(): JSX.Element {
         )}
         {/* <CarAnimation /> */}
         <Grid container spacing={1} p={1} alignItems="stretch">
+          <Grid item xs={12} mt={2}>
+            <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+            <Typography variant="h4">Around You</Typography>
+            {yourCenterSpots.assetCards.length != 0 ? (
+              <>
+                <AssetBlockCardHorizontalSwipe
+                  assetCards={yourCenterSpots.assetCards}
+                />
+              </>
+            ) : (
+              <>
+                <SkeletonAssetBlockCardHorizontalSwipe />
+              </>
+            )}
+          </Grid>
           <Divider style={{ marginTop: 2, marginBottom: 2 }} />
           <Grid container spacing={2}>
             <Grid item xs={6}>
@@ -205,16 +342,15 @@ export default function Home(): JSX.Element {
                   border: "1px solid black",
                   borderRadius: "5px",
                   p: 2,
-                  background: "linear-gradient(25deg, #f6c0aa, #a4c7e7)",
                 }}
               >
-                <Typography variant="h6">Keep track of your gear</Typography>
-                <Typography>
-                  List items you have and want to bring on your trip
+                <Typography variant="h6">
+                  Average gas price in your area
                 </Typography>
-                <Typography>
-                  Need something else? Check your friends' gear
-                </Typography>
+                <Typography>Unleaded: {avgGasPrices?.unleaded}</Typography>
+                <Typography>Midgrade: {avgGasPrices?.midgrade}</Typography>
+                <Typography>Premium: {avgGasPrices?.premium}</Typography>
+                <Typography>Diesel: {avgGasPrices?.diesel}</Typography>
               </Box>
             </Grid>
           </Grid>
@@ -322,6 +458,136 @@ export default function Home(): JSX.Element {
               </Box>
             </Grid>
           </Grid>
+          <Grid container spacing={2} mt={2}>
+            <Grid item xs={6}>
+              <Box
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  p: 2,
+                  background: "linear-gradient(25deg, #f6c0aa, #a4c7e7)",
+                }}
+              >
+                <Typography variant="h6">Keep track of your gear</Typography>
+                <Typography>
+                  List items you have and want to bring on your trip
+                </Typography>
+                <Typography>
+                  Need something else? Check your friends' gear
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: "1px solid black",
+                  borderRadius: "5px",
+                  p: 2,
+                  background: "linear-gradient(225deg, #f6c0aa, #a4c7e7)",
+                }}
+              >
+                <Typography variant="h6">
+                  Help keep the list curated by reviewing and up- or down-voting
+                  spots
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+          {/* {spotAssemblage.locations.map((location, index) => {
+              console.log(location);
+              return (
+                <Grid key={index} item xs={12} mt={2}>
+                  <Divider style={{ marginTop: 5, marginBottom: 5 }} />
+                  <Typography variant="h4">{location.title}</Typography>
+                  {location.spots.length != 0 ? (
+                    <AssetBlockCardHorizontalSwipe
+                      assetCards={location.spots.map((spot) => {
+                        return {
+                          title: spot.title,
+                          type: "spots",
+                          id: spot._id,
+                          attribute: "description",
+                          value: spot.description,
+                          image: spot.images[0],
+                        };
+                      })}
+                    />
+                  ) : (
+                    <SkeletonAssetBlockCardHorizontalSwipe />
+                  )}
+                </Grid>
+              );
+            })}
+            {spotAssemblage.sources.map((source, index) => (
+              <Grid key={index} item xs={12} mt={2}>
+                <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+                <Typography variant="h4">{source.title}</Typography>
+                {source.spots.length != 0 ? (
+                  <AssetBlockCardHorizontalSwipe
+                    assetCards={source.spots.map((spot) => {
+                      return {
+                        title: spot.title,
+                        type: "spots",
+                        id: spot._id,
+                        attribute: "description",
+                        value: spot.description,
+                        image: spot.images[0],
+                      };
+                    })}
+                  />
+                ) : (
+                  <SkeletonAssetBlockCardHorizontalSwipe />
+                )}
+              </Grid>
+            ))}
+            {spotAssemblage.subjects.map((subject, index) => (
+              <Grid key={index} item xs={12} mt={2}>
+                <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+                <Typography variant="h4">{subject.title}</Typography>
+                {subject.spots.length != 0 ? (
+                  <AssetBlockCardHorizontalSwipe
+                    assetCards={subject.spots.map((spot) => {
+                      return {
+                        title: spot.title,
+                        type: "spots",
+                        id: spot._id,
+                        attribute: "description",
+                        value: spot.description,
+                        image: spot.images[0],
+                      };
+                    })}
+                  />
+                ) : (
+                  <SkeletonAssetBlockCardHorizontalSwipe />
+                )}
+              </Grid>
+            ))}
+            {spotAssemblage.trips.length > 0 && (
+              <>
+                <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+                <Typography variant="h4">Featured Trips</Typography>
+                <Grid item xs={12} mt={2}>
+                  <AssetBlockCardHorizontalSwipe
+                    assetCards={spotAssemblage.trips.map((trip, index) => {
+                      return {
+                        title: trip.name,
+                        type: "trips",
+                        id: trip._id,
+                        attribute: "description",
+                        value: trip.description,
+                        image: trip.image,
+                      };
+                    })}
+                  />
+                </Grid>
+              </>
+            )} */}
         </Grid>
       </Container>
     </Container>

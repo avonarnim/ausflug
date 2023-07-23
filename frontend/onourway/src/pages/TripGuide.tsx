@@ -541,172 +541,141 @@ const guides: Guides = {
       ],
     },
   },
-  //   "New-York-to-Atlanta": {
-  //     Eccentric: {
-  //       seo_description:
-  //         "Embark on a wild and eccentric road trip from New York to Atlanta, discovering quirky gems and bizarre wonders at every stop. Experience the captivating magic of the House of Mystery, marvel at the enigmatic Coral Castle, and explore the world of the peculiar at the International UFO Museum. Step into the surreal at the Neon Boneyard, and conclude your eccentric expedition with a visit to the mesmerizing World of Coca-Cola.",
-  //       stops: [
-  //         {
-  //           stop_name: "House of Mystery",
-  //           time_spent: "2.5 hours",
-  //           address: "156 Grassy Lake Rd, Altamont, NY 12009",
-  //           description:
-  //             "Kickstart your eccentric expedition at the House of Mystery, a strange roadside attraction filled with optical illusions and perplexing tricks that challenge your senses.",
-  //         },
-  //         {
-  //           stop_name: "Coral Castle",
-  //           time_spent: "3 hours",
-  //           address: "28655 S Dixie Hwy, Homestead, FL 33033",
-  //           description:
-  //             "Embark on a virtual visit to the Coral Castle, an enigmatic structure built by a single man using mysterious methods and giant coral stones, leaving visitors in awe of its peculiar construction.",
-  //         },
-  //         {
-  //           stop_name: "International UFO Museum",
-  //           time_spent: "2 hours",
-  //           address: "114 N Main St, Roswell, NM 88203",
-  //           description:
-  //             "Unleash your curiosity at the International UFO Museum, dedicated to the infamous Roswell incident. Explore UFO sightings, conspiracy theories, and immerse yourself in the world of extraterrestrial mysteries.",
-  //         },
-  //         {
-  //           stop_name: "Neon Boneyard",
-  //           time_spent: "2 hours",
-  //           address: "770 Las Vegas Blvd N, Las Vegas, NV 89101",
-  //           description:
-  //             "Step into the surreal world of the Neon Boneyard, where vintage neon signs find a final resting place. Delight in this glowing graveyard of iconic Las Vegas signs.",
-  //         },
-  //         {
-  //           stop_name: "World of Coca-Cola",
-  //           time_spent: "2.5 hours",
-  //           address: "121 Baker St NW, Atlanta, GA 30313",
-  //           description:
-  //             "Conclude your eccentric expedition with a visit to the World of Coca-Cola, a mesmerizing museum dedicated to the iconic soda brand. Immerse yourself in the history, art, and tasting experience of Coca-Cola products from around the world.",
-  //         },
-  //       ],
-  //     },
-  //     Nature: {
-  //       seo_description:
-  //         "Embark on a rejuvenating nature retreat from New York to Atlanta, surrounded by picturesque landscapes and serene outdoor havens. Wander through the enchanting beauty of Great Smoky Mountains National Park, explore the breathtaking vistas of Shenandoah National Park, and immerse yourself in the natural wonders of Mammoth Cave National Park. Enjoy the scenic beauty of Blue Ridge Parkway and conclude your nature-filled journey at Atlanta's Piedmont Park.",
-  //       stops: [
-  //         {
-  //           stop_name: "Great Smoky Mountains National Park",
-  //           time_spent: "2 days",
-  //           address: "107 Park Headquarters Rd, Gatlinburg, TN 37738",
-  //           description:
-  //             "Begin your nature retreat at Great Smoky Mountains National Park, a pristine wilderness offering scenic drives, hiking trails, and breathtaking vistas of the Appalachian Mountains. Immerse yourself in the natural beauty of this protected haven.",
-  //         },
-  //         {
-  //           stop_name: "Shenandoah National Park",
-  //           time_spent: "1 day",
-  //           address: "3655 U.S. Highway 211 East, Luray, VA 22835",
-  //           description:
-  //             "Explore the stunning scenery of Shenandoah National Park, featuring scenic drives along the Skyline Drive and hiking trails amidst the Blue Ridge Mountains. Enjoy a day surrounded by nature's wonders.",
-  //         },
-  //         {
-  //           stop_name: "Mammoth Cave National Park",
-  //           time_spent: "1 day",
-  //           address: "1 Mammoth Cave Pkwy, Mammoth Cave, KY 42259",
-  //           description:
-  //             "Discover the natural wonders of Mammoth Cave National Park, home to the world's longest cave system. Take a guided tour through awe-inspiring underground chambers and learn about the park's unique geology.",
-  //         },
-  //         {
-  //           stop_name: "Blue Ridge Parkway",
-  //           time_spent: "1 day",
-  //           address: "Blue Ridge Parkway, Asheville, NC",
-  //           description:
-  //             "Enjoy the scenic beauty of Blue Ridge Parkway, a picturesque drive that winds through the Appalachian Highlands. Marvel at the panoramic views and explore charming overlooks and hiking trails.",
-  //         },
-  //         {
-  //           stop_name: "Piedmont Park",
-  //           time_spent: "2 hours",
-  //           address: "1320 Monroe Dr NE, Atlanta, GA 30306",
-  //           description:
-  //             "Conclude your nature-filled journey at Piedmont Park in Atlanta, a serene urban park offering green spaces, walking trails, and beautiful views of the city skyline. Relax and unwind amidst nature in the heart of Atlanta.",
-  //         },
-  //       ],
-  //     },
-  //     Foodie: {
-  //       seo_description:
-  //         "Embark on a delectable foodie adventure from New York to Atlanta, savoring a culinary journey filled with delightful treats and diverse flavors. Indulge in New York's iconic pizza, feast on mouthwatering barbecue in North Carolina, and savor the rich flavors of Lowcountry cuisine in Savannah. Enjoy the taste of Georgia peaches and conclude your foodie expedition with Atlanta's classic soul food.",
-  //       stops: [
-  //         {
-  //           stop_name: "Joe's Pizza",
-  //           time_spent: "1 hour",
-  //           address: "7 Carmine St, New York, NY 10014",
-  //           description:
-  //             "Kickstart your foodie adventure with a slice of iconic New York-style pizza at Joe's Pizza. Savor the perfect balance of thin crust, flavorful sauce, and gooey cheese.",
-  //         },
-  //         {
-  //           stop_name: "Lexington Barbecue",
-  //           time_spent: "2 hours",
-  //           address: "100 Smokehouse Ln, Lexington, NC 27295",
-  //           description:
-  //             "Feast on mouthwatering barbecue at Lexington Barbecue in North Carolina, known for its deliciously smoky pork shoulder and traditional Southern sides.",
-  //         },
-  //         {
-  //           stop_name: "The Grey",
-  //           time_spent: "2.5 hours",
-  //           address: "109 Martin Luther King Jr Blvd, Savannah, GA 31401",
-  //           description:
-  //             "Savor the rich flavors of Lowcountry cuisine at The Grey in Savannah. Enjoy dishes influenced by Gullah Geechee traditions and local ingredients.",
-  //         },
-  //         {
-  //           stop_name: "Georgia Peach Truck",
-  //           time_spent: "30 minutes",
-  //           address: "Various locations in Georgia",
-  //           description:
-  //             "Taste the sweetness of Georgia peaches at the Georgia Peach Truck. Grab some fresh peaches to enjoy on the road or as a delightful snack.",
-  //         },
-  //         {
-  //           stop_name: "Mary Mac's Tea Room",
-  //           time_spent: "1.5 hours",
-  //           address: "224 Ponce de Leon Ave NE, Atlanta, GA 30308",
-  //           description:
-  //             "Conclude your foodie expedition with a visit to Mary Mac's Tea Room, a classic Atlanta eatery serving up traditional Southern soul food dishes with a warm and welcoming atmosphere.",
-  //         },
-  //       ],
-  //     },
-  //     Culture: {
-  //       seo_description:
-  //         "Embark on a captivating cultural exploration from New York to Atlanta, discovering historic landmarks, artistic gems, and diverse traditions. Immerse yourself in the artistic wonders of The Met, explore the profound legacy of Washington D.C.'s monuments, and visit the captivating National Civil Rights Museum. Discover the rich heritage of Charleston's Historic District and conclude your cultural journey at the Center for Civil and Human Rights in Atlanta.",
-  //       stops: [
-  //         {
-  //           stop_name: "The Met - Metropolitan Museum of Art",
-  //           time_spent: "4 hours",
-  //           address: "1000 5th Ave, New York, NY 10028",
-  //           description:
-  //             "Begin your cultural exploration at The Met, one of the world's largest and most prestigious art museums. Immerse yourself in diverse artistic masterpieces and learn about cultures from around the globe.",
-  //         },
-  //         {
-  //           stop_name: "Washington D.C. Monuments",
-  //           time_spent: "2 days",
-  //           address: "National Mall, Washington, D.C.",
-  //           description:
-  //             "Explore the profound legacy of American history at Washington D.C.'s monuments and memorials. Visit the Lincoln Memorial, Washington Monument, and other iconic landmarks that pay tribute to the nation's heritage.",
-  //         },
-  //         {
-  //           stop_name: "National Civil Rights Museum",
-  //           time_spent: "3 hours",
-  //           address: "450 Mulberry St, Memphis, TN 38103",
-  //           description:
-  //             "Delve into the history of the civil rights movement at the National Civil Rights Museum in Memphis. Learn about the struggles and triumphs that shaped the nation's quest for equality and justice.",
-  //         },
-  //         {
-  //           stop_name: "Charleston's Historic District",
-  //           time_spent: "2 days",
-  //           address: "Charleston, SC",
-  //           description:
-  //             "Discover the rich heritage of Charleston's Historic District, a charming area with well-preserved architecture and significant historical sites. Immerse yourself in the city's cultural heritage and traditions.",
-  //         },
-  //         {
-  //           stop_name: "Center for Civil and Human Rights",
-  //           time_spent: "2.5 hours",
-  //           address: "100 Ivan Allen Jr Blvd NW, Atlanta, GA 30313",
-  //           description:
-  //             "Conclude your cultural journey at the Center for Civil and Human Rights in Atlanta. Engage with powerful exhibits that explore the global struggle for civil and human rights, leaving you inspired and informed.",
-  //         },
-  //       ],
-  //     },
-  //   },
+  "New-York-to-Atlanta": {
+    Eccentric: {
+      seo_description:
+        "Embark on a wild and eccentric road trip from New York to Atlanta, discovering quirky gems and bizarre wonders at every stop. Experience the captivating magic of the House of Mystery, marvel at the enigmatic Coral Castle, and explore the world of the peculiar at the International UFO Museum. Step into the surreal at the Neon Boneyard, and conclude your eccentric expedition with a visit to the mesmerizing World of Coca-Cola.",
+      stops: [
+        {
+          _id: "64b96014d2d286f296210dad",
+          place_id: "ChIJ6QA5TymgVogRwfAmE5zenDE",
+          stop_name: "Mint Museum Uptown",
+          time_spent: "2 hours",
+          address: "500 S Tryon St, Charlotte, NC 28202",
+          description:
+            "Begin your expedition at the Mint Museum Uptown, a contemporary art museum with a diverse collection of American, European, and African art. Explore the museum's exhibits and discover the beauty of its architecture.",
+        },
+        {
+          _id: "64b957595b4b8d4186c4a298",
+          place_id: "ChIJyWIVfyigVogR6c37kTbkXa4",
+          stop_name: "NASCAR Hall of Fame",
+          time_spent: "2 hours",
+          address: "400 E M.L.K. Jr Blvd, Charlotte, NC 28202",
+          description:
+            "Visit the NASCAR Hall of Fame, a museum dedicated to the history and heritage of NASCAR. Explore the interactive exhibits and learn about the sport's legendary drivers.",
+        },
+        {
+          _id: "64b9603dd2d286f296210daf",
+          place_id: "ChIJ8yjI7H4E9YgRyacfAZqyAUQ",
+          stop_name: "World of Coca-Cola",
+          time_spent: "2.5 hours",
+          address: "121 Baker St NW, Atlanta, GA 30313",
+          description:
+            "Conclude your eccentric expedition with a visit to the World of Coca-Cola, a mesmerizing museum dedicated to the iconic soda brand. Immerse yourself in the history, art, and tasting experience of Coca-Cola products from around the world.",
+        },
+      ],
+    },
+    Nature: {
+      seo_description:
+        "Embark on a rejuvenating nature retreat from New York to Atlanta, surrounded by picturesque landscapes and serene outdoor havens. Wander through the enchanting beauty of Great Smoky Mountains National Park, explore the breathtaking vistas of Shenandoah National Park, and immerse yourself in the natural wonders of Mammoth Cave National Park. Enjoy the scenic beauty of Blue Ridge Parkway and conclude your nature-filled journey at Atlanta's Piedmont Park.",
+      stops: [
+        {
+          _id: "64b96097d2d286f296210db1",
+          place_id: "ChIJPTRyEx5SWYgR43xpB4asTqA",
+          stop_name: "Great Smoky Mountains National Park",
+          time_spent: "2 days",
+          address: "107 Park Headquarters Rd, Gatlinburg, TN 37738",
+          description:
+            "Begin your nature retreat at Great Smoky Mountains National Park, a pristine wilderness offering scenic drives, hiking trails, and breathtaking vistas of the Appalachian Mountains. Immerse yourself in the natural beauty of this protected haven.",
+        },
+        {
+          _id: "64b84740f2f7c3835bf635a5",
+          place_id: "ChIJESb8ihdhtIkRMYiMZWR5F-Y",
+          stop_name: "Shenandoah National Park",
+          time_spent: "1 day",
+          address: "3655 U.S. Highway 211 East, Luray, VA 22835",
+          description:
+            "Explore the stunning scenery of Shenandoah National Park, featuring scenic drives along the Skyline Drive and hiking trails amidst the Blue Ridge Mountains. Enjoy a day surrounded by nature's wonders.",
+        },
+        {
+          _id: "64b960b8d2d286f296210db3",
+          place_id: "ChIJV3vJlE0CZogRwKOAYKCziB8",
+          stop_name: "Mammoth Cave National Park",
+          time_spent: "1 day",
+          address: "1 Mammoth Cave Pkwy, Mammoth Cave, KY 42259",
+          description:
+            "Discover the natural wonders of Mammoth Cave National Park, home to the world's longest cave system. Take a guided tour through awe-inspiring underground chambers and learn about the park's unique geology.",
+        },
+        {
+          _id: "64b960f8d2d286f296210db5",
+          place_id:
+            "EiFCbHVlIFJkZyBQa3d5LCBBc2hldmlsbGUsIE5DLCBVU0EiLiosChQKEgkVprrBuJtNiBHN0qoc9t5ajhIUChIJCW8PPKmMWYgRXTo0BsEx75Q",
+          stop_name: "Blue Ridge Parkway",
+          time_spent: "1 day",
+          address: "Blue Ridge Parkway, Asheville, NC",
+          description:
+            "Enjoy the scenic beauty of Blue Ridge Parkway, a picturesque drive that winds through the Appalachian Highlands. Marvel at the panoramic views and explore charming overlooks and hiking trails.",
+        },
+        {
+          _id: "64b96121d2d286f296210db7",
+          place_id: "ChIJGaxkUDkE9YgRDjUv9U7qrvM",
+          stop_name: "Piedmont Park",
+          time_spent: "2 hours",
+          address: "1320 Monroe Dr NE, Atlanta, GA 30306",
+          description:
+            "Conclude your nature-filled journey at Piedmont Park in Atlanta, a serene urban park offering green spaces, walking trails, and beautiful views of the city skyline. Relax and unwind amidst nature in the heart of Atlanta.",
+        },
+      ],
+    },
+    Foodie: {
+      seo_description:
+        "Embark on a delectable foodie adventure from New York to Atlanta, savoring a culinary journey filled with delightful treats and diverse flavors. Indulge in New York's iconic pizza, feast on mouthwatering barbecue in North Carolina, and savor the rich flavors of Lowcountry cuisine in Savannah. Enjoy the taste of Georgia peaches and conclude your foodie expedition with Atlanta's classic soul food.",
+      stops: [
+        {
+          _id: "64b96169d2d286f296210db9",
+          place_id: "ChIJ8Q2WSpJZwokRQz-bYYgEskM",
+          stop_name: "Joe's Pizza",
+          time_spent: "1 hour",
+          address: "7 Carmine St, New York, NY 10014",
+          description:
+            "Kickstart your foodie adventure with a slice of iconic New York-style pizza at Joe's Pizza. Savor the perfect balance of thin crust, flavorful sauce, and gooey cheese.",
+        },
+        {
+          _id: "64b96252d2d286f296210dbb",
+          place_id: "ChIJOTZYHl6XU4gRHDJh188ie1w",
+          stop_name: "Lexington Barbecue",
+          time_spent: "2 hours",
+          address: "100 Smokehouse Ln, Lexington, NC 27295",
+          description:
+            "Feast on mouthwatering barbecue at Lexington Barbecue in North Carolina, known for its deliciously smoky pork shoulder and traditional Southern sides.",
+        },
+        {
+          _id: "64b9628ed2d286f296210dbd",
+          place_id: "ChIJgUolJWwE9YgRnxg5IduXOsg",
+          stop_name: "Mary Mac's Tea Room",
+          time_spent: "1.5 hours",
+          address: "224 Ponce de Leon Ave NE, Atlanta, GA 30308",
+          description:
+            "Conclude your foodie expedition with a visit to Mary Mac's Tea Room, a classic Atlanta eatery serving up traditional Southern soul food dishes with a warm and welcoming atmosphere.",
+        },
+      ],
+    },
+    Culture: {
+      seo_description:
+        "Embark on a captivating cultural exploration from New York to Atlanta, discovering historic landmarks, artistic gems, and diverse traditions. Immerse yourself in the artistic wonders of The Met, explore the profound legacy of Washington D.C.'s monuments, and visit the captivating National Civil Rights Museum. Discover the rich heritage of Charleston's Historic District and conclude your cultural journey at the Center for Civil and Human Rights in Atlanta.",
+      stops: [
+        {
+          _id: "64b962dbd2d286f296210dbf",
+          place_id: "ChIJPRzoQ4AE9YgRqgunUXVptj4",
+          stop_name: "Center for Civil and Human Rights",
+          time_spent: "2.5 hours",
+          address: "100 Ivan Allen Jr Blvd NW, Atlanta, GA 30313",
+          description:
+            "Conclude your cultural journey at the Center for Civil and Human Rights in Atlanta. Engage with powerful exhibits that explore the global struggle for civil and human rights, leaving you inspired and informed.",
+        },
+      ],
+    },
+  },
   //   "Miami-to-Orlando": {
   //     Eccentric: {
   //       seo_description:

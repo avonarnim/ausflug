@@ -28,11 +28,13 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
-const ListItemWithWiderSecondaryAction = styled(ListItem)(({ theme }) => ({
-  "&.MuiListItem-secondaryAction": {
-    paddingRight: 144,
-  },
-}));
+export const ListItemWithWiderSecondaryAction = styled(ListItem)(
+  ({ theme }) => ({
+    "&.MuiListItem-secondaryAction": {
+      paddingRight: 144,
+    },
+  })
+);
 
 const ListItemWith3SecondaryAction = styled(ListItem)(({ theme }) => ({
   "&.MuiListItem-secondaryAction": {
