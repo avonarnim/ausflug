@@ -34,6 +34,17 @@ exports.get_profile_by_username = async function (req, res) {
   });
 };
 
+// retrieve single user's profile with matching id
+exports.get_profiles = async function (req, res) {
+  User.find({}, function (err, users) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.json(users);
+    }
+  });
+};
+
 exports.get_statuses_and_gear = async function (req, res) {
   User.findOne({ _id: req.params.userId }, function (err, user) {
     if (err) {

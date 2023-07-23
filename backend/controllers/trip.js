@@ -70,3 +70,44 @@ exports.delete_trip = function (req, res) {
     }
   );
 };
+
+// exports.query_trips = function (req, res) {
+//   User.aggregate(
+//     [
+//       {
+//         $search: {
+//           index: "prod-trips",
+//           text: {
+//             query: req.body.query,
+//             path: { wildcard: "*" },
+//             fuzzy: {
+//               maxEdits: 2,
+//               prefixLength: 3,
+//             },
+//           },
+//         },
+//       },
+//       {
+//         $skip: req.body.page * 50,
+//       },
+//       {
+//         $limit: 50,
+//       },
+//       {
+//         $project: {
+//           _id: 1,
+//           name: 1,
+//           description: 1,
+//           originVal: 1,
+//           destinationVal: 1,
+//           image: 1,
+//         },
+//       },
+//     ],
+//     function (err, trips) {
+//       console.log(trips);
+//       if (err) res.send(err);
+//       res.json(trips);
+//     }
+//   );
+// };

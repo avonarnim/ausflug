@@ -29,6 +29,7 @@ export function CustomSearchBar() {
   >([]);
   const searchSpots = useMutation("SearchSpots");
   const searchProfiles = useMutation("SearchProfiles");
+  const getProfiles = useMutation("GetProfiles");
 
   useEffect(() => {
     handleInitialSearch();
@@ -38,9 +39,10 @@ export function CustomSearchBar() {
     setSpotSearchResults(
       await searchSpots.commit({ query: "a", page: spotPage })
     );
-    setProfileSearchResults(
-      await searchProfiles.commit({ query: "a", page: profilePage })
-    );
+    // setProfileSearchResults(
+    //   await searchProfiles.commit({ query: "a", page: profilePage })
+    // );
+    setProfileSearchResults(await getProfiles.commit({}));
   };
 
   const search = async (props: { isNewQuery: boolean; page: number }) => {
@@ -122,7 +124,7 @@ export function CustomSearchBar() {
             })}
           />
         )}
-        {searchType === "users" && profileSearchResults.length > 0 && (
+        {searchType === "users" && profileSearchResults?.length > 0 && (
           <AssetGrid
             assetCards={profileSearchResults.map((profile) => {
               return {

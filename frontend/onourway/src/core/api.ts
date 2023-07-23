@@ -588,7 +588,7 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
           }
           case "GetProfile": {
             const profileId = (input as { profileId: string }).profileId;
-            res = await fetch(`${apiBaseUrl}/api/users/${profileId}`, {
+            res = await fetch(`${apiBaseUrl}/api/users/profile/${profileId}`, {
               method: "GET",
               headers,
             });
@@ -603,7 +603,7 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             break;
           }
           case "GetProfiles": {
-            res = await fetch(`${apiBaseUrl}/api/users`, {
+            res = await fetch(`${apiBaseUrl}/api/users/blankSearch`, {
               method: "GET",
               headers,
             });

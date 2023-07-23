@@ -154,11 +154,14 @@ router.route("/api/events/venue/:externalId").get((req, res) => {
 // #endregion
 
 // #region Users
-router.route("/api/users/:userId").get((req, res) => {
+router.route("/api/users/profile/:userId").get((req, res) => {
   user.get_profile(req, res);
 });
 router.route("/api/users/username/:username").get((req, res) => {
   user.get_profile_by_username(req, res);
+});
+router.route("/api/users/blankSearch").get((req, res) => {
+  user.get_profiles(req, res);
 });
 router.route("/api/users/list").post((req, res) => {
   user.get_follow_list(req, res);
