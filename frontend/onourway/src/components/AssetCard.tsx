@@ -47,17 +47,19 @@ export function AssetCard(props: AssetCardProps): JSX.Element {
       >
         <Grid container>
           <Grid item xs={3}>
-            <Box sx={{ p: 1, height: "100%" }}>
-              <CardMedia
-                component="img"
-                sx={{
-                  borderRadius: 1,
-                  height: "100%",
-                }}
-                image={props.image}
-                alt=""
-              />
-            </Box>
+            {props.image !== null && (
+              <Box sx={{ p: 1, height: "100%" }}>
+                <CardMedia
+                  component="img"
+                  sx={{
+                    borderRadius: 1,
+                    height: "100%",
+                  }}
+                  image={props.image}
+                  alt=""
+                />
+              </Box>
+            )}
           </Grid>
           <Grid item xs={8}>
             <Box

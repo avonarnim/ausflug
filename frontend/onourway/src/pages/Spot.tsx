@@ -100,7 +100,7 @@ export default function Spot(): JSX.Element {
         .map((image) => ({
           image: image,
         }))
-        .filter((image) => image.image !== ""),
+        .filter((image) => image.image !== "" || image.image === null),
     });
     console.log("spot set", getSpotResponse);
     const marker = new google.maps.Marker({
