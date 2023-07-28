@@ -483,7 +483,10 @@ export default function Profile(props: {
               rowHeight={164}
             >
               {posts.map((post) => (
-                <ImageListItem key={post._id}>
+                <ImageListItem
+                  key={post._id}
+                  onClick={() => navigate(`/post/${post._id}`)}
+                >
                   <img
                     src={`${post.images[0]}?w=164&h=164&fit=crop&auto=format`}
                     srcSet={`${post.images[0]}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}

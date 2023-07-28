@@ -13,6 +13,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Paper,
   TextField,
   Theme,
   Typography,
@@ -23,7 +24,13 @@ import { useParams, Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../core/AuthContext";
 import { useMutation } from "../core/api";
 import { TripProps } from "./EditTrip";
-import { Edit, Delete, Favorite, Comment } from "@mui/icons-material";
+import {
+  Edit,
+  Delete,
+  Favorite,
+  FavoriteBorderOutlined,
+  Comment,
+} from "@mui/icons-material";
 import { SpotInfoProps } from "../components/SpotInfo";
 import { PostProps } from "./Feed";
 import { ProfileProps } from "./Profile";
@@ -78,6 +85,7 @@ export default function Post(): JSX.Element {
   const updatePost = useMutation("UpdatePost");
   const deletePost = useMutation("DeletePost");
   const classes = useStyles();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (params.postId) {
@@ -101,7 +109,7 @@ export default function Post(): JSX.Element {
     }
   };
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (post: PostProps) => {
     if (post) {
       const updateResponse = await updatePost.commit({
         ...post,
@@ -119,7 +127,9 @@ export default function Post(): JSX.Element {
       comment: comment,
       createdAt: Date.now(),
     });
-    await handleUpdate();
+    if (post) {
+      await handleUpdate(post);
+    }
     setComment("");
   };
 
@@ -136,7 +146,11 @@ export default function Post(): JSX.Element {
             <CardContent className={classes.content}>
               <div className={classes.author}>
                 <Avatar src={post.authorImage} alt={post.authorUsername} />
-                <Typography variant="subtitle1" className={classes.authorName}>
+                <Typography
+                  variant="subtitle1"
+                  className={classes.authorName}
+                  onClick={() => navigate(`/profile/${post.authorId}`)}
+                >
                   {post.authorUsername}
                 </Typography>
                 {currentUser.uid === post.authorId && (
@@ -150,16 +164,20 @@ export default function Post(): JSX.Element {
                   </IconButton>
                 )}
               </div>
-              <List>
-                {post.comments.map((comment) => (
-                  <ListItem>
-                    <ListItemText
-                      primary={comment.userId}
-                      secondary={comment.comment}
-                    />
-                  </ListItem>
-                ))}
-              </List>
+              <Paper
+                style={{ height: 150, overflow: "auto", boxShadow: "none" }}
+              >
+                <List dense sx={{ width: "100%" }}>
+                  {post.comments.map((comment) => (
+                    <ListItem>
+                      <ListItemText
+                        primary={comment.userId}
+                        secondary={comment.comment}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Paper>
               <div className={classes.likeSection}>
                 <IconButton
                   aria-label="like"
@@ -167,10 +185,17 @@ export default function Post(): JSX.Element {
                   className={classes.likeIcon}
                   onClick={() => {
                     post.likes.push({ userId: currentUser.uid });
-                    handleUpdate();
+                    if (post) {
+                      handleUpdate(post);
+                    }
                   }}
                 >
-                  <Favorite />
+                  {post.likes.find((like) => like === currentUser.uid) !==
+                  undefined ? (
+                    <Favorite />
+                  ) : (
+                    <FavoriteBorderOutlined />
+                  )}
                 </IconButton>
                 <Typography variant="body1">
                   {post.likes.length} likes

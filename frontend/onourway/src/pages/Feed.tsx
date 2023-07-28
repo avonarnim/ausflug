@@ -173,6 +173,7 @@ export default function Feed(): JSX.Element {
                   component="img"
                   src={post.images[0]}
                   alt={post.authorUsername}
+                  onClick={() => navigate(`/post/${post._id}`)}
                 />
                 <CardContent>
                   <Typography variant="body2">{post.caption}</Typography>
