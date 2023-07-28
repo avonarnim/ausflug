@@ -27,6 +27,7 @@ import {
   Terms,
   TripGuide,
   Trips,
+  Post,
 } from "./pages/index";
 import { AuthProvider } from "./core/AuthContext";
 
@@ -104,6 +105,10 @@ function App() {
                     children={<Profile indicator={"username"} />}
                   />
                 }
+              />
+              <Route
+                path="/post/:postId"
+                element={<React.Suspense children={<Post />} />}
               />
               <Route
                 path="/terms"

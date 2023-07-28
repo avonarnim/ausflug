@@ -204,7 +204,7 @@ type Input<T extends Type> = T extends "CreateSpot"
   : T extends "UpdatePost"
   ? PostProps
   : T extends "DeletePost"
-  ? { postId: string; userId: string }
+  ? { _id: string; authorId: string }
   : T extends "GetFeedPosts"
   ? { userId: string }
   : T extends "CreateFeedback"
@@ -840,8 +840,8 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             break;
           }
           case "UpdatePost": {
-            const castedInput = input as { postId: string };
-            res = await fetch(`${apiBaseUrl}/api/posts/${castedInput.postId}`, {
+            const castedInput = input as { _id: string };
+            res = await fetch(`${apiBaseUrl}/api/posts/${castedInput._id}`, {
               method: "PUT",
               headers,
               body: JSON.stringify({ ...input }),
@@ -849,8 +849,9 @@ export function useMutation<T extends Type>(type: T): Mutation<T> {
             break;
           }
           case "DeletePost": {
-            const postId = (input as { postId: string; userId: string }).postId;
-            const userId = (input as { postId: string; userId: string }).userId;
+            const postId = (input as { _id: string; authorId: string })._id;
+            const userId = (input as { _id: string; authorId: string })
+              .authorId;
             res = await fetch(`${apiBaseUrl}/api/posts/${postId}/${userId}`, {
               method: "DELETE",
               headers,
