@@ -95,7 +95,7 @@ export default function Feed(): JSX.Element {
     setAnchorEl(null);
   };
   const handleDeleteClick = async (post: PostProps) => {
-    await deletePost.commit({ postId: post._id, userId: currentUser.uid });
+    await deletePost.commit({ _id: post._id, authorId: currentUser.uid });
     setPosts(posts.filter((p) => p._id !== post._id));
     setAnchorEl(null);
   };
