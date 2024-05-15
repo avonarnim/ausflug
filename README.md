@@ -29,9 +29,12 @@ requests to their controllers. The controllers rely on the models to answer post
 put/get/update/delete requests.
 
 Keys should be placed both in `env.yaml` (for GCP to recognize process.env.\_\_\_)
-as well as `.env` for local development.
+as well as `.env` for local development. The `.env` file keys should be listed as
+`KEYNAME=value`. The `env.yaml` file keys should be listed as `KEYNAME: value`
 
-Dependencies are handled by npm
+Dependencies are handled by npm. If it's your first time running the backend
+locally, do `npm install` and potentially `sudo npm install -g --force nodemon`.
+This should be done from the backend directory
 
 ## Scripts:
 
@@ -60,6 +63,8 @@ Note that the important typings that are copied from the backend are found in th
 `pages/Profile.tsx`
 
 ## Scripts:
+
+For your first time, first install yarn, then run `yarn install` from `onourway/frontend/onourway``
 
 `npm start`
 

@@ -4403,7 +4403,7 @@ export default function TripGuide(): JSX.Element {
       setTitle(params.name.replaceAll("-", " "));
       setTripGuides(guides[params.name]);
     } else {
-      console.log("no user");
+      console.log("unavailable guide endpoints");
     }
   }, [params.name]);
 

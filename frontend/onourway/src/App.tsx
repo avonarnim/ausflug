@@ -26,6 +26,7 @@ import {
   Settings,
   Terms,
   TripGuide,
+  TripGuideBrowser,
   Trips,
   Post,
 } from "./pages/index";
@@ -133,6 +134,10 @@ function App() {
               <Route
                 path="/gas"
                 element={<React.Suspense children={<Gas />} />}
+              />
+              <Route
+                path="/guide"
+                element={<React.Suspense children={<TripGuideBrowser />} />}
               />
               <Route
                 path="/guide/:name"

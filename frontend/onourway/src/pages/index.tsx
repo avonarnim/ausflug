@@ -23,4 +23,5 @@ export const Trips = React.lazy(() => import("./Trips"));
 export const RandomTrip = React.lazy(() => import("./RandomTrip"));
 export const Gas = React.lazy(() => import("./Gas"));
 export const TripGuide = React.lazy(() => import("./TripGuide"));
+export const TripGuideBrowser = React.lazy(() => import("./TripGuideBrowser"));
 export const Post = React.lazy(() => import("./Post"));

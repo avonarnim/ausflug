@@ -137,6 +137,15 @@ export function NavBar(props: AppBarProps): JSX.Element {
             >
               Gas
             </Link>
+            <Link
+              color="inherit"
+              underline="none"
+              to="/guide"
+              component={NavLink}
+              sx={{ pl: 2, pr: 2 }}
+            >
+              Guides
+            </Link>
             {currentUser && (
               <Link
                 color="inherit"
@@ -185,6 +194,9 @@ export function NavBar(props: AppBarProps): JSX.Element {
                 </MenuItem>
                 <MenuItem onClick={() => handleMobileMenu("/activity")}>
                   Activity
+                </MenuItem>
+                <MenuItem onClick={() => handleMobileMenu("/guide")}>
+                  Guides
                 </MenuItem>
               </Menu>
             </Box>
